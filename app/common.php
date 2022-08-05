@@ -1,0 +1,203 @@
+<?php
+
+use App\Models\Parteners;
+use App\Models\Phones;
+use App\Models\Transactions;
+use JetBrains\PhpStorm\ArrayShape;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
+
+#[ArrayShape(["first_name" => "string",  "parteners_id" => "string", "solde" => "string"])] function _auth(): array
+{
+    /**
+     * @var Parteners $partner
+    */
+    //dd(getUser());
+    $partner = Parteners::query()->find(getUser()['id']);
+    return [
+        "first_name" =>$partner->name,
+        "parteners_id" =>$partner->id,
+        "solde" =>$partner->solde,
+    ];
+}
+
+function title(string $title): string
+{
+    return "INTECH API " . $title;
+}
+
+function dateFilterStart($date): DateTime
+{
+    return DateTime::createFromFormat('Y-m-d H:i:s', $date .' 00:00:00');
+}
+function dateFilterEnd($date): DateTime
+{
+    return DateTime::createFromFormat('Y-m-d H:i:s', $date .' 23:59:59');
+}
+function  page(): int{
+    return (int)request('page',1);
+}
+function  size(): int
+{
+    return (int)request('size',15);
+}
+//'SUCCESS','PENDING','PROCESSING','FAILLED','CANCELED'
+const STATUS = [
+  'SUCCESS' => 'statut-success',
+  'CANCELED' => 'table-warning',
+  'FAILLED' => 'statut-danger',
+  'PROCESSING' => 'statut-infos',
+  'PENDING' => 'statut-infos',
+];
+
+const STATE = [
+    'ACTIVED' => 'ACTIVED',
+    'INACTIVED' => 'INACTIVED',
+    'DELETED' => 'DELETED',
+];
+function status($status): string{
+    return  @STATUS[$status] ?? '';
+}
+
+const OPERATIONS= [
+    'APROVISIONNEMENT'=>'APROVISIONNEMENT'
+];
+const TYPE_PARTNER_COMPTE =[
+    'API'=>'API',
+    'CAISSE'=>'CAISSE'
+];
+
+function logoFromName($name): string{
+    $tabNames = explode(' ',$name);
+    $name  ='';
+    foreach($tabNames as $tabName){
+        $name .= ucfirst($tabName[0]);
+    }
+    return $name;
+}
+ function amountSuccess(int $sousServicesId){
+    return amountStatusSubService('SUCCESS',$sousServicesId);
+}
+ function amountFailled(int $sousServicesId){
+    return amountStatusSubService('FAILLED',$sousServicesId);
+}
+ function amountPending(int $sousServicesId){
+    return amountStatusSubService('PENDING',$sousServicesId) +  amountStatusSubService('PROCESSING',$sousServicesId) ;
+}
+ function percentageAmount($amountRef, $amount1, $amount2): float|int
+ {
+    return  ($amountRef / (($amountRef + $amount1 + $amount2  ) ?: 1)) * 100;
+}
+function amountStatusSubService(string $statut, int $sousServicesId){
+    $queryAmount = Transactions::where('sous_services_id',$sousServicesId)->whereBetween('created_at',[
+        dateFilterStart(request('date_start',gmdate('Y-m-d'))),
+        dateFilterEnd(request('date_end',gmdate('Y-m-d')))
+    ])->where(STATUS_TRX_NAME,$statut);
+
+    if(getPartnerI()){
+        $queryAmount->where('parteners_id',getPartnerI());
+    }
+    return $queryAmount->sum('amount') ;
+}
+function getPartnerI(){
+    return request('parteners_id',null);
+}
+
+ function amountState($status): float|int
+ {
+    $query =  Transactions::whereBetween('created_at',[
+        dateFilterStart(request('date_start',gmdate('Y-m-d'))),
+        dateFilterEnd(request('date_end',gmdate('Y-m-d')))
+    ]);
+    if(getPartnerI()){
+        $query->where('parteners_id',getPartnerI());
+    }
+    return $query->where(STATUS_TRX_NAME,$status)->sum('amount') ;
+}
+function loginUser(Parteners $partner):void{
+    session([keyAuth() => $partner]);
+}
+
+/**
+ * @throws ContainerExceptionInterface
+ * @throws NotFoundExceptionInterface
+ */
+function getUser(){
+  return  session()->get(keyAuth());
+}
+function keyAuth(): string
+{
+    return "__AUTH_PARTENER__";
+}
+function logOut(): void{
+    session()->forget([keyAuth()]);
+    session()->flush();
+}
+
+function checkAuth(): bool
+{
+    return session()->has(keyAuth());
+}
+
+function GUID(): string
+{
+    if (function_exists('com_create_guid') === true) {
+        return trim(com_create_guid(), '{}');
+    }
+
+    return sprintf('%04X%04X-%04X-%04X-%04X-%04X%04X%04X', mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(16384, 20479), mt_rand(32768, 49151), mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(0, 65535));
+}
+function nowIso(): string
+{
+    return gmdate("Y-m-d H:i:s");
+}
+
+function dateIso(DateTime $date,$format='Y-m-d' ): string
+{
+    return $date->format($format);
+}
+function money($number): string{
+  return  number_format($number,'2','.',' ');
+}
+function percent($number): string{
+  return  number_format($number,'2','.',' ');
+}
+
+function period(): string
+{
+    $start= request('date_start', gmdate('Y-m-d')  );
+    $end= request('date_end', gmdate('Y-m-d'));
+    if($start === $end && $end === gmdate('Y-m-d')){
+        return  "Journée en cours" . partnerName();
+    }
+    return dateFr($start). ' - ' . dateFr($end) . partnerName();
+}
+function dateFr(string $date): string
+{
+    return implode('-',array_reverse(explode('-',$date)));
+}
+const STATUS_TRX_NAME = 'pre_statut';
+//UPDATE transactions set pre_statut = statut;
+
+
+function soldeIntech(){
+   return  Phones::query()->sum('solde');
+}
+
+function balancePartners(){
+   return  Parteners::query()->sum('solde');
+}
+function gainIntech(){
+   return  rand(0,198790);
+}
+function soldeService(int $serviceId){
+  return  Phones::query()->where('services_id',$serviceId)->sum('solde');
+}
+
+function partner(): ?Parteners{
+ return Parteners::find(getPartnerI());
+}
+function partnerName(): string{
+ $partner = partner();
+ return $partner ? 'Pour ' . $partner->name  : '';
+}
