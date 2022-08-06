@@ -68,7 +68,7 @@
                                 <div class="col-sm-2">
                                     <select name="sous_services_id" id="sous_services_id" class=""
                                             placeholder="Services">
-                                        <option value="" selected> Sélectionnez un service</option>
+                                        <option value="" selected> Tous les services</option>
 
                                         @foreach($sous_services as $sous_service)
                                             <option @if($sous_services_id ==  $sous_service->id) selected
@@ -111,7 +111,7 @@
                                            class="form-control form-control-normal" placeholder="Montant max">
                                 </div>
 
-
+                                <x-partner />
                                 <div class="col-sm-2">
                                     <button type="submit"
                                             class="primary-api-digital btn btn-primary btn-outline-primary btn-block"><i
@@ -119,7 +119,7 @@
                                     </button>
                                 </div>
                                 <div class="col-sm-2">
-                                    <button onclick="window.location.href='/partner/transaction'" type="button"
+                                    <button onclick="window.location.href='/transaction'" type="button"
                                             class="warning-api-digital btn btn-primary btn-outline-primary btn-block"><i
                                             class="icofont icofont-delete"></i>Annuler
                                     </button>
@@ -140,6 +140,7 @@
                                 <th># Transaction Id</th>
                                 <th>Numéro </th>
                                 <th>Montant</th>
+                                <th>Partenaire</th>
                                 <th>Commission</th>
                                 <th>Frais</th>
                                 <th>Services</th>
@@ -158,6 +159,7 @@
                                     </th>
                                     <td>{{ $transaction->phone }} </td>
                                     <td class="currency">{{ $transaction->amount }} <span>XOF</span></td>
+                                    <td class="currency" title="{{ $transaction->partener->name}} : {{ $transaction->partener->email}}">{{ $transaction->partener_name }} <span></span></td>
                                     <td class="currency">{{ $transaction->commission_amount }} <span>XOF</span></td>
                                     <td class="currency">{{ $transaction->fee_amount }} <span>XOF</span></td>
                                     <td>{{ $transaction->sous_service_name }}</td>

@@ -2,23 +2,23 @@
 
 namespace App\View\Components;
 
-use App\Services\DashboardServices;
+use App\Services\PartnersServices;
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
 class FilterPartener extends Component
 {
-    public DashboardServices $dashboardServices;
+    public PartnersServices $partnersServices;
 
     /**
      * Create a new component instance.
      *
      * @return void
      */
-    public function __construct(DashboardServices $dashboardServices)
+    public function __construct(PartnersServices $partnersServices)
     {
-        $this->dashboardServices = $dashboardServices;
+        $this->partnersServices = $partnersServices;
     }
 
     /**
@@ -28,7 +28,7 @@ class FilterPartener extends Component
      */
     public function render(): View|string|Closure
     {
-        $partners = $this->dashboardServices->partners();
+        $partners = $this->partnersServices->partners();
         return view('components.filter-partener',compact('partners'));
     }
 }

@@ -31,10 +31,10 @@
                            class="form-control form-control-normal" placeholder="Date de fin">
                 </div>
                 {{--                 DATE START                --}}
-                <div class="col-sm-2">
+                <div class="col-sm-1">
                     <button type="submit"
                             class="primary-api-digital btn btn-primary btn-outline-primary btn-block"><i
-                            class="icofont icofont-search"></i>Appliquer
+                            class="icofont icofont-search"></i>Filtrer
                     </button>
                 </div>
                 <div class="col-sm-1">

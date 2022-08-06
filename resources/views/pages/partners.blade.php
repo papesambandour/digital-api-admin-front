@@ -1,11 +1,11 @@
 @section('title')
-    {{title( 'VERSEMENT' )}}
+    {{title( 'SERVICES' )}}
 @endsection
 
 @extends('layouts.main')
 <?php
 /**
- * @var \App\Models\OperationParteners[] $versements ;
+ * @var \App\Models\Parteners[] $partners ;
  */
 ?>
 @section('page')
@@ -18,8 +18,8 @@
                     <div class="page-header-title">
                         <i class="icofont icofont-table bg-c-blue"></i>
                         <div class="d-inline">
-                            <h4>Mes Versements</h4>
-                            <span>Donne la liste de tous les versements des partenaires </span>
+                            <h4> Partenaires</h4>
+                            <span>Donne la liste de tous les partenaires   </span>
                         </div>
                     </div>
                 </div>
@@ -47,32 +47,14 @@
                                 {{--                 DATE START                --}}
 
                                 {{--                 DATE START                --}}
-                                <label class="col-sm-3 col-form-label">Date de fin</label>
+                                <label class="col-md-3 col-form-label">Date de fin</label>
                                 <div class="col-sm-3">
                                     <input value="{{$date_end}}" name="date_end" id="date_end" type="date"
                                            class="form-control form-control-normal" placeholder="Date de fin">
                                 </div>
-
-                            </div>
-                            <div class="form-group row">
-                                {{--                 DATE START                --}}
-                                {{--                 DATE START                --}}
-                                <label class="col-sm-3 col-form-label">Montant min</label>
-                                <div class="col-sm-3">
-                                    <input value="{{$amount_min}}" name="amount_min" id="amount_min" type="text"
-                                           class="form-control form-control-normal" placeholder="Montant min">
-                                </div>
-
-
-                                <label class="col-sm-3 col-form-label">Montant max</label>
-                                <div class="col-sm-3">
-                                    <input value="{{$amount_max}}" name="amount_max" id="amount_max" type="text"
-                                           class="form-control form-control-normal" placeholder="Montant max">
-                                </div>
                             </div>
                             <div class="form-group row">
                                 <x-partner col_l="3" col_s="3"/>
-
                                 <div class="col-sm-3">
                                     <button type="submit"
                                             class="primary-api-digital btn btn-primary btn-outline-primary btn-block"><i
@@ -80,11 +62,12 @@
                                     </button>
                                 </div>
                                 <div class="col-sm-3">
-                                    <button onclick="window.location.href='/versement'" type="button"
+                                    <button onclick="window.location.href='/partners'" type="button"
                                             class="warning-api-digital btn btn-primary btn-outline-primary btn-block"><i
                                             class="icofont icofont-delete"></i>Annuler
                                     </button>
                                 </div>
+
                             </div>
 
                             <div>
@@ -99,26 +82,55 @@
                             <thead>
                             <tr>
                                 <th># Id</th>
-                                <th>Montant</th>
-                                <th>Partenaire</th>
-                                <th>Operation de </th>
+                                <th>Libelle</th>
+                                <th>Email</th>
+                                <th>Solde</th>
+                                <th>État</th>
                                 <th>Date</th>
+                                <th>Options</th>
                             </tr>
                             </thead>
                             <tbody>
-                            @foreach($versements as $versement)
+                            @foreach($partners as $partner)
                                 <tr>
                                     <th scope="row">
                                         <span style="font-weight: bold;color: #324960;text-decoration: underline">
-                                            {{$versement->id}}
+                                            {{$partner->id}}
                                         </span>
                                     </th>
-                                    <td> <span class="currency"> {{ $versement->amount }} XOF</span> </td>
-                                    <td> <span class="currency"> {{ $versement->partener->name }} </span> </td>
+                                    <td class="text-center"><span class="currency"> {{ $partner->name }} </span></td>
+                                    <td class="text-center">{{$partner->email}} </td>
+                                    <td class="text-center"><span class="currency"> {{ $partner->solde }} XOF</span>
+                                    </td>
 
-                                    <td> <span class="statut-success">{{$versement->type_operation}} </span> </td>
                                     <td>
-                                        {{ $versement->created_at }}
+                                        {{ $partner->state }}
+                                    </td>
+                                    <td>
+                                        {{ $partner->created_at }}
+                                    </td>
+                                    <td>
+                                        <div class="btn-group dropdown-split-success">
+
+                                            <button style="background: transparent;color: #4fc3a1;border: none;width: 100%;height: 30px" type="button" class="btn btn-success  dropdown-toggle-split waves-effect waves-light icofont icofont-navigation-menu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <span class="sr-only"></span>
+                                            </button>
+                                            <div class="dropdown-menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(113px, 40px, 0px); top: 0px; left: 0px; will-change: transform;">
+                                                <a class="dropdown-item waves-effect waves-light" href="#">Action</a>
+                                                <a class="dropdown-item waves-effect waves-light" href="#">Another action</a>
+                                                <a class="dropdown-item waves-effect waves-light" href="#">Something else here</a>
+                                                <div class="dropdown-divider"></div>
+                                                <a class="dropdown-item waves-effect waves-light" href="#">Separated link</a>
+                                                <a class="dropdown-item waves-light waves-effect" href="#">Verser</a>
+                                                <a class="dropdown-item waves-light waves-effect" href="#">Versements</a>
+                                                <a class="dropdown-item waves-light waves-effect" href="#">Afficher ses transactions</a>
+                                                <a class="dropdown-item waves-light waves-effect" href="#">Dashboard</a>
+                                                <a class="dropdown-item waves-light waves-effect" href="#">Services Permis</a>
+                                                <a class="dropdown-item waves-light waves-effect" href="#">Lister les services</a>
+                                                <a class="dropdown-item waves-light waves-effect" href="#">Gain Générer à partir du partenaires</a>
+                                            </div>
+                                        </div>
+
                                     </td>
                                 </tr>
                             @endforeach
@@ -129,7 +141,7 @@
                 </div>
             </div>
             <div style="float: right">
-                {{ $versements->links('pagination::bootstrap-4') }}
+                {{ $partners->links('pagination::bootstrap-4') }}
             </div>
 
         </div>

@@ -29,6 +29,13 @@
         <div class="pcoded-navigatio-lavel" >Monétique</div>
         <ul class="pcoded-item pcoded-left-item">
             <li class="active">
+                <a href="/partners">
+                    <span class="pcoded-micon"><i class="ti-direction-alt"></i><b>D</b></span>
+                    <span class="pcoded-mtext" > Partenaires</span>
+                    <span class="pcoded-mcaret"></span>
+                </a>
+            </li>
+            <li class="active">
                 <a href="/versement">
                     <span class="pcoded-micon"><i class="ti-direction-alt"></i><b>D</b></span>
                     <span class="pcoded-mtext" >Rechargement partenaire</span>
@@ -53,10 +60,11 @@
         </ul>
         <div class="pcoded-navigatio-lavel" >Configurations</div>
         <ul class="pcoded-item pcoded-left-item">
+
             <li class="active">
                 <a href="/service">
                     <span class="pcoded-micon"><i class="ti-direction-alt"></i><b>D</b></span>
-                    <span class="pcoded-mtext" >Mes Services</span>
+                    <span class="pcoded-mtext" >Services</span>
                     <span class="pcoded-mcaret"></span>
                 </a>
             </li>

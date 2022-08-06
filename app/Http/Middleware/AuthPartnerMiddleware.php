@@ -19,7 +19,7 @@ class AuthPartnerMiddleware
         if(checkAuth()){
             return $next($request);
         }else{
-            return redirect('/auth-partner/login');
+            return redirect('/auth/login');
         }
 
     }

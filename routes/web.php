@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthPartnersController;
 use App\Http\Controllers\ConfigurationController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\PartnersController;
 use App\Http\Controllers\TransactionsController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\URL;
@@ -55,4 +56,8 @@ Route::group(['middleware'=>['partner-auth']],function(){
     Route::post('/apikey/regenerateKey/{idKey}',[ConfigurationController::class,'regenerateKey'] );
     Route::get('/reclamation',[ConfigurationController::class,'reclamation'] );
     /*CONFIGURATIONS END*/
+
+    /*PARTNERS END*/
+    Route::get('/partners',[PartnersController::class,'index'] );
+    /*PARTNERS END*/
 });

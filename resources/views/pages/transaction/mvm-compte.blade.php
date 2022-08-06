@@ -18,8 +18,8 @@
                     <div class="page-header-title">
                         <i class="icofont icofont-table bg-c-blue"></i>
                         <div class="d-inline">
-                            <h4>Mes mouvements compte</h4>
-                            <span>Donne la liste de toutes les entrées et sorties vers le compte du partenaire Intech API </span>
+                            <h4>Les mouvements compte partenaires</h4>
+                            <span>Donne la liste de toutes les entrées et sorties des comptes partenaires </span>
                         </div>
                     </div>
                 </div>
@@ -71,15 +71,15 @@
                                 </div>
                             </div>
                             <div class="form-group row">
-
-                                <div class="col-sm-2">
+                                <x-partner col_l="3" col_s="3"/>
+                                <div class="col-sm-3">
                                     <button type="submit"
                                             class="primary-api-digital btn btn-primary btn-outline-primary btn-block"><i
                                             class="icofont icofont-search"></i>Rechercher
                                     </button>
                                 </div>
-                                <div class="col-sm-2">
-                                    <button onclick="window.location.href='/partner/mvm-compte'" type="button"
+                                <div class="col-sm-3">
+                                    <button onclick="window.location.href='/mvm-compte'" type="button"
                                             class="warning-api-digital btn btn-primary btn-outline-primary btn-block"><i
                                             class="icofont icofont-delete"></i>Annuler
                                     </button>
@@ -99,6 +99,7 @@
                             <tr>
                                 <th># Id</th>
                                 <th>Montant</th>
+                                <th>Partenaire</th>
                                 <th>Operation de </th>
                                 <th>Provenance </th>
                                 <th>Date</th>
@@ -113,6 +114,7 @@
                                         </span>
                                     </th>
                                     <td> <span class="currency"> {{ $mouvement->amount }} XOF</span> </td>
+                                    <td> <span class="currency"> {{ $mouvement->partener->name }} </span> </td>
 
                                     <td> <span class="statut-success">{{$mouvement->type_operation}} </span> </td>
                                     <td> <span class="statut-infos" >{{$mouvement->operation}} </span> </td>
