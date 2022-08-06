@@ -170,16 +170,16 @@ function period(): string
     if($start === $end && $end === gmdate('Y-m-d')){
         return  "Journée en cours" . partnerName();
     }
-    return dateFr($start). ' - ' . dateFr($end) . partnerName();
+    return 'Du ' . dateFr($start). ' au ' . dateFr($end) . partnerName();
 }
 function period2(): string
 {
     $start= request('date_start', gmdate('Y-m-d')  );
     $end= request('date_end', gmdate('Y-m-d'));
     if($start === $end && $end === gmdate('Y-m-d')){
-        return  "Journée en cours" . partnerName2();
+        return  partnerName2() . "<br>Journée en cours" ;
     }
-    return dateFr($start). ' - ' . dateFr($end) . partnerName2();
+    return  partnerName2() .'<br> Du '.  dateFr($start). ' au ' . dateFr($end) ;
 }
 function dateFr(string $date): string
 {
@@ -208,9 +208,9 @@ function partner(): ?Parteners{
 }
 function partnerName(): string{
  $partner = partner();
- return $partner ? ' Pour ' . $partner->name  : '';
+ return $partner ? ' Avec ' . $partner->name  : '';
 }
 function partnerName2(): string{
  $partner = partner();
- return $partner ? ' <br>Pour ' . $partner->name  : '';
+ return $partner ? 'Gagnés Avec ' . $partner->name  : 'Gagnés Avec les partenaires';
 }

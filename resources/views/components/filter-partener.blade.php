@@ -1,4 +1,4 @@
-<label class="col-sm-2 col-form-label">Services</label>
+<label class="col-sm-1 col-form-label">Services</label>
 <div class="col-sm-2">
     <select name="_partener_" id="_partener_" class=""
             placeholder="Services">

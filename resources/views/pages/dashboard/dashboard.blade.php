@@ -37,10 +37,10 @@
                             class="icofont icofont-search"></i>Appliquer
                     </button>
                 </div>
-                <div class="col-sm-2">
+                <div class="col-sm-1">
                     <button onclick="window.location.href='/'" type="button"
                             class="success-api-digital btn btn-primary btn-outline-primary btn-block"><i
-                            class="icofont icofont-delete"></i>Journée en cours
+                            class="icofont icofont-delete"></i>
                     </button>
                 </div>
             </div>
@@ -191,7 +191,7 @@
                         <span class="text-c-green f-w-600">{{$service->name}}</span>
                         <h4> <span style="font-size: 15px;color: #93be52">Solde</span>  <span style="font-size: 16px;color: #303549">{{soldeService($service->id) }} XOF</span> </h4>
                         <hr style="display: block; border-bottom: 1px solid #93be52">
-                        <h4> <span style="font-size: 15px;color: #93be52">Gain</span> <span style="font-size: 16px;color: #303549">{{soldeService($service->id) }} XOF {!! period2() !!} </span></h4>
+                        <h4> <span style="font-size: 15px;color: #93be52">Gain</span> <span style="font-size: 16px;color: #303549">{{soldeService($service->id) }} XOF <br>  {!! period2() !!} </span></h4>
                         <div>
                                                             <span class="f-left m-t-10 text-muted">
                                                                 <i class="text-c-green f-16 icofont icofont-calendar m-r-10"></i>
