@@ -14,6 +14,7 @@
         <form class="col-md-12 col-xl-12">
             {{--START--}}
             <div class="form-group row">
+                <x-partner />
                 {{--                 DATE START                --}}
                 <label class="col-sm-1 col-form-label">Date de début</label>
                 <div class="col-sm-2">
@@ -45,12 +46,14 @@
             </div>
             {{--END--}}
         </form>
+        <h1 class="h3 " style="width: 100%;display: block;text-align: left;font-size: 17px;color: #303549">Infos compte Intech API</h1>
+
         <!-- card1 start -->
         <div class="col-md-6 col-xl-4">
             <div class="card widget-card-1">
                 <div class="card-block-small">
                     <i class="icofont icofont-money bg-c-blue card1-icon"></i>
-                    <span class="text-c-blue f-w-600">SOLDE INTECH</span>
+                    <span class="text-c-blue f-w-600">Solde Intech API</span>
                     <h4 class="currency">{{soldeIntech()}} XOF</h4>
                     <div>
                                                             <span class="f-left m-t-10 text-muted">
@@ -84,7 +87,7 @@
             <div class="card widget-card-1">
                 <div class="card-block-small">
                     <i class="icofont icofont-money bg-c-blue card1-icon"></i>
-                    <span class="text-c-blue f-w-600">Gain INTECH</span>
+                    <span class="text-c-blue f-w-600">Gain Intech API</span>
                     <h4> {{gainIntech()}} XOF</h4>
                     <div>
                                                             <span class="f-left m-t-10 text-muted">
@@ -95,12 +98,14 @@
                 </div>
             </div>
         </div>
+        <h1 class="h3 " style="width: 100%;display: block;text-align: left;font-size: 17px;color: #303549">Statistiques sur les transactions</h1>
+
         <!-- card1 start -->
         <div class="col-md-6 col-xl-4">
             <div class="card widget-card-1">
                 <div class="card-block-small">
                     <i class="icofont icofont-ui-home  bg-c-green card1-icon"></i>
-                    <span class="text-c-green f-w-600">Transaction Succès</span>
+                    <span class="text-c-green f-w-600">Transactions Succès</span>
                     <h4>{{amountState('SUCCESS')}} XOF</h4>
                     <div>
                                                             <span class="f-left m-t-10 text-muted">
@@ -177,15 +182,16 @@
         <!-- Email Sent End -->
         <!-- Data widget start -->
 
-       <h1 class="h3 text-center" style="width: 100%;display: block;text-align: center;font-size: 19px;color: #303549">SOLDE INTECH PAR SERVICES</h1>
-
+       <h1 class="h3 " style="width: 100%;display: block;text-align: left;font-size: 17px;color: #303549">Solde intech par services</h1>
        @foreach($services as $service)
             <div class="col-md-6 col-xl-4">
                 <div class="card widget-card-1">
                     <div class="card-block-small">
                         <i class="icofont icofont-money bg-c-green card1-icon"></i>
                         <span class="text-c-green f-w-600">{{$service->name}}</span>
-                        <h4> {{soldeService($service->id) }} XOF</h4>
+                        <h4> <span style="font-size: 15px;color: #93be52">Solde</span>  <span style="font-size: 16px;color: #303549">{{soldeService($service->id) }} XOF</span> </h4>
+                        <hr style="display: block; border-bottom: 1px solid #93be52">
+                        <h4> <span style="font-size: 15px;color: #93be52">Gain</span> <span style="font-size: 16px;color: #303549">{{soldeService($service->id) }} XOF {!! period2() !!} </span></h4>
                         <div>
                                                             <span class="f-left m-t-10 text-muted">
                                                                 <i class="text-c-green f-16 icofont icofont-calendar m-r-10"></i>

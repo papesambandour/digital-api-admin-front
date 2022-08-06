@@ -100,7 +100,7 @@ function amountStatusSubService(string $statut, int $sousServicesId){
     return $queryAmount->sum('amount') ;
 }
 function getPartnerI(){
-    return request('parteners_id',null);
+    return request('_partener_',null);
 }
 
  function amountState($status): float|int
@@ -172,6 +172,15 @@ function period(): string
     }
     return dateFr($start). ' - ' . dateFr($end) . partnerName();
 }
+function period2(): string
+{
+    $start= request('date_start', gmdate('Y-m-d')  );
+    $end= request('date_end', gmdate('Y-m-d'));
+    if($start === $end && $end === gmdate('Y-m-d')){
+        return  "Journée en cours" . partnerName2();
+    }
+    return dateFr($start). ' - ' . dateFr($end) . partnerName2();
+}
 function dateFr(string $date): string
 {
     return implode('-',array_reverse(explode('-',$date)));
@@ -199,5 +208,9 @@ function partner(): ?Parteners{
 }
 function partnerName(): string{
  $partner = partner();
- return $partner ? 'Pour ' . $partner->name  : '';
+ return $partner ? ' Pour ' . $partner->name  : '';
+}
+function partnerName2(): string{
+ $partner = partner();
+ return $partner ? ' <br>Pour ' . $partner->name  : '';
 }
