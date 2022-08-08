@@ -38,14 +38,17 @@
                 <li class="user-profile header-notification">
                     <a href="#!">
                         <img src="/assets/icon/profil.svg" alt="User Profile" />
-                        <span>{{_auth()['first_name']}}</span>
+                        <span>{{_auth()->f_name}}</span>
                         <i class="ti-angle-down"></i>
                     </a>
                     <ul class="show-notification profile-notification">
-                        <li>
-                            <a href="#">
-                                <i class="ti-user"></i> Profil
+                        <li >
+                            <a  class="currency">
+                                <i class="ti-user "></i> Profil  {{_auth()->profil->name}}
                             </a>
+                        </li>
+                        <li class="ti-layout-accordion-separated">
+
                         </li>
                         <li>
                             <a href="/auth/logout">

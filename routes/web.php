@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\AuthPartnersController;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ConfigurationController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PartnersController;
@@ -31,13 +31,13 @@ if (!empty($proxy_schema)) {
 
 
 Route::group(['middleware'=>[],'prefix'=>'auth'],function(){
-    Route::get('/login',[AuthPartnersController::class,'login'] );
-    Route::post('/login',[AuthPartnersController::class,'loginPost'] );
-    Route::get('/logout',[AuthPartnersController::class,'logOut'] );
+    Route::get('/login',[AuthController::class,'login'] );
+    Route::post('/login',[AuthController::class,'loginPost'] );
+    Route::get('/logout',[AuthController::class,'logOut'] );
 });
 
 
-Route::group(['middleware'=>['partner-auth']],function(){
+Route::group(['middleware'=>['admin-auth']],function(){
     /*REPORTING START*/
     Route::get('/',[DashboardController::class,'dashboard'] );
     Route::get('/statistic',[DashboardController::class,'statistic'] );

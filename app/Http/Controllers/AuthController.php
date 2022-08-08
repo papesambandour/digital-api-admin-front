@@ -7,7 +7,7 @@ use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 
-class AuthPartnersController extends Controller
+class AuthController extends Controller
 {
     public LoginPartnerServices $loginPartnerServices;
 

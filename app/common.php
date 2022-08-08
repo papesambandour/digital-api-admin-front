@@ -3,22 +3,18 @@
 use App\Models\Parteners;
 use App\Models\Phones;
 use App\Models\Transactions;
+use App\Models\Users;
 use JetBrains\PhpStorm\ArrayShape;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
-#[ArrayShape(["first_name" => "string",  "parteners_id" => "string", "solde" => "string"])] function _auth(): array
+#[ArrayShape(["first_name" => "string",  "parteners_id" => "string", "solde" => "string"])] function _auth():?Users
 {
     /**
-     * @var Parteners $partner
+     * @var Users $partner
     */
-    //dd(getUser());
-    $partner = Parteners::query()->find(getUser()['id']);
-    return [
-        "first_name" =>$partner->name,
-        "parteners_id" =>$partner->id,
-        "solde" =>$partner->solde,
-    ];
+    return Users::find(getUser()['id']);
+
 }
 
 function title(string $title): string
@@ -114,8 +110,8 @@ function getPartnerI(){
     }
     return $query->where(STATUS_TRX_NAME,$status)->sum('amount') ;
 }
-function loginUser(Parteners $partner):void{
-    session([keyAuth() => $partner]);
+function loginUser(Users $user):void{
+    session([keyAuth() => $user]);
 }
 
 /**
@@ -127,7 +123,7 @@ function getUser(){
 }
 function keyAuth(): string
 {
-    return "__AUTH_PARTENER__";
+    return "__AUTH_USER__";
 }
 function logOut(): void{
     session()->forget([keyAuth()]);

@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\PartenerComptes;
+use App\Models\Parteners;
 use App\Models\Services;
 use App\Models\SousServices;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -54,12 +55,13 @@ class ConfigServices
     }
     public function addKey(){
         $key  = PartenerComptes::query()->where('parteners_id',getPartnerI())->count();
+        $partner = Parteners::find(getPartnerI());
        return PartenerComptes::create([
             'type_partener_compte' => TYPE_PARTNER_COMPTE['API'],
-            'parteners_id' => _auth()['parteners_id'],
+            'parteners_id' => getPartnerI(),
             'created_at' => nowIso(),
             'state' => STATE['ACTIVED'],
-            'name' => _auth()['first_name'] . ' API KEY ' . (++$key) ,
+            'name' => $partner->name . ' API KEY ' . (++$key) ,
             'app_key' => GUID(),
         ]);
     }
