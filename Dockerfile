@@ -1,5 +1,5 @@
-#FROM tangramor/nginx-php8-fpm
-FROM php:8.0.2-apache-buster
+FROM tangramor/nginx-php8-fpm
+#FROM php:8.0.2-apache-buster
 # copy source code
 COPY . /var/www/html
 ENV TZ Africa/Dakar
