@@ -18,8 +18,14 @@
                     <div class="page-header-title">
                         <i class="icofont icofont-table bg-c-blue"></i>
                         <div class="d-inline">
-                            <h4>Les mouvements compte partenaires</h4>
-                            <span>Donne la liste de toutes les entrées et sorties des comptes partenaires </span>
+
+                            @if(getPartnerI())
+                                <h4>Les mouvements compte pour  {{partner()->name}}</h4>
+                                <span>Donne la liste de toutes les entrées et sorties du compte : <span style="color:green;font-weight: bold"> {{partner()->name}}</span>  </span>
+                            @else
+                                <h4>Services </h4>
+                                <span>Donne la liste de toutes les entrées et sorties des comptes partenaires </span>
+                            @endif
                         </div>
                     </div>
                 </div>

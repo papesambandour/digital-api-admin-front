@@ -119,11 +119,12 @@
                                                 <div class="dropdown-divider"></div>
                                                 <a class="dropdown-item waves-light waves-effect" href="#">Verser</a>
                                                 <a class="dropdown-item waves-light waves-effect" href="/versement?_partener_={{$partner->id}}">Versements</a>
+                                                <a class="dropdown-item waves-light waves-effect" href="/mvm-compte?_partener_={{$partner->id}}">Mouvements comptes</a>
                                                 <a class="dropdown-item waves-light waves-effect" href="/transaction?_partener_={{$partner->id}}">Afficher ses transactions</a>
-                                                <a class="dropdown-item waves-light waves-effect" href="#">Dashboard</a>
-                                                <a class="dropdown-item waves-light waves-effect" href="#">Services Permis</a>
-                                                <a class="dropdown-item waves-light waves-effect" href="#">Lister les services</a>
-                                                <a class="dropdown-item waves-light waves-effect" href="#">Gain Générer à partir du partenaires</a>
+                                                <a class="dropdown-item waves-light waves-effect" href="/?_partener_={{$partner->id}}">Dashboard</a>
+                                                <a class="dropdown-item waves-light waves-effect" href="/service/?_partener_={{$partner->id}}">Services Permis</a>
+{{--                                                <a class="dropdown-item waves-light waves-effect" href="#">Lister les services</a>--}}
+{{--                                                <a class="dropdown-item waves-light waves-effect" href="#">Gain Générer à partir du partenaires</a>--}}
                                             </div>
                                         </div>
 

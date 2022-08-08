@@ -51,9 +51,9 @@ Route::group(['middleware'=>['admin-auth']],function(){
 
     /*CONFIGURATIONS START*/
     Route::get('/service',[ConfigurationController::class,'service'] );
-    Route::get('/apikey',[ConfigurationController::class,'apikey'] );
-    Route::post('/apikey/addkey',[ConfigurationController::class,'addKey'] );
-    Route::post('/apikey/regenerateKey/{idKey}',[ConfigurationController::class,'regenerateKey'] );
+//    Route::get('/apikey',[ConfigurationController::class,'apikey'] );
+//    Route::post('/apikey/addkey',[ConfigurationController::class,'addKey'] );
+//    Route::post('/apikey/regenerateKey/{idKey}',[ConfigurationController::class,'regenerateKey'] );
     Route::get('/reclamation',[ConfigurationController::class,'reclamation'] );
     /*CONFIGURATIONS END*/
 

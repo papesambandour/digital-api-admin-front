@@ -26,7 +26,7 @@ class ConfigurationController extends Controller
         $date_end= request('date_end');
         return view('pages/config.service',compact('sousServices','date_start','date_end'));
     }
-    public function apikey(): Factory|View|Application
+    /*public function apikey(): Factory|View|Application
     {
         $apisKeys = $this->configServices->apikeyPaginate();
         $date_start= request('date_start');
@@ -45,6 +45,6 @@ class ConfigurationController extends Controller
     public function reclamation(): Factory|View|Application
     {
         return view('pages/config.reclamation');
-    }
+    }*/
 
 }
