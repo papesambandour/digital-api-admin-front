@@ -38,7 +38,7 @@
             <li class="active">
                 <a href="/versement">
                     <span class="pcoded-micon"><i class="ti-direction-alt"></i><b>D</b></span>
-                    <span class="pcoded-mtext" >Rechargement partenaire</span>
+                    <span class="pcoded-mtext" >Versements</span>
                     <span class="pcoded-mcaret"></span>
                 </a>
             </li>

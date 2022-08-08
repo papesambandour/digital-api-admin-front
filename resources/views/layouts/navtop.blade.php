@@ -47,9 +47,6 @@
                                 <i class="ti-user "></i> Profil  {{_auth()->profil->name}}
                             </a>
                         </li>
-                        <li class="ti-layout-accordion-separated">
-
-                        </li>
                         <li>
                             <a href="/auth/logout">
                                 <i class="ti-layout-sidebar-left"></i> Se déconnecter

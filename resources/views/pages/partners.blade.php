@@ -116,14 +116,10 @@
                                                 <span class="sr-only"></span>
                                             </button>
                                             <div class="dropdown-menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(113px, 40px, 0px); top: 0px; left: 0px; will-change: transform;">
-                                                <a class="dropdown-item waves-effect waves-light" href="#">Action</a>
-                                                <a class="dropdown-item waves-effect waves-light" href="#">Another action</a>
-                                                <a class="dropdown-item waves-effect waves-light" href="#">Something else here</a>
                                                 <div class="dropdown-divider"></div>
-                                                <a class="dropdown-item waves-effect waves-light" href="#">Separated link</a>
                                                 <a class="dropdown-item waves-light waves-effect" href="#">Verser</a>
-                                                <a class="dropdown-item waves-light waves-effect" href="#">Versements</a>
-                                                <a class="dropdown-item waves-light waves-effect" href="#">Afficher ses transactions</a>
+                                                <a class="dropdown-item waves-light waves-effect" href="/versement?_partener_={{$partner->id}}">Versements</a>
+                                                <a class="dropdown-item waves-light waves-effect" href="/transaction?_partener_={{$partner->id}}">Afficher ses transactions</a>
                                                 <a class="dropdown-item waves-light waves-effect" href="#">Dashboard</a>
                                                 <a class="dropdown-item waves-light waves-effect" href="#">Services Permis</a>
                                                 <a class="dropdown-item waves-light waves-effect" href="#">Lister les services</a>
