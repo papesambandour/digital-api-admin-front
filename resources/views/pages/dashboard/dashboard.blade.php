@@ -191,7 +191,7 @@
                         <span class="text-c-green f-w-600">{{$service->name}}</span>
                         <h4> <span style="font-size: 15px;color: #93be52">Solde</span>  <span style="font-size: 16px;color: #303549">{{soldeService($service->id) }} XOF</span> </h4>
                         <hr style="display: block; border-bottom: 1px solid #93be52">
-                        <h4> <span style="font-size: 15px;color: #93be52">Gain</span> <span style="font-size: 16px;color: #303549">{{soldeService($service->id) }} XOF <br>  {!! period2() !!} </span></h4>
+                        <h4> <span style="font-size: 15px;color: #93be52">Gain</span> <span style="font-size: 16px;color: #303549">{{  '--' }} XOF <br>  {!! period2() !!} </span></h4>
                         <div>
                                                             <span class="f-left m-t-10 text-muted">
                                                                 <i class="text-c-green f-16 icofont icofont-calendar m-r-10"></i>
