@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\OperationParteners;
 use App\Models\Transactions;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Http;
 
 class TransactionServices
 {
@@ -88,6 +89,20 @@ class TransactionServices
             $query->where('created_at','<=',dateFilterEnd(request('date_end')));
         }
         return  $query->orderBy('id','DESC')->paginate(size());
+    }
+    public function reFund(Transactions $transaction): \Illuminate\Http\RedirectResponse
+    {
+        $uri = "external/transaction/refund/". $transaction->id;
+        $rest = Http::get(env('API_DIGITAL_URL'),[
+            'headers' => ['keys'=>env('SECRETE_API_DIGITAL')]
+        ]);
+        if($rest->status() === 200){
+            return redirect()->back()->with('success','Transaction rembourser avec success');
+        }else{
+            return redirect()->back()->with('error','Erreur lors du remboursement de la Transaction.');
+        }
+        //dump($rest->status());
+       // dd($rest->body());
     }
 
 }

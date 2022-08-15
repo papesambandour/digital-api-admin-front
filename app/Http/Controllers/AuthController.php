@@ -6,6 +6,8 @@ use App\Services\LoginPartnerServices;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Routing\Redirector;
 
 class AuthController extends Controller
 {
@@ -23,7 +25,7 @@ class AuthController extends Controller
     {
         return view('pages/security/login');
     }
-    public function loginPost()
+    public function loginPost(): Redirector|Application|RedirectResponse
     {
        $credentials = request(['email','password']);
 
@@ -35,7 +37,8 @@ class AuthController extends Controller
            return redirect()->back()->with('error','Login ou mot de passe incorrect');
        }
     }
-    public function logOut(){
+    public function logOut(): Redirector|Application|RedirectResponse
+    {
         logOut();
        return redirect("/auth/login");
     }

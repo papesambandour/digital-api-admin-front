@@ -44,6 +44,7 @@ Route::group(['middleware'=>['admin-auth']],function(){
     /*REPORTING START*/
 
     /*TRANSACTION START*/
+    Route::post('/transaction/{transaction}',[TransactionsController::class,'reFund'] );
     Route::get('/transaction',[TransactionsController::class,'transaction'] );
     Route::get('/versement',[TransactionsController::class,'versement'] );
     Route::get('/mvm-compte',[TransactionsController::class,'mvmCompte'] );

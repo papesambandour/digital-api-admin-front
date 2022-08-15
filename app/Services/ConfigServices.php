@@ -37,7 +37,7 @@ class ConfigServices
         if(request('date_end')){
             $query->where('created_at','<=',dateFilterEnd(request('date_end')));
         }
-        return $query->orderBy('id','DESC')->paginate(size());
+        return $query->orderBy('id','DESC')->with('service')->with('typeService')->paginate(size());
     }
     public function apikeyPaginate(): LengthAwarePaginator
     {

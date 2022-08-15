@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Transactions;
 use App\Services\ConfigServices;
 use App\Services\TransactionServices;
 use Illuminate\Contracts\Foundation\Application;
@@ -58,6 +59,10 @@ class TransactionsController extends Controller
         $amount_min = request('amount_min');
         $amount_max = request('amount_max');
         return view('pages/transaction.mvm-compte',compact('mouvements','amount_min','amount_max','date_end','date_start',));
+    }
+    public function reFund(Transactions $transaction): \Illuminate\Http\RedirectResponse
+    {
+        return $this->transactions->reFund($transaction);
     }
 
 }

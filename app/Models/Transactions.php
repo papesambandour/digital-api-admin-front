@@ -49,6 +49,27 @@ use Illuminate\Database\Eloquent\Model;
  * @property SousServices $sousService
  * @property OperationParteners[] $operationParteners
  * @property UssdExecutionMessages[] $ussdExecutionMessages
+ * @property string $code_ussd_response;
+ * @property string $ussd_response_match;
+ * @property string $pre_statut;
+ * @property string $statut_ussd_response;
+ * @property string $statut_sms_response;
+ * @property string $date_pre_success;
+ * @property string $callback_sended_at;
+ * @property string $need_check_transaction;
+ * @property string $callback_ready;
+ * @property string $next_send_callback_date;
+ * @property string $check_transaction_response;
+ * @property int $is_solde_commission;
+ * @property float $solde_commission;
+ * @property float $commission_amount_psp;
+ * @property float $fee_amount_psp;
+ * @property float $commission_amount_owner;
+ * @property float $fee_amount_owner;
+ * @property string $deep_link_url;
+ * @property string $success_redirect_url;
+ * @property string $error_redirect_url;
+ * @property int $transaction_is_finish;
  */
 class Transactions extends Model
 {

@@ -33,9 +33,27 @@ use Illuminate\Database\Eloquent\Model;
  * @property SousServicesParteners[] $sousServicesParteners
  * @property SousServicesPhones[] $sousServicesPhones
  * @property Transactions[] $transactions
+ * @property int $need_phone;
+ * @property int $has_solde_api;
+ * @property string $api_manager_class_name;
+ * @property string api_manager_namespace$;
+ * @property float $amount_commssion;
+ * @property float $taux_commission
+ * @property float $taux_fee;
+ * @property float $amount_fee
+ * @property int $pending_timeout;
+ * @property string $pre_status_error_type;
+ * @property string $status_error_type;
+ * @property string $pre_status_success_type;
+ * @property string $status_success_type;
+ * @property string $pre_status_timeout_type;
+ * @property string $status_timeout_type;
+ * @property string $when_pre_status_for_callback;
+ * @property string $when_status_for_callback;
  */
 class SousServices extends Model
 {
+    public static $snakeAttributes= false;
     /**
      * @var array
      */

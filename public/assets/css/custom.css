@@ -130,6 +130,10 @@ h2{
         text-align: center;
     }
 }
+pre { white-space:unset !important; }
+td { white-space:unset !important; }
+tr { vertical-align: middle; }
+
 /*TABLEAU PRETY*/
 /******************************SELECT2**********************************/
 .select2-container--default .select2-selection--single .select2-selection__rendered {
@@ -185,36 +189,36 @@ h2{
 /******************************STATE****************************/
 .statut-success{
   background: #4fc3a1;
-    padding: 10px;
+    padding: 3px 1px;
     color: #fff;
     border: 1px solid #4fc3a1;
     border-radius: 10px;
     font-weight: bold;
     line-height:12px;
     display: inline-block;
-    min-width: 100px;
+    min-width: 80px;
 }
 .statut-infos{
   background: #324960;
-    padding: 10px;
+    padding: 3px 1px;
     color: #fff;
     border: 1px solid #324960;
     border-radius: 10px;
     font-weight: bold;
     line-height:12px;
     display: inline-block;
-    min-width: 100px;
+    min-width: 80px;
 }
 .statut-danger{
   background: #fc6180;
-    padding: 10px;
+    padding: 3px 1px;
     color: #fff;
     border: 1px solid #fc6180;
     border-radius: 10px;
     font-weight: bold;
     line-height:12px;
     display: inline-block;
-   min-width: 100px;
+   min-width: 80px;
 }
 /******************************STTATE****************************/
 

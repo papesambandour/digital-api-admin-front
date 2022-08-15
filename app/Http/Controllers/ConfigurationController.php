@@ -24,7 +24,7 @@ class ConfigurationController extends Controller
         $sousServices = $this->configServices->servicesPaginate();
         $date_start= request('date_start');
         $date_end= request('date_end');
-        return view('pages/config.service',compact('sousServices','date_start','date_end'));
+        return view('pages/config.sous_service',compact('sousServices','date_start','date_end'));
     }
     /*public function apikey(): Factory|View|Application
     {

@@ -12,6 +12,16 @@
 @section('page')
 
     <div class="page-wrapper">
+        <div class="col-md-12">
+            @if(Session::has('success'))
+                <p class="alert alert-success">{{ Session::get('success') }}</p>
+            @endif
+        </div>
+        <div class="col-md-12">
+            @if(Session::has('error'))
+                <p class="alert alert-danger">{{ Session::get('error') }}</p>
+            @endif
+        </div>
         <!-- Page-header start -->
         <div class="page-header card">
             <div class="row align-items-end">
@@ -146,6 +156,7 @@
                                 <th>Services</th>
                                 <th>Statut</th>
                                 <th>Date</th>
+                                <th>Options</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -177,6 +188,23 @@
                                     <td>
                                         {{ $transaction->created_at }}
                                     </td>
+                                    <td>
+                                        <div class="btn-group dropdown-split-success">
+
+                                            <button readonly="readonly" style="background: transparent;color: #4fc3a1;border: none;width: 100%;height: 30px" type="button" class="btn btn-success  dropdown-toggle-split waves-effect waves-light icofont icofont-navigation-menu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <span class="sr-only"></span>
+                                            </button>
+                                            <div class="dropdown-menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(113px, 40px, 0px); top: 0px; left: 0px; will-change: transform;">
+                                                <a class="dropdown-item text-center">Options</a>
+                                                <div class="dropdown-divider"></div>
+                                                <form id="{{$transaction->id}}" action="/transaction/{{$transaction->id}}" method="POST">
+                                                    @csrf
+                                                    <button style="cursor: pointer" onclick='refund("{{$transaction->id}}")' type="button" class="dropdown-item text-center" >Rembourser</button>
+                                                </form>
+                                            </div>
+                                        </div>
+
+                                    </td>
                                 </tr>
                             @endforeach
                             </tbody>
@@ -203,6 +231,18 @@
             $('#sous_services_id').select2();
             $('#statut').select2();
         });
+
+        function refund(idForm) {
+            let msg='Voulez-vous confirmer le remboursement ?';
+            Notiflix
+                .Confirm
+                .show('Remboursement ',msg,
+                    'Oui',
+                    'Non',
+                    () => {document.getElementById(idForm).submit()},
+                    () => {console.log('If you say so...');},
+                    { messageMaxLength: msg.length + 90,},);
+        }
 
     </script>
 @endsection

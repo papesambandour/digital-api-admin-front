@@ -21,6 +21,7 @@
 <script src="/assets/js/pcoded.min.js"></script>
 <script src="/assets/js/jquery.mCustomScrollbar.concat.min.js"></script>
 <script src="/assets/js/demo-12.js"></script>
+@livewireScripts
 <script>
     var $window = $(window);
     var nav = $('.fixed-button');

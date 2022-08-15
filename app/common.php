@@ -193,7 +193,7 @@ function balancePartners(){
    return  Parteners::query()->sum('solde');
 }
 function gainIntech(){
-   return  rand(0,198790);
+   return  '---';
 }
 function soldeService(int $serviceId){
   return  Phones::query()->where('services_id',$serviceId)->sum('solde');
