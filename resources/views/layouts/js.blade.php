@@ -51,6 +51,7 @@
 
     })
 </script>
+
 <script>
     $(document).ready(function () {
         if( $('#_partener_').text()){
@@ -60,4 +61,5 @@
 
 </script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script  src="/assets/js/components/services.js"></script>
 @yield('js','')

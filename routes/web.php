@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\SousServicesController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ConfigurationController;
 use App\Http\Controllers\DashboardController;
@@ -51,7 +52,7 @@ Route::group(['middleware'=>['admin-auth']],function(){
     /*TRANSACTION END*/
 
     /*CONFIGURATIONS START*/
-    Route::get('/service',[ConfigurationController::class,'service'] );
+    Route::get('/sous-service',[ConfigurationController::class,'serviceSous'] );
 //    Route::get('/apikey',[ConfigurationController::class,'apikey'] );
 //    Route::post('/apikey/addkey',[ConfigurationController::class,'addKey'] );
 //    Route::post('/apikey/regenerateKey/{idKey}',[ConfigurationController::class,'regenerateKey'] );
@@ -61,4 +62,10 @@ Route::group(['middleware'=>['admin-auth']],function(){
     /*PARTNERS END*/
     Route::get('/partners',[PartnersController::class,'index'] );
     /*PARTNERS END*/
+});
+
+Route::group(['middleware'=>['admin-auth'],'prefix'=>'api'],function(){
+    Route::resource('sous_services', SousServicesController::class)->except([
+        'create'
+    ]);
 });

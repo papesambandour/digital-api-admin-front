@@ -10,7 +10,7 @@
 ?>
 @section('page')
     <div id="app">
-        <div class="page-wrapper" >
+        <div class="page-wrapper">
             <!-- Page-header start -->
             <div class="page-header card">
                 <div class="row align-items-end">
@@ -21,15 +21,21 @@
 
                                 @if(getPartnerI())
                                     <h4>Sous Services Permis pour {{partner()->name}}</h4>
-                                <span>Donne la liste de tous les Sous Services permis pour le partenaire : <span style="color:green;font-weight: bold"> {{partner()->name}}</span>  </span>
+                                    <span>Donne la liste de tous les Sous Services permis pour le partenaire : <span
+                                            style="color:green;font-weight: bold"> {{partner()->name}}</span>  </span>
                                 @else
                                     <h4>Sous Services </h4>
-                                 <span>Donne la liste de tous les Sous Services disponible </span>
+                                    <span>Donne la liste de tous les Sous Services disponible </span>
                                 @endif
                             </div>
                         </div>
                     </div>
                     <div class="col-lg-4">
+                        <button v-on:click="showModalAddService()" type="button"
+                                class="primary-api-digital btn btn-primary btn-outline-primary btn-block ">
+                            <i title="Ajouter un clef" class="ti-plus "></i>
+                            <span style=""> Ajouter une sous services</span>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -63,13 +69,15 @@
                                     <x-partner col_l="3" col_s="3"/>
                                     <div class="col-sm-3">
                                         <button type="submit"
-                                                class="primary-api-digital btn btn-primary btn-outline-primary btn-block"><i
+                                                class="primary-api-digital btn btn-primary btn-outline-primary btn-block">
+                                            <i
                                                 class="icofont icofont-search"></i>Rechercher
                                         </button>
                                     </div>
                                     <div class="col-sm-3">
-                                        <button onclick="window.location.href='/partner/service'" type="button"
-                                                class="warning-api-digital btn btn-primary btn-outline-primary btn-block"><i
+                                        <button onclick="window.location.href='/sous-service'" type="button"
+                                                class="warning-api-digital btn btn-primary btn-outline-primary btn-block">
+                                            <i
                                                 class="icofont icofont-delete"></i>Annuler
                                         </button>
                                     </div>
@@ -82,7 +90,11 @@
                         </div>
                     </div>
                     <div class="card-block table-border-style">
-                        <input type="hidden" id="_data_" value="{{json_encode($sousServices->items())}}">
+                        {{--                        {{dd($sousServices->items())}}--}}
+                        <input type="hidden" id="_data_sous_services" value="{{json_encode($sousServices->items())}}">
+                        <input type="hidden" id="_data_type_services" value="{{json_encode($typeServices)}}">
+                        <input type="hidden" id="_data_services" value="{{json_encode($services)}}">
+                        <input type="hidden" id="_data_partner" value="{{json_encode(partner())}}">
                         <div class="table-wrapper">
                             <table class="fl-table">
                                 <thead>
@@ -103,22 +115,46 @@
                                                 {{$sousService->id}}
                                             </span>
                                         </th>
-                                        <td class="text-left"> <span class="currency"> {{ $sousService->name }} </span> </td>
-                                        <td class="text-left"> <span class=""> {{ $sousService->service->name }} </span> </td>
-                                        <td class="text-left"> <span class="currency"> {{ $sousService->typeService->name }} </span> </td>
+                                        <td class="text-left"><span class="currency"> {{ $sousService->name }} </span>
+                                        </td>
+                                        <td class="text-left"><span class=""> {{ $sousService->service->name }} </span>
+                                        </td>
+                                        <td class="text-left"><span
+                                                class="currency"> {{ $sousService->typeService->name }} </span></td>
 
                                         <td>
                                             {{ $sousService->created_at }}
                                         </td>
                                         <td>
                                             <div class="btn-group dropdown-split-success">
-                                                <button style="background: transparent;color: #4fc3a1;border: none;width: 100%;height: 30px" type="button" class="btn btn-success  dropdown-toggle-split waves-effect waves-light icofont icofont-navigation-menu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <button
+                                                    style="background: transparent;color: #4fc3a1;border: none;width: 100%;height: 30px"
+                                                    type="button"
+                                                    class="btn btn-success  dropdown-toggle-split waves-effect waves-light icofont icofont-navigation-menu"
+                                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                     <span class="sr-only"></span>
                                                 </button>
-                                                <div class="dropdown-menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(113px, 40px, 0px); top: 0px; left: 0px; will-change: transform;">
+                                                <div class="dropdown-menu" x-placement="bottom-start"
+                                                     style="position: absolute; transform: translate3d(113px, 40px, 0px); top: 0px; left: 0px; will-change: transform;">
                                                     <div class="dropdown-divider"></div>
-                                                    <button v-on:click='openModal("{{$sousService->id}}")' type="button"   class="dropdown-item waves-light waves-effect" >Configurer frais</button>
-                                                    <button v-on:click='showDetails("{{$sousService->id}}")' type="button"   class="dropdown-item waves-light waves-effect" >Voir details</button>
+                                                    <button v-on:click='showDetails("{{$sousService->id}}")'
+                                                            type="button"
+                                                            class="dropdown-item waves-light waves-effect pointer">Voir
+                                                        details
+                                                    </button>
+                                                    @if(partner())
+                                                        <button
+                                                            v-on:click='configCommissionModal("{{$sousService->id}}")'
+                                                            type="button"
+                                                            class="dropdown-item waves-light waves-effect pointer">
+                                                            Configurer frais {{partner()->name}}</button>
+                                                    @endif
+                                                    <button v-on:click='showModalUpdateService("{{$sousService->id}}")'
+                                                            type="button"
+                                                            class="dropdown-item waves-light waves-effect pointer">
+                                                        Modifier le services
+                                                    </button>
+
                                                 </div>
                                             </div>
                                         </td>
@@ -139,55 +175,232 @@
         </div>
         <!-- Page-body end -->
 
-        {{--  MODAL START  --}}
+        {{--  MODAL FRAIX START  --}}
 
-        <div class="modal fade" id="modalFraisSouService" tabindex="-1" role="dialog" aria-labelledby="modalFraisSouServiceLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
+        <div class="modal fade" id="modalFraisSouService" tabindex="-1" role="dialog"
+             aria-labelledby="modalFraisSouServiceLabel" aria-hidden="true">
+            <div class="modal-dialog modal-xl" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="modalFraisSouServiceLabel"> @{{ title }}</h5>
+                        <h5 class="modal-title" id="modalFraisSouServiceLabel">
+                            Configuration des frais du service
+                            <span class="currency">
+                                @{{ sousService.name  }}
+                            </span>
+
+                            pour le partenaire
+                            <span class="currency">
+                                @{{ partners.name }}
+                            </span>
+
+                        </h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <div class="modal-body">
-                        ...
-                    </div>
+                    <form v-on:submit.prevent="addCommission()" class="modal-body">
+                        <table class="fl-table">
+                            <thead>
+                            <tr>
+                                <th>Montant de debut</th>
+                                <th>Montant de fin</th>
+                                <th>Taux frais</th>
+                                <th>Montant frais</th>
+                                <th>Taux commission</th>
+                                <th>Montant commission</th>
+                                <th>Options</th>
+
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr v-for="commission in commissions">
+                                <td>@{{ commission.amount_start }}</td>
+                                <td>@{{ commission.amount_end }}</td>
+                                <td>@{{ commission.taux_fee }}</td>
+                                <td>@{{ commission.amount_fee }}</td>
+                                <td>@{{ commission.taux_commission }}</td>
+                                <td>@{{ commission.amount_commssion }}</td>
+                                <td>
+                                    <button class="warning-api-digital btn btn-primary btn-outline-primary btn-block"
+                                            type="button" v-on:click="deleteCommission(commission)">
+                                        <i class="ti-minus"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <div class="form-group row">
+                            <label for="amount_start" class="col-sm-3 col-form-label">Montant de debut</label>
+                            <div class="col-sm-3">
+                                <input :min="getMinStart()" :max="getMinStart()" name="amount_start" id="amount_start" v-model="commission.amount_start"
+                                       type="number"
+                                       class="form-control form-control-normal" placeholder="Montant de debut">
+                            </div>
+
+
+                            <label for="amount_start" class="col-sm-3 col-form-label">Montant de fin</label>
+                            <div class="col-sm-3">
+                                <input :min="getMinEnd()" name="amount_end" id="amount_end" v-model="commission.amount_end" type="number"
+                                       class="form-control form-control-normal" placeholder="Montant de fin">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+
+                            <label for="taux_fee" class="col-sm-3 col-form-label">Taux frais</label>
+                            <div class="col-sm-3">
+                                <input name="taux_fee" id="taux_fee" v-model="commission.taux_fee" type="number"
+                                       class="form-control form-control-normal" placeholder="Taux frais">
+                            </div>
+
+                            <label for="amount_fee" class="col-sm-3 col-form-label">Montant frais</label>
+                            <div class="col-sm-3">
+                                <input name="amount_fee" id="amount_fee" v-model="commission.amount_fee" type="number"
+                                       class="form-control form-control-normal" placeholder="Montant frais">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="taux_commission" class="col-sm-3 col-form-label">Taux commission</label>
+                            <div class="col-sm-3">
+                                <input name="taux_commission" id="taux_commission" v-model="commission.taux_commission"
+                                       type="number"
+                                       class="form-control form-control-normal" placeholder="Taux commission">
+                            </div>
+                            <label for="amount_commssion" class="col-sm-3 col-form-label">Montant commission</label>
+                            <div class="col-sm-3">
+                                <input name="amount_commssion" id="amount_commssion"
+                                       v-model="commission.amount_commssion" type="number"
+                                       class="form-control form-control-normal" placeholder="Montant frais">
+                            </div>
+
+                        </div>
+                        <div class="row">
+                            <button :disabled="isLast()" class="warning-api-digital btn btn-primary btn-outline-primary btn-sm"
+                                    type="submit" >
+                                <i class="ti-plus"></i>
+                            </button>
+                        </div>
+                    </form>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Save changes</button>
+                        <button style="margin: 0 !important;" type="submit"
+                                class="primary-api-digital btn btn-primary btn-outline-primary btn-block"
+                        >Enregistrer
+                        </button>
+                        <button  style="margin: 0 !important;" type="button"
+                                class="btn btn-secondary btn-outline-secondary btn-block" data-dismiss="modal">Fermer
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
-        {{--  MODAL END  --}}
-        {{--  MODAL DETAILS START  --}}
+        {{--  MODAL FRAIX END  --}}
 
-        <div class="modal  fade" id="modalDetails" tabindex="-1" role="dialog" aria-labelledby="modalDetailsLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg" role="document">
-                <div class="modal-content ">
+        {{--  MODAL ADD UPDATE START  --}}
+
+        <div class="modal fade" id="modalEditAdd" tabindex="-1" role="dialog" aria-labelledby="modalEditAddLabel"
+             aria-hidden="true">
+            <form v-on:submit.prevent="submit('edit')" class="modal-dialog modal-xl" role="document">
+                <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="modalDetailsLabel"> Details Sous Service @{{ sousService.name }}</h5>
+                        <h5 class="modal-title" id="modalEditAddLabel">Modification du service @{{ sousService.name
+                            }}</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
-                     <table class="table table-striped table-bordered table-hover table-details">
-                         <tr v-for=" (value,key) in sousServiceMapping">
-                             <td style="width: 50%">
-                                 @{{ sousServiceMapping[key].name || key}}
-                             </td>
+                        {{--INPUT ITEM--}}
+                        {{--                        <div class="form-group row" v-for="(formBuilder,key) in sousServiceMapping"  v-html="formItemBuilder(formBuilder,key,sousService)">--}}
+                        <div class="form-group row" v-for="(formBuilder,key) in sousServiceMapping">
+                            {{--                 DATE START                --}}
+                            <label v-if="(formBuilder.edit || formBuilder.add) " class="col-sm-4 col-form-label">@{{
+                                formBuilder.name }}</label>
+                            <div class="col-sm-8">
+                                <input :disabled="(!formBuilder.add && isAdd) || (!formBuilder.edit && !isAdd) "
+                                       :id="formBuilder.key" :name="formBuilder.key"
+                                       v-if="(formBuilder.edit || formBuilder.add) && formBuilder.type === 'text'"
+                                       v-model="sousService[formBuilder.key]"
+                                       :type="formBuilder.input"
+                                       class="form-control form-control-normal" :placeholder="formBuilder.name">
+                                <textarea :disabled="(!formBuilder.add && isAdd) || (!formBuilder.edit && !isAdd) "
+                                          :id="formBuilder.key" :name="formBuilder.key" rows="5"
+                                          v-if="(formBuilder.edit || formBuilder.add) && formBuilder.type === 'textarea'"
+                                          v-model="sousService[formBuilder.key]"
+                                          :type="formBuilder.input"
+                                          class="form-control form-control-normal" :placeholder="formBuilder.name">
+                                </textarea>
+                                <select :disabled="(!formBuilder.add && isAdd) || (!formBuilder.edit && !isAdd) "
+                                        v-select2 :id="formBuilder.key" :name="formBuilder.key" multiple
+                                        v-if="(formBuilder.edit || formBuilder.add) && formBuilder.type === 'select' && formBuilder.multiple"
+                                        v-model="sousService[formBuilder.key]"
+                                        class="form-control form-control-normal" :placeholder="formBuilder.name">
+                                    {{--                                    <option  value="">Please select one</option>--}}
+                                    <option v-for="(item,key) in formBuilder.items" :value="item.value"> @{{ item.name
+                                        }}
+                                    </option>
+                                </select>
+                                <select :disabled="(!formBuilder.add && isAdd) || (!formBuilder.edit && !isAdd) "
+                                        v-select2 :id="formBuilder.key" :name="formBuilder.key"
+                                        v-if="(formBuilder.edit || formBuilder.add) && formBuilder.type === 'select' && !formBuilder.multiple"
+                                        v-model="sousService[formBuilder.key]"
+                                        class="form-control form-control-normal" :placeholder="formBuilder.name">
+                                    {{--                                    <option  value="">Please select one</option>--}}
+                                    <option v-for="(item,key) in formBuilder.items" :value="item.value">
+                                        @{{ item.name }}
+                                    </option>
+                                </select>
+                                <div v-if=" formBuilder?.no_valid" class="invalid-feedback "> @{{
+                                    formBuilder.no_valid}}
+                                </div>
 
-                             <td  v-html="sousServiceMapping[key].value">
+                            </div>
 
-                             </td>
-                         </tr>
-                     </table>
+                        </div>
+                        {{--INPUT ITEM--}}
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="primary-api-digital btn btn-primary btn-outline-primary btn-block" data-dismiss="modal">Fermer</button>
-{{--                        <button type="button" class="btn btn-primary">Save changes</button>--}}
+                        <button style="margin: 0 !important;" type="submit"
+                                class="primary-api-digital btn btn-primary btn-outline-primary btn-block"
+                        >Enregistrer
+                        </button>
+                        <button style="margin: 0 !important;" type="button"
+                                class="btn btn-secondary btn-outline-secondary btn-block" data-dismiss="modal">Fermer
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        {{--  MODAL ADD UPDATE END  --}}
+        {{--  MODAL DETAILS START  --}}
+
+        <div class="modal  fade" id="modalDetails" tabindex="-1" role="dialog" aria-labelledby="modalDetailsLabel"
+             aria-hidden="true">
+            <div class="modal-dialog modal-xl" role="document">
+                <div class="modal-content ">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalDetailsLabel"> Details Sous Service @{{ sousService.name
+                            }}</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <table class="table table-striped table-bordered table-hover table-details">
+                            <tr v-for=" (value,key) in sousServiceMapping">
+                                <td class="primary-text font-weight-bold" style="width: 50%">
+                                    @{{ sousServiceMapping[key].name}}
+                                </td>
+
+                                <td class="currency" v-html="sousServiceMapping[key].value">
+
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="primary-api-digital btn btn-primary btn-outline-primary btn-block"
+                                data-dismiss="modal">Fermer
+                        </button>
+                        {{--                        <button type="button" class="btn btn-primary">Save changes</button>--}}
                     </div>
                 </div>
             </div>
@@ -197,76 +410,8 @@
 @endsection
 
 @section('js')
+    <script src="/assets/js/components/sous_services.js">
 
-    <script>
-        const app = new Vue({
-            el: '#app',
-            data: {
-                page:1,
-                title:"CONFIGURATION",
-                sousServices: {},
-                sousService: {},
-                sousServiceMapping: {
-
-                },
-
-            },
-            methods: {
-              openModal(idService){
-                  $('#modalFraisSouService').modal('show');
-                  this.sousService= this.getSousService(idService);
-              },
-                showDetails(idService){
-                  $('#modalDetails').modal('show');
-                  this.sousService= this.getSousService(idService);
-                  this.sousServiceMapping= this.mapping(this.sousService);
-                    console.log(this.sousService.regex_message_validation)
-              },
-            mapping(sousService){
-               return {
-                   'id':{
-                       name:'#ID',
-                       value: sousService.id
-                   },
-                   'code':{
-                       name:'Code',
-                       value: sousService.code
-                   },
-                    'name':{
-                        name:'Libelle',
-                        value: sousService.name
-                    },
-                    'service':{
-                        name:'Service',
-                        value: sousService?.service?.name
-                    },
-                    'typeService':{
-                        name:'Type Service',
-                        value: sousService?.typeService?.name
-                    },
-                    'regex_phone':{
-                        name:'Validation Phone',
-                        value: sousService?.regex_phone
-                    },
-                    'regex_message_validation':{
-                        name:'Message de validation',
-                        value: sousService?.regex_message_validation
-                    },
-                    'position_validation_index':{
-                        name:'Position des paramètres',
-                        value: `<pre>${ JSON.stringify(JSON.parse(sousService?.position_validation_index), undefined, 2) } </pre>`
-                    },
-               }
-            },
-            getSousService(idService){
-              return this.sousServices.find((sousService)=> +sousService.id === +idService);
-            }
-            },
-            computed: {},
-            created() {
-            this.sousServices = JSON.parse($("#_data_").val());
-            },
-        });
     </script>
 @endsection
 

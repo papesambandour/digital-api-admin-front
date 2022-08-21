@@ -20,7 +20,7 @@ class DashboardController extends Controller
     }
   public function dashboard(): Factory|View|Application
   {
-      $services  = $this->configServices->services();
+      $services  = $this->configServices->servicesPlate();
       $sousServices = $this->configServices->sousServices();
       return view('pages/dashboard.dashboard',compact('services','sousServices'));
   }

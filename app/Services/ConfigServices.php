@@ -6,6 +6,7 @@ use App\Models\PartenerComptes;
 use App\Models\Parteners;
 use App\Models\Services;
 use App\Models\SousServices;
+use App\Models\TypeServices;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
 
@@ -19,13 +20,18 @@ class ConfigServices
         }
         return $query->get();
     }
-    public function services(): Collection|array
+    public function servicesPlate(): Collection|array
     {
-        $query = Services::query();
+        $query = Services::query()->where('state',STATE['ACTIVED']);
+        return $query->get();
+    }
+    public function typeServicesPlate(): Collection|array
+    {
+        $query = TypeServices::query()->where('state',STATE['ACTIVED']);
         return $query->get();
     }
 
-    public function servicesPaginate(): LengthAwarePaginator
+    public function sousServicesPaginate(): LengthAwarePaginator
     {
         $query = SousServices::query();
         if(getPartnerI()){
@@ -37,7 +43,7 @@ class ConfigServices
         if(request('date_end')){
             $query->where('created_at','<=',dateFilterEnd(request('date_end')));
         }
-        return $query->orderBy('id','DESC')->with('service')->with('typeService')->paginate(size());
+        return $query->orderBy('id','DESC')->with('service')->with('typeService')->with('commissions')->paginate(size());
     }
     public function apikeyPaginate(): LengthAwarePaginator
     {

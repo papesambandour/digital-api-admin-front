@@ -254,3 +254,31 @@ li.page-item > a:hover{
     background: #4680ff !important;
 }
 /******************************TABL****************************/
+.pointer{
+    cursor: pointer;
+}
+.modal-xl{
+    min-width: 1140px !important;
+}
+.primary-text{
+    color: #324960 !important;
+}
+.logo-service{
+    width: 100px;
+    height: 100px;
+    object-fit: contain;
+}
+.select2-container {
+    width: 100% !important;
+    z-index: 1000 !important;
+}
+.invalid-feedback{
+    display: block !important;
+}
+[id^="NotiflixReportWrap"] {
+    z-index: 9999999999999 !important;
+}
+.bg-green {
+    background: #4fc3a1;
+    margin: 0 !important;border: none;cursor: pointer
+}

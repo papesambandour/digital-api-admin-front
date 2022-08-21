@@ -19,12 +19,14 @@ class ConfigurationController extends Controller
     {
         $this->configServices = $configServices;
     }
-    public function service(): Factory|View|Application
+    public function serviceSous(): Factory|View|Application
     {
-        $sousServices = $this->configServices->servicesPaginate();
+        $sousServices = $this->configServices->sousServicesPaginate();
+        $services= $this->configServices->servicesPlate();
+        $typeServices= $this->configServices->typeServicesPlate();
         $date_start= request('date_start');
         $date_end= request('date_end');
-        return view('pages/config.sous_service',compact('sousServices','date_start','date_end'));
+        return view('pages/config.sous_service',compact('typeServices','services','sousServices','date_start','date_end'));
     }
     /*public function apikey(): Factory|View|Application
     {

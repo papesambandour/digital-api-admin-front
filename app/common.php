@@ -7,7 +7,34 @@ use App\Models\Users;
 use JetBrains\PhpStorm\ArrayShape;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
+function  tox64($path): string
+{
+    if(!$path){
+        $path ='img/pro-medical.png';
+    }
+    if(substr($path,0,4) === 'http'){
+        $path = base_path() . '/public/storage' . explode('storage',$path)[1] ;
+    }else{
+        $path = base_path() . '/public/' . $path ;
+    }
+    $type = pathinfo($path, PATHINFO_EXTENSION);
+    $data = file_get_contents($path);
 
+    return 'data:file/' . $type . ';base64,' . base64_encode($data);
+
+}
+$isSeed = false;
+
+function str_without_accents($str, $charset='utf-8'): array|string|null
+{
+    $str = htmlentities($str, ENT_NOQUOTES, $charset);
+
+    $str = preg_replace('#&([A-za-z])(?:acute|cedil|caron|circ|grave|orn|ring|slash|th|tilde|uml);#', '\1', $str);
+    $str = preg_replace('#&([A-za-z]{2})(?:lig);#', '\1', $str); // pour les ligatures e.g. '&oelig;'
+    // supprime les autres caractères
+
+    return preg_replace('#&[^;]+;#', '', $str);   // or add this : mb_strtoupper($str); for uppercase :)
+}
 #[ArrayShape(["first_name" => "string",  "parteners_id" => "string", "solde" => "string"])] function _auth():?Users
 {
     /**
@@ -200,7 +227,11 @@ function soldeService(int $serviceId){
 }
 
 function partner(): ?Parteners{
- return Parteners::find(getPartnerI());
+ $partner =  Parteners::find(getPartnerI());
+ if(!$partner){
+     //dd("Le partner n'exist pas");
+ }
+ return $partner;
 }
 function partnerName(): string{
  $partner = partner();

@@ -62,9 +62,9 @@
         <ul class="pcoded-item pcoded-left-item">
 
             <li class="active">
-                <a href="/service">
+                <a href="/sous-service">
                     <span class="pcoded-micon"><i class="ti-direction-alt"></i><b>D</b></span>
-                    <span class="pcoded-mtext" >Services</span>
+                    <span class="pcoded-mtext" >Sous Services</span>
                     <span class="pcoded-mcaret"></span>
                 </a>
             </li>
