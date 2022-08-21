@@ -225,7 +225,10 @@ function gainIntech(){
 function soldeService(int $serviceId){
   return  Phones::query()->where('services_id',$serviceId)->sum('solde');
 }
-
+function partnerDetail(): bool
+{
+    return (int)request('partner_details') === 1;
+}
 function partner(): ?Parteners{
  $partner =  Parteners::find(getPartnerI());
  if(!$partner){

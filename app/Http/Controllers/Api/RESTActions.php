@@ -614,7 +614,7 @@ trait RESTActions {
             }
             $response = $m::create($request->except(['state','statut']));
             $response = $m::find($response->id);
-            return Utils::respond('created',  $request->all());
+            return Utils::respond('created',  $response);
             /*
             |--------------------------------------------------------------------------------------------\
             |                               STORE END                                           |

@@ -122,7 +122,7 @@
                                                 <a class="dropdown-item waves-light waves-effect" href="/mvm-compte?_partener_={{$partner->id}}">Mouvements comptes</a>
                                                 <a class="dropdown-item waves-light waves-effect" href="/transaction?_partener_={{$partner->id}}">Afficher ses transactions</a>
                                                 <a class="dropdown-item waves-light waves-effect" href="/?_partener_={{$partner->id}}">Dashboard</a>
-                                                <a class="dropdown-item waves-light waves-effect" href="/service/?_partener_={{$partner->id}}">Services Permis</a>
+                                                <a class="dropdown-item waves-light waves-effect" href="/sous-service/?_partener_={{$partner->id}}&partner_details=1">Services Permis & Configuration frais</a>
 {{--                                                <a class="dropdown-item waves-light waves-effect" href="#">Lister les services</a>--}}
 {{--                                                <a class="dropdown-item waves-light waves-effect" href="#">Gain Générer à partir du partenaires</a>--}}
                                             </div>

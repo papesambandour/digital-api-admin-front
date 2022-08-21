@@ -31,11 +31,13 @@
                         </div>
                     </div>
                     <div class="col-lg-4">
+                        @if( !partnerDetail())
                         <button v-on:click="showModalAddService()" type="button"
                                 class="primary-api-digital btn btn-primary btn-outline-primary btn-block ">
                             <i title="Ajouter un clef" class="ti-plus "></i>
                             <span style=""> Ajouter une sous services</span>
                         </button>
+                            @endif
                     </div>
                 </div>
             </div>
@@ -147,12 +149,18 @@
                                                             v-on:click='configCommissionModal("{{$sousService->id}}")'
                                                             type="button"
                                                             class="dropdown-item waves-light waves-effect pointer">
-                                                            Configurer frais {{partner()->name}}</button>
+                                                            Configurer frais <span class="currency"> {{partner()->name}}</span></button>
+
+                                                        <button
+                                                            v-on:click='addSubServiceModal("{{$sousService->id}}")'
+                                                            type="button"
+                                                            class="dropdown-item waves-light waves-effect pointer">
+                                                            Configurer sous services pour <span class="currency"> {{partner()->name}}</span>  </button>
                                                     @endif
                                                     <button v-on:click='showModalUpdateService("{{$sousService->id}}")'
                                                             type="button"
                                                             class="dropdown-item waves-light waves-effect pointer">
-                                                        Modifier le services
+                                                        Modifier le service
                                                     </button>
 
                                                 </div>
