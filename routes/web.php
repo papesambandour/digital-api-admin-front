@@ -1,6 +1,9 @@
 <?php
 
+use App\Http\Controllers\Api\CommissionController;
 use App\Http\Controllers\Api\SousServicesController;
+use App\Http\Controllers\Api\SousServicesPartnersController;
+use App\Http\Controllers\Api\SousServicesPhonesController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ConfigurationController;
 use App\Http\Controllers\DashboardController;
@@ -68,4 +71,14 @@ Route::group(['middleware'=>['admin-auth'],'prefix'=>'api'],function(){
     Route::resource('sous_services', SousServicesController::class)->except([
         'create'
     ]);
+    Route::resource('sous_services_partners', SousServicesPartnersController::class)->except([
+        'create'
+    ]);
+    Route::resource('sous_services_phones', SousServicesPhonesController::class)->except([
+        'create'
+    ]);
+    Route::resource('commission', CommissionController::class)->except([
+        'create'
+    ]);
 });
+

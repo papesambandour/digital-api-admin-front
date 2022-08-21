@@ -1,10 +1,12 @@
 const app = new Vue({
     el: '#app',
     data: {
-        url: '/api/sous_services',
+        url_sous_services: '/api/sous_services',
+        url_commission: '/api/commission',
         page: 1,
         isAdd: true,
         showModal: false,
+        frais:false,
         title: "CONFIGURATION",
         typeServices: {},
         sousServices: [],
@@ -21,6 +23,8 @@ const app = new Vue({
                 amount_fee: 0,
                 parteners_id: 0,
                 sous_services_id: 0,
+                commission_is_fixe: 0,
+                fee_is_fixe: 0,
             }
         ],
         partners: {},
@@ -33,16 +37,16 @@ const app = new Vue({
             amount_fee: 0,
             parteners_id: 0,
             sous_services_id: 0,
+            commission_is_fixe: 0,
+            fee_is_fixe: 0,
         }
 
     },
     methods: {
-        configCommissionModal(idService) {
+        async configCommissionModal(idService) {
             $('#modalFraisSouService').modal('show');
             this.sousService = this.getSousService(idService);
-            this.commissions = this.sousService.commissions?.filter((commission) => {
-                return commission.parteners_id = this.partners.id
-            });
+            this.commissions = await CommissionService.getCommissionByPartnerAndService(this.partners.id,this.sousService.id);
             this.commission.parteners_id = this.partners.id;
             this.commission.sous_services_id = this.sousService.id;
             console.log(this.commissions);
@@ -83,7 +87,7 @@ const app = new Vue({
         async submit(action) {
             let sent = Helper.copy(this.sousService);
             let id = this.sousService.id;
-            let url = this.isAdd ? this.url : `${this.url}/${id}`
+            let url = this.isAdd ? this.url_sous_services : `${this.url_sous_services}/${id}`
             this.unNormalize(sent);
             sent = Helper.sanitize(sent, this.isAdd ? 'add' : 'edit', this.sousServiceMapping)
             console.log(sent);
@@ -633,41 +637,96 @@ const app = new Vue({
                 }
             })
         },
-        addCommission() {
-            console.log('Commission', this.commission);
-            this.commissions.push(Helper.copy(this.commission));
-            this.commission = {
-                amount_start: 0,
-                amount_end: 0,
-                amount_commssion: 0,
-                taux_commission: 0,
-                taux_fee: 0,
-                amount_fee: 0,
-                parteners_id: 0,
-                sous_services_id: 0,
-            };
-        },
-        deleteCommission(deleteCommission) {
-            if (confirm('Vous-vous supprimer le frais')) {
-                console.log(deleteCommission);
-                this.commissions = this.commissions.filter((commission) => {
-                    return commission.id !== deleteCommission.id
-                })
+       async addCommission() {
+            if(confirm('Êtes-vous  sure de vouloir ajouter ces frais')){
+                console.log('Commission', this.commission);
+                let sent = Helper.copy(this.commission);
+                let res = await CommissionService.addCommission(sent)
+                if(res.code === 201){
+                    this.commission.id = res.data.id ;
+                    this.commissions.push(Helper.copy(this.commission));
+                    this.commission = {
+                        amount_start: 0,
+                        amount_end: 0,
+                        amount_commssion: 0,
+                        taux_commission: 0,
+                        taux_fee: 0,
+                        amount_fee: 0,
+                        parteners_id: this.partners.id,
+                        sous_services_id: this.sousService.id,
+                        commission_is_fixe: 0,
+                        fee_is_fixe: 0,
+                    };
+                    Notiflix
+                        .Report
+                        .info(
+                            'SUCCÈS',
+                            'Frais ajouter avec succès',
+                            'FERMER',
+                            {
+                                svgSize: '42px',
+                                messageMaxLength: 100000,
+                                plainText: true,
+                            },
+                        );
+                }else{
+                    Notiflix
+                        .Report
+                        .info(
+                            'ERREUR',
+                            res.msg || 'Une erreur est survenue !',
+                            'FERMER',
+                            {
+                                svgSize: '42px',
+                                messageMaxLength: 100000,
+                                plainText: true,
+                            },
+                        );
+                }
             }
-            /*   Notiflix
-                   .Confirm
-                   .show('Ajout clé API ','Vous-vous supprimer le frais',
-                       'Oui',
-                       'Non',
-                       () => {
-                           console.log(deleteCommission);
-                           this.commissions = this.commissions.filter((commission)=>{
-                               return commission.id !== deleteCommission.id
-                           })
-
-                       },
-                       () => {console.log('If you say so...');},
-                       { messageMaxLength: 90000,},);*/
+        },
+        isTheLastComm(commission){
+          return CommissionService.isTheLastComm(commission,this.commissions)  ;
+        },
+       async deleteCommission(deleteCommission,$event) {
+           $event.disabled = true;
+            if (confirm('Vous-vous supprimer le frais')) {
+                let res = await CommissionService.deleteCommission(deleteCommission.id);
+                if(res){
+                    this.commissions = this.commissions.filter((commission) => {
+                        return commission.id !== deleteCommission.id
+                    });
+                    $event.disabled = false;
+                    Notiflix
+                        .Report
+                        .info(
+                            'SUCCÈS',
+                            'Frais supprimé',
+                            'FERMER',
+                            {
+                                svgSize: '42px',
+                                messageMaxLength: 100000,
+                                plainText: true,
+                            },
+                        );
+                }else {
+                    $event.disabled = false;
+                    Notiflix
+                        .Report
+                        .info(
+                            'ERREUR',
+                            'Une erreur est survenue !',
+                            'FERMER',
+                            {
+                                svgSize: '42px',
+                                messageMaxLength: 100000,
+                                plainText: true,
+                            },
+                        );
+                }
+            }else {
+                $event.disabled = false;
+            }
         },
         getMinStart(){
             if(this.commissions.length){

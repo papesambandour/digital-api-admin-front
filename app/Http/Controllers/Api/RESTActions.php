@@ -393,7 +393,6 @@ trait RESTActions {
             |                               OTHERS RESPONSE  START                                           |
             |--------------------------------------------------------------------------------------------/
             */
-            return $model->get();
             return Utils::respond('done', $model->get());
             /*
             |--------------------------------------------------------------------------------------------\
@@ -788,6 +787,25 @@ trait RESTActions {
             |--------------------------------------------------------------------------------------------/
             */
 
+        } catch (\Exception $e) {
+            if(getenv('APP_DEBUG') == 'true'){
+                return Utils::respond('error', $e->getMessage(),true) ;
+            }else{
+                return Utils::respond('error',[],true) ;
+            }
+        }
+    }
+
+    public function realDelete($id,Request $request)
+    {
+        try {
+            $m = self::MODEL;
+            $model = $m::find($id);
+            if (is_null($model)) {
+                return Utils::respond('not_found',[],true);
+            }
+            $m::destroy($id);
+            return Utils::respond('removed');
         } catch (\Exception $e) {
             if(getenv('APP_DEBUG') == 'true'){
                 return Utils::respond('error', $e->getMessage(),true) ;

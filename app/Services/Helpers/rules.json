@@ -35,8 +35,7 @@
         "commission_is_fixe": "required|boolean",
         "fee_is_fixe": "required|boolean",
         "parteners_id": "required|integer|min:-2147483648|max:2147483647",
-        "sous_services_id": "required|integer|min:-2147483648|max:2147483647",
-        "state": "required"
+        "sous_services_id": "required|integer|min:-2147483648|max:2147483647"
     },
     "country": {
         "name": "required|max:255",
@@ -222,13 +221,11 @@
     },
     "sous_services_parteners": {
         "sous_services_id": "required|integer|min:-2147483648|max:2147483647",
-        "parteners_id": "required|integer|min:-2147483648|max:2147483647",
-        "state": "required"
+        "parteners_id": "required|integer|min:-2147483648|max:2147483647"
     },
     "sous_services_phones": {
         "sous_services_id": "required|integer|min:-2147483648|max:2147483647",
-        "phones_id": "required|integer|min:-2147483648|max:2147483647",
-        "state": "required"
+        "phones_id": "required|integer|min:-2147483648|max:2147483647"
     },
     "transactions": {
         "type_operation": "required",

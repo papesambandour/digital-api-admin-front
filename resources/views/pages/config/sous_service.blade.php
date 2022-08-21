@@ -221,63 +221,66 @@
                                 <td>@{{ commission.taux_commission }}</td>
                                 <td>@{{ commission.amount_commssion }}</td>
                                 <td>
-                                    <button class="warning-api-digital btn btn-primary btn-outline-primary btn-block"
-                                            type="button" v-on:click="deleteCommission(commission)">
+                                    <button v-if="isTheLastComm(commission)" class="warning-api-digital btn btn-primary btn-outline-primary btn-block"
+                                            type="button" v-on:click="deleteCommission(commission,$event)">
                                         <i class="ti-minus"></i>
                                     </button>
                                 </td>
                             </tr>
                             </tbody>
                         </table>
-                        <div class="form-group row">
-                            <label for="amount_start" class="col-sm-3 col-form-label">Montant de debut</label>
-                            <div class="col-sm-3">
-                                <input :min="getMinStart()" :max="getMinStart()" name="amount_start" id="amount_start" v-model="commission.amount_start"
-                                       type="number"
-                                       class="form-control form-control-normal" placeholder="Montant de debut">
-                            </div>
+                        <hr class="hr">
+                        <div style="margin-top:50px" v-if="!isLast()">
+                            <div class="form-group row" >
+                                <label for="amount_start" class="col-sm-3 col-form-label">Montant de debut</label>
+                                <div class="col-sm-3">
+                                    <input :min="getMinStart()" :max="getMinStart()" name="amount_start" id="amount_start" v-model="commission.amount_start"
+                                           type="number"
+                                           class="form-control form-control-normal" placeholder="Montant de debut">
+                                </div>
 
 
-                            <label for="amount_start" class="col-sm-3 col-form-label">Montant de fin</label>
-                            <div class="col-sm-3">
-                                <input :min="getMinEnd()" name="amount_end" id="amount_end" v-model="commission.amount_end" type="number"
-                                       class="form-control form-control-normal" placeholder="Montant de fin">
+                                <label for="amount_start" class="col-sm-3 col-form-label">Montant de fin</label>
+                                <div class="col-sm-3">
+                                    <input :min="getMinEnd()" name="amount_end" id="amount_end" v-model="commission.amount_end" type="number"
+                                           class="form-control form-control-normal" placeholder="Montant de fin">
+                                </div>
                             </div>
-                        </div>
-                        <div class="form-group row">
+                            <div class="form-group row">
 
-                            <label for="taux_fee" class="col-sm-3 col-form-label">Taux frais</label>
-                            <div class="col-sm-3">
-                                <input name="taux_fee" id="taux_fee" v-model="commission.taux_fee" type="number"
-                                       class="form-control form-control-normal" placeholder="Taux frais">
-                            </div>
+                                <label for="taux_fee" class="col-sm-3 col-form-label">Taux frais</label>
+                                <div class="col-sm-3">
+                                    <input name="taux_fee" id="taux_fee" v-model="commission.taux_fee" type="number"
+                                           class="form-control form-control-normal" placeholder="Taux frais">
+                                </div>
 
-                            <label for="amount_fee" class="col-sm-3 col-form-label">Montant frais</label>
-                            <div class="col-sm-3">
-                                <input name="amount_fee" id="amount_fee" v-model="commission.amount_fee" type="number"
-                                       class="form-control form-control-normal" placeholder="Montant frais">
+                                <label for="amount_fee" class="col-sm-3 col-form-label">Montant frais</label>
+                                <div class="col-sm-3">
+                                    <input name="amount_fee" id="amount_fee" v-model="commission.amount_fee" type="number"
+                                           class="form-control form-control-normal" placeholder="Montant frais">
+                                </div>
                             </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="taux_commission" class="col-sm-3 col-form-label">Taux commission</label>
-                            <div class="col-sm-3">
-                                <input name="taux_commission" id="taux_commission" v-model="commission.taux_commission"
-                                       type="number"
-                                       class="form-control form-control-normal" placeholder="Taux commission">
-                            </div>
-                            <label for="amount_commssion" class="col-sm-3 col-form-label">Montant commission</label>
-                            <div class="col-sm-3">
-                                <input name="amount_commssion" id="amount_commssion"
-                                       v-model="commission.amount_commssion" type="number"
-                                       class="form-control form-control-normal" placeholder="Montant frais">
-                            </div>
+                            <div class="form-group row">
+                                <label for="taux_commission" class="col-sm-3 col-form-label">Taux commission</label>
+                                <div class="col-sm-3">
+                                    <input name="taux_commission" id="taux_commission" v-model="commission.taux_commission"
+                                           type="number"
+                                           class="form-control form-control-normal" placeholder="Taux commission">
+                                </div>
+                                <label for="amount_commssion" class="col-sm-3 col-form-label">Montant commission</label>
+                                <div class="col-sm-3">
+                                    <input name="amount_commssion" id="amount_commssion"
+                                           v-model="commission.amount_commssion" type="number"
+                                           class="form-control form-control-normal" placeholder="Montant frais">
+                                </div>
 
-                        </div>
-                        <div class="row">
-                            <button :disabled="isLast()" class="warning-api-digital btn btn-primary btn-outline-primary btn-sm"
-                                    type="submit" >
-                                <i class="ti-plus"></i>
-                            </button>
+                            </div>
+                            <div class="text-center">
+                                <button :disabled="isLast()" class="primary-api-digital btn btn-primary btn-outline-primary "
+                                        type="submit" >
+                                    <i class="ti-plus"></i> Ajouter une ligne de frais
+                                </button>
+                            </div>
                         </div>
                     </form>
                     <div class="modal-footer">

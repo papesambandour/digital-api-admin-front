@@ -270,7 +270,7 @@ li.page-item > a:hover{
 }
 .select2-container {
     width: 100% !important;
-    z-index: 1000 !important;
+    z-index: 9999999999 !important;
 }
 .invalid-feedback{
     display: block !important;
@@ -281,4 +281,8 @@ li.page-item > a:hover{
 .bg-green {
     background: #4fc3a1;
     margin: 0 !important;border: none;cursor: pointer
+}
+.hr{
+    border-top: 1px solid #000; width: 100%;display: block;
+    margin-top:50px;
 }

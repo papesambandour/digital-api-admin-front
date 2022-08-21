@@ -28,6 +28,9 @@ class  HttpClient {
     static get(url){
       return HttpClient.http(url, "GET");
     }
+    static delete(url){
+      return HttpClient.http(url, "DELETE");
+    }
     static post(url, body){
       return HttpClient.http(url, "POST", body);
     }
@@ -81,12 +84,12 @@ class Helper{
     static copy(object) {
         return JSON.parse(JSON.stringify(object));
     }
-    static async handleResponseApiSaveUpdate(url,sent,isAdd,modelMapping){
+    static async handleResponseApiSaveUpdate(url,sent,isAdd,modelMapping,code=2001){
         try {
             const rest =isAdd
                 ? await HttpClient.post(url,sent)
                 : await HttpClient.put(url,sent)
-            if(rest.code === 201) {
+            if(rest.code === code) {
                 Notiflix
                     .Report
                     .info(
@@ -121,10 +124,10 @@ class Helper{
             console.log('EERRRRRRRER',e);
         }
     }
-    static async handleResponseApiShow(url){
+    static async handleResponseApiShow(url,code=200){
         try {
             const rest = await HttpClient.get(url);
-            if(rest.code === 200) {
+            if(rest.code === code) {
                return rest.data ;
             }else{
                 Notiflix
@@ -143,6 +146,32 @@ class Helper{
             }
         } catch (e) {
             console.log('EERRRRRRRER',e);
+            return  null;
+        }
+    }
+    static async handleResponseApiDelete(url,code=204){
+        try {
+            const rest = await HttpClient.delete(url);
+            if(rest.code === code) {
+               return rest.data ;
+            }else{
+                /*Notiflix
+                    .Report
+                    .info(
+                        'Erreur',
+                        rest.msg,
+                        'FERMER',
+                        {
+                            svgSize: '42px',
+                            messageMaxLength: 100000,
+                            plainText: true,
+                        },
+                    );*/
+                return null;
+            }
+        } catch (e) {
+            console.log('EERRRRRRRER',e);
+            return  null;
         }
     }
 
@@ -164,5 +193,36 @@ class Helper{
             names += dataItem[name[i]]  + separator
         }
         return names;
+    }
+}
+
+class CommissionService{
+    static url_commission = '/api/commission';
+    static async getCommissionByPartnerAndService(partnersId,sousServiceId){
+       let res =  await HttpClient.get(`${CommissionService.url_commission}?where=parteners_id|e|${partnersId},sous_services_id|e|${sousServiceId }`);
+       if(res.code ===200){
+           return res.data ;
+       }else {
+           throw new Error("Une erreur est survenue");
+       }
+    }
+    static async addCommission(data){
+        return await HttpClient.post(`${CommissionService.url_commission}`, data);
+    }
+    static async deleteCommission(idCommission){
+        try {
+            const rest = await HttpClient.delete( `${CommissionService.url_commission}/${idCommission}`);
+            if(rest.code === 204) {
+                return rest.data ;
+            }else{
+                return null;
+            }
+        } catch (e) {
+            console.log('EERRRRRRRER',e);
+            return  null;
+        }
+    }
+    static isTheLastComm(commission,commissions){
+        return commissions[commissions.length - 1].id === commission.id ;
     }
 }
