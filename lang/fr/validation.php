@@ -175,5 +175,7 @@ return [
         'time'                  => 'heure',
         'available'             => 'disponible',
         'size'                  => 'taille',
+        'amount_confirm'                  => 'montant confirmation',
+        'amount'                  => 'montant',
     ],
 ];

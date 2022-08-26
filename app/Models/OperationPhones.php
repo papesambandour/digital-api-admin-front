@@ -31,7 +31,7 @@ class OperationPhones extends Model
     /**
      * @var array
      */
-    protected $fillable = ['phones_id', 'operation_phones_id', 'commentaire', 'amount', 'state', 'created_at', 'updated_at', 'type_operation', 'statut', 'date_creation', 'date_success', 'date_canceled', 'date_processing', 'date_failled', 'operation', 'solde_before', 'solde_after'];
+    protected $fillable = ['users_id','phones_id', 'operation_phones_id', 'commentaire', 'amount', 'state', 'created_at', 'updated_at', 'type_operation', 'statut', 'date_creation', 'date_success', 'date_canceled', 'date_processing', 'date_failled', 'operation', 'solde_before', 'solde_after'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

@@ -619,6 +619,26 @@ class Utils
         }
         return $rule_key;
     }
+    public static function getRuleModel($model, $id = false, $input = []): array
+    {
+        $table = $model->getTable();
+        $rule_key = static::getContentRule($table);
+        if ($id) {
+            array_walk($rule_key, function ($value, $key) use (&$rule_key, $id, $table, $input) {
+                if (isset($input[$key])) {
+                    if (preg_match("/(\|)?unique([^|])*(\|)?/", $rule_key[$key])) {
+
+                        $rule_key[$key] = preg_replace("/(\|)?unique([^|])*(\|)?/", "|unique:$table,$key,$id", $rule_key[$key]);
+
+                    }
+                } else {
+                    unset($rule_key[$key]);
+                }
+
+            });
+        }
+        return $rule_key;
+    }
 
     public static function respond($status, $data = [], $error = false, $json = true): JsonResponse|array
     {

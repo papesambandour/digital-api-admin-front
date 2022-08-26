@@ -4,6 +4,7 @@ const app = new Vue({
         url_sous_services: '/api/sous_services',
         url_commission: '/api/commission',
         page: 1,
+        init: false,
         isAdd: true,
         showModal: false,
         frais:false,
@@ -12,6 +13,8 @@ const app = new Vue({
         sousServices: [],
         services: {},
         sousService: {},
+        sousServicePartners: [],
+        allSousServices: [],
         sousServiceMapping: {},
         commissions: [
             {
@@ -65,6 +68,53 @@ const app = new Vue({
         unNormalize(sousService) {
             sousService.when_status_for_callback = sousService?.when_status_for_callback?.join('|');
             sousService.when_pre_status_for_callback = sousService?.when_pre_status_for_callback?.join('|');
+        },
+       async addSubServiceModal() {
+           this.init = true;
+            this.isAdd = false;
+            this.allSousServices =  await SousServices.getSousServices();
+            this.sousServicePartners =  await SousServicesPartners.getSousServicePartners(this.partners.id);
+           this.sousServicePartners = this.sousServicePartners?.map((ssp)=>{
+               return ssp.sous_services_id
+           });
+            $('#addSubServiceModal').modal('show');
+            console.log(this.sousService);
+           Helper.select2('_autorise_service');
+        },
+        async saveSubServicePermit(){
+         let res=  await SousServicesPartners.add(this.partners,this.sousServicePartners);
+             if(res){
+                 $('#addSubServiceModal').modal('hide');
+                 Notiflix
+                     .Report
+                     .info(
+                         'SUCCÈS',
+                         'Souscription effectué avec succès',
+                         'FERMER',
+                         {
+                             svgSize: '42px',
+                             messageMaxLength: 100000,
+                             plainText: true,
+                         },
+                     );
+                 setTimeout(function(){
+                     window.location.reload();
+                 },1000)
+
+             }else {
+                 Notiflix
+                     .Report
+                     .info(
+                         'Erreur',
+                         'La souscription a échoué',
+                         'FERMER',
+                         {
+                             svgSize: '42px',
+                             messageMaxLength: 100000,
+                             plainText: true,
+                         },
+                     );
+             }
         },
         showModalUpdateService(idService) {
             this.isAdd = false;
@@ -760,6 +810,7 @@ const app = new Vue({
         this.typeServices = JSON.parse($("#_data_type_services").val()) || {};
         this.partners = JSON.parse($("#_data_partner").val()) || {};
         this.sousService = {};
+        this.sousServicePartners = [];
     },
 });
 
@@ -773,6 +824,6 @@ Vue.directive('select2', {
         $(el).on('select2:unselect', () => {
             const event = new Event('change', {bubbles: true, cancelable: true})
             el.dispatchEvent(event)
-        })
+        });
     },
 });

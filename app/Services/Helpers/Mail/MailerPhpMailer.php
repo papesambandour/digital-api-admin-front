@@ -1,14 +1,14 @@
 <?php
 
 
-namespace App\helper;
-use App\User;
-use PHPMailer\PHPMailer\PHPMailer;
+namespace App\Services\Helpers\Mail;
 use PHPMailer\PHPMailer\Exception;
+use PHPMailer\PHPMailer\PHPMailer;
 
-class Mailer
+class MailerPhpMailer
 {
-    public static function sendMailHopitalV1($data=[], $to=''){
+    public  function genericSend($data=[], $to=''): int|string
+    {
 
         $host = env('MAIL_HOST');
         $username = env('MAIL_USERNAME');
@@ -21,7 +21,7 @@ class Mailer
                 $mail->CharSet = 'UTF-8';
                 // Passing `true` enables exceptions
                 $mail->isSMTP();
-                //$mail->SMTPDebug  = 2;
+              //  $mail->SMTPDebug  = 2;
                 $mail->Host = $host;  // Specify main and backup SMTP servers
                 $mail->SMTPAuth = true;
                 $mail->Username = $username;                 // SMTP username

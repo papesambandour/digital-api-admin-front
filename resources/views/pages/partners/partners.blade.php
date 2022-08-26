@@ -11,6 +11,11 @@
 @section('page')
 
     <div class="page-wrapper">
+        <div class="col-md-12">
+            @if(Session::has('success'))
+                <p class="alert alert-success">{{ Session::get('success') }}</p>
+            @endif
+        </div>
         <!-- Page-header start -->
         <div class="page-header card">
             <div class="row align-items-end">
@@ -24,6 +29,12 @@
                     </div>
                 </div>
                 <div class="col-lg-4">
+                        <button onclick="window.location.href='/partners/create'" type="button"
+                                class="primary-api-digital btn btn-primary btn-outline-primary btn-block ">
+                            <i title="Ajouter un clef" class="ti-plus "></i>
+                            <span style=""> Ajouter un partenaire</span>
+                        </button>
+
                 </div>
             </div>
         </div>
@@ -117,7 +128,8 @@
                                             </button>
                                             <div class="dropdown-menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(113px, 40px, 0px); top: 0px; left: 0px; will-change: transform;">
                                                 <div class="dropdown-divider"></div>
-                                                <a class="dropdown-item waves-light waves-effect" href="#">Verser</a>
+                                                <a class="dropdown-item waves-light waves-effect" href="/partners/versement/{{$partner->id}}">Verser</a>
+                                                <a class="dropdown-item waves-light waves-effect" href="/partners/{{$partner->id}}/edit">Modifier infos</a>
                                                 <a class="dropdown-item waves-light waves-effect" href="/versement?_partener_={{$partner->id}}">Versements</a>
                                                 <a class="dropdown-item waves-light waves-effect" href="/mvm-compte?_partener_={{$partner->id}}">Mouvements comptes</a>
                                                 <a class="dropdown-item waves-light waves-effect" href="/transaction?_partener_={{$partner->id}}">Afficher ses transactions</a>

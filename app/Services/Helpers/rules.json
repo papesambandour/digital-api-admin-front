@@ -123,18 +123,10 @@
         "state": "required"
     },
     "parteners": {
-        "state": "required",
-        "solde": "required|numeric",
-        "amount_reserved": "required|numeric",
         "name": "required|max:255",
         "phone": "required|max:255|unique:parteners,phone",
         "email": "required|max:255|unique:parteners,email",
-        "adress": "nullable",
-        "password": "required|max:255",
-        "first_connection": "required|boolean",
-        "password_expired": "nullable|date",
-        "password_duration_day": "required|integer|min:-2147483648|max:2147483647",
-        "solde_commission": "required|numeric"
+        "adress": "nullable"
     },
     "phones": {
         "solde": "required|numeric",

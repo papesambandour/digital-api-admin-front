@@ -8,6 +8,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ConfigurationController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PartnersController;
+use App\Http\Controllers\PhonesController;
 use App\Http\Controllers\TransactionsController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\URL;
@@ -63,7 +64,12 @@ Route::group(['middleware'=>['admin-auth']],function(){
     /*CONFIGURATIONS END*/
 
     /*PARTNERS END*/
-    Route::get('/partners',[PartnersController::class,'index'] );
+    Route::get('/partners/versement/{id}',[PartnersController::class ,'versement']);
+    Route::post('/partners/versement/{id}',[PartnersController::class ,'versementSave']);
+    Route::resource('/partners',PartnersController::class );
+    /*PARTNERS END*/
+    /*PARTNERS END*/
+    Route::resource('/phones', PhonesController::class );
     /*PARTNERS END*/
 });
 

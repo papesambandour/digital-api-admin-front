@@ -40,6 +40,12 @@ class  HttpClient {
 }
 
 class Helper{
+    static select2(id) {
+        setTimeout(() => {
+            $(`#${id}`).select2();
+        },500)
+
+    }
     static activeSelect2(id, formBuilder) {
         if (formBuilder.type == 'select') {
             console.log(`#${id}`)
@@ -226,3 +232,37 @@ class CommissionService{
         return commissions[commissions.length - 1].id === commission.id ;
     }
 }
+class SousServices{
+    static url_sous_services = '/api/sous_services';
+    static async getSousServices(){
+        let res =  await HttpClient.get(`${SousServices.url_sous_services}?where=state|e|ACTIVED`);
+        if(res.code ===200){
+            return res.data ;
+        }else {
+            throw new Error("Une erreur est survenue");
+        }
+    }
+}
+class SousServicesPartners{
+    static url_sous_services_partners = '/api/sous_services_partners';
+    static async getSousServicePartners(partnersId){
+        let res =  await HttpClient.get(`${SousServicesPartners.url_sous_services_partners}?where=parteners_id|e|${partnersId}`);
+        if(res.code ===200){
+            return res.data ;
+        }else {
+            throw new Error("Une erreur est survenue");
+        }
+    }
+    static async add(partners,sousServicePartners){
+        let data = {
+            partners_id: partners.id,
+            sous_services: sousServicePartners
+        }
+        let res =  await HttpClient.post(`${SousServicesPartners.url_sous_services_partners}`,data);
+        return res.code === 201;
+    }
+}
+// $( document).on('.sensible','dblclick',function(elem) {
+//     $(elem).css('pointerEvents','all')
+//     alert()
+// });

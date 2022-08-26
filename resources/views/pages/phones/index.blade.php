@@ -5,7 +5,7 @@
 @extends('layouts.main')
 <?php
 /**
- * @var \App\Models\OperationParteners[] $versements ;
+ * @var \App\Models\Phones[] $phones ;
  */
 ?>
 @section('page')
@@ -18,8 +18,8 @@
                     <div class="page-header-title">
                         <i class="icofont icofont-table bg-c-blue"></i>
                         <div class="d-inline">
-                            <h4>Mes Versements</h4>
-                            <span>Donne la liste de tous les versements des partenaires </span>
+                            <h4>Les Providers</h4>
+                            <span>Donne la liste de tous API providers utilisé dans INTECH API </span>
                         </div>
                     </div>
                 </div>
@@ -71,7 +71,20 @@
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <x-partner col_l="3" col_s="3"/>
+                                <label class="col-sm-3 col-form-label">Partenaires</label>
+                                <div class="col-sm-3">
+                                    <select name="_sous_services_id" id="_sous_services_id" class=""
+                                            placeholder="Services">
+                                        <option value="" selected> Tous les partenaires</option>
+
+                                        @foreach($services as $service)
+                                            <optgroup label="{{$service->name}}" ></optgroup>
+                                            @foreach(getSousServicesByServiceId($service->id) as $sousService)
+                                               <option value="{{$sousService->id}}"> {{$sousService->name}} </option>
+                                            @endforeach
+                                        @endforeach
+                                    </select>
+                                </div>
 
                                 <div class="col-sm-3">
                                     <button type="submit"
@@ -80,7 +93,7 @@
                                     </button>
                                 </div>
                                 <div class="col-sm-3">
-                                    <button onclick="window.location.href='/versement'" type="button"
+                                    <button onclick="window.location.href='/phones'" type="button"
                                             class="warning-api-digital btn btn-primary btn-outline-primary btn-block"><i
                                             class="icofont icofont-delete"></i>Annuler
                                     </button>
@@ -99,28 +112,51 @@
                             <thead>
                             <tr>
                                 <th># Id</th>
-                                <th>Montant</th>
-                                <th>Partenaire</th>
-                                <th>Operation de </th>
-                                <th>Utilisateur Responsable  </th>
+                                <th>Identifiant</th>
+                                <th>Solde</th>
+                                <th>Solde Api</th>
+                                <th>Sous Services</th>
+                                <th>Service</th>
                                 <th>Date</th>
+                                <th>Options</th>
                             </tr>
                             </thead>
                             <tbody>
-                            @foreach($versements as $versement)
+                            @foreach($phones as $phone)
                                 <tr>
                                     <th scope="row">
                                         <span style="font-weight: bold;color: #324960;text-decoration: underline">
-                                            {{$versement->id}}
+                                            {{$phone->id}}
                                         </span>
                                     </th>
-                                    <td> <span class="currency"> {{ $versement->amount }} XOF</span> </td>
-                                    <td> <span class="currency"> {{ $versement->partener->name }} </span> </td>
+                                    <td> <span class="currency"> {{ $phone->number }} </span> </td>
+                                    <td> <span class="currency"> {{ $phone->solde}} XOF</span> </td>
 
-                                    <td> <span class="statut-success">{{$versement->type_operation}} </span> </td>
-                                    <td> <span class="statut-success">{{@$versement->user->f_name ?: 'unknown'}} {{@$versement->user->f_name ?: 'unknown'}} </span> </td>
+                                    <td> <span class="statut-success">{{$phone->solde_api}} XOF </span> </td>
                                     <td>
-                                        {{ $versement->created_at }}
+                                        <span class="currency">  {{@$phone->sousServicesPhones[0]->sousService->name ?: 'Pas encore souscrit '}}</span>
+
+                                    </td>
+                                    <td>
+                                        <span class="currency">  {{$phone->service->name}}</span>
+
+                                    </td>
+                                    <td>
+                                        {{ $phone->created_at }}
+                                    </td>
+                                    <td>
+                                        <div class="btn-group dropdown-split-success">
+
+                                            <button style="background: transparent;color: #4fc3a1;border: none;width: 100%;height: 30px" type="button" class="btn btn-success  dropdown-toggle-split waves-effect waves-light icofont icofont-navigation-menu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <span class="sr-only"></span>
+                                            </button>
+                                            <div class="dropdown-menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(113px, 40px, 0px); top: 0px; left: 0px; will-change: transform;">
+                                                <div class="dropdown-divider"></div>
+                                                <a class="dropdown-item waves-light waves-effect" href="/phones/verser/{{$phone->id}}">Verser</a>
+                                                <a class="dropdown-item waves-light waves-effect" href="/phones/versement/{{$phone->id}}">Versement</a>
+                                                <a class="dropdown-item waves-light waves-effect" href="/phones/souscription-service/{{$phone->id}}">Souscription Services</a>
+                                            </div>
+                                        </div>
                                     </td>
                                 </tr>
                             @endforeach
@@ -131,7 +167,7 @@
                 </div>
             </div>
             <div style="float: right">
-                {{ $versements->links('pagination::bootstrap-4') }}
+                {{ $phones->links('pagination::bootstrap-4') }}
             </div>
 
         </div>
@@ -143,7 +179,9 @@
 @endsection
 
 @section('js')
-
+    <script>
+        $('#_sous_services_id').select2();
+    </script>
 @endsection
 
 @section('css')

@@ -4,6 +4,7 @@ use App\Models\Parteners;
 use App\Models\Phones;
 use App\Models\Transactions;
 use App\Models\Users;
+use Illuminate\Support\Facades\DB;
 use JetBrains\PhpStorm\ArrayShape;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -35,7 +36,7 @@ function str_without_accents($str, $charset='utf-8'): array|string|null
 
     return preg_replace('#&[^;]+;#', '', $str);   // or add this : mb_strtoupper($str); for uppercase :)
 }
-#[ArrayShape(["first_name" => "string",  "parteners_id" => "string", "solde" => "string"])] function _auth():?Users
+ function _auth():?Users
 {
     /**
      * @var Users $partner
@@ -72,22 +73,33 @@ const STATUS = [
   'PROCESSING' => 'statut-infos',
   'PENDING' => 'statut-infos',
 ];
-
+const STATUS_TRX=[
+    'SUCCESS'=>'SUCCESS','PENDING'=>'PENDING','PROCESSING'=>'PROCESSING','FAILLED'=>'FAILLED','CANCELED'=>'CANCELED'
+];
 const STATE = [
     'ACTIVED' => 'ACTIVED',
     'INACTIVED' => 'INACTIVED',
     'DELETED' => 'DELETED',
 ];
+const OPERATIONS=[
+    'TRANSACTION'=>'TRANSACTION',
+    'ANNULATION_TRANSACTION'=> 'ANNULATION_TRANSACTION',
+    'APROVISIONNEMENT'=>'APROVISIONNEMENT',
+    'ANNULATION_APROVISIONNEMENT'=> 'ANNULATION_APROVISIONNEMENT',
+    'APPEL_DE_FOND'=>'APPEL_DE_FOND',
+    'ANNULATION_APPEL_DE_FOND'=> 'ANNULATION_APPEL_DE_FOND',
+];
 function status($status): string{
     return  @STATUS[$status] ?? '';
 }
 
-const OPERATIONS= [
-    'APROVISIONNEMENT'=>'APROVISIONNEMENT'
-];
 const TYPE_PARTNER_COMPTE =[
     'API'=>'API',
     'CAISSE'=>'CAISSE'
+];
+const TYPE_OPERATION =[
+    'DEBIT'=>'DEBIT',
+    'CREDIT'=>'CREDIT'
 ];
 
 function logoFromName($name): string{
@@ -243,4 +255,21 @@ function partnerName(): string{
 function partnerName2(): string{
  $partner = partner();
  return $partner ? 'Gagnés Avec ' . $partner->name  : 'Gagnés Avec les partenaires';
+}
+function updateSolde($model,$amount,$filed='solde'){
+    $tables= $model->getTable();
+    $query = "UPDATE  $tables  set $filed = $filed + '$amount' where id =  $model->id";
+    $rest = DB::update($query);
+}
+function sousServiceName(): string
+{
+    return '_sous_services_id';
+}
+function sousServiceId(): int
+{
+    return (int) request(sousServiceName());
+}
+
+function getSousServicesByServiceId($serviceId){
+    return \App\Models\SousServices::where('services_id', $serviceId)->get();
 }

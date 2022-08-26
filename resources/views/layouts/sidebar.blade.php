@@ -68,6 +68,13 @@
                     <span class="pcoded-mcaret"></span>
                 </a>
             </li>
+            <li class="active">
+                <a href="/phones">
+                    <span class="pcoded-micon"><i class="ti-direction-alt"></i><b>D</b></span>
+                    <span class="pcoded-mtext" >Services Providers</span>
+                    <span class="pcoded-mcaret"></span>
+                </a>
+            </li>
            {{-- <li class="active">
                 <a href="/apikey">
                     <span class="pcoded-micon"><i class="ti-direction-alt"></i><b>D</b></span>

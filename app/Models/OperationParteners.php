@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -27,13 +28,18 @@ use Illuminate\Database\Eloquent\Model;
  * @property float $commission
  * @property Transactions $transaction
  * @property Parteners $partener
+ * @property int $users_id
+ * @property Users $user
  */
 class OperationParteners extends Model
 {
+    public function user():Attribute{
+        return  Attribute::make(fn()=> Users::find($this->users_id));
+    }
     /**
      * @var array
      */
-    protected $fillable = ['parteners_id', 'transactions_id', 'commentaire', 'amount', 'state', 'created_at', 'updated_at', 'type_operation', 'statut', 'date_creation', 'date_success', 'date_canceled', 'date_processing', 'date_failled', 'operation', 'solde_befor', 'solde_after', 'fee', 'commission'];
+    protected $fillable = ['users_id','parteners_id', 'transactions_id', 'commentaire', 'amount', 'state', 'created_at', 'updated_at', 'type_operation', 'statut', 'date_creation', 'date_success', 'date_canceled', 'date_processing', 'date_failled', 'operation', 'solde_befor', 'solde_after', 'fee', 'commission'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

@@ -38,6 +38,13 @@
                             <span style=""> Ajouter une sous services</span>
                         </button>
                             @endif
+                        @if(getPartnerI())
+                            <button v-on:click="addSubServiceModal()" type="button"
+                                    class="primary-api-digital btn btn-primary btn-outline-primary btn-block ">
+                                <i title="Ajouter un clef" class="ti-plus "></i>
+                                <span style=""> Configurer sous services pour <span class="currency"> {{partner()->name}}</span></span>
+                            </button>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -151,11 +158,6 @@
                                                             class="dropdown-item waves-light waves-effect pointer">
                                                             Configurer frais <span class="currency"> {{partner()->name}}</span></button>
 
-                                                        <button
-                                                            v-on:click='addSubServiceModal("{{$sousService->id}}")'
-                                                            type="button"
-                                                            class="dropdown-item waves-light waves-effect pointer">
-                                                            Configurer sous services pour <span class="currency"> {{partner()->name}}</span>  </button>
                                                     @endif
                                                     <button v-on:click='showModalUpdateService("{{$sousService->id}}")'
                                                             type="button"
@@ -292,10 +294,6 @@
                         </div>
                     </form>
                     <div class="modal-footer">
-                        <button style="margin: 0 !important;" type="submit"
-                                class="primary-api-digital btn btn-primary btn-outline-primary btn-block"
-                        >Enregistrer
-                        </button>
                         <button  style="margin: 0 !important;" type="button"
                                 class="btn btn-secondary btn-outline-secondary btn-block" data-dismiss="modal">Fermer
                         </button>
@@ -306,7 +304,6 @@
         {{--  MODAL FRAIX END  --}}
 
         {{--  MODAL ADD UPDATE START  --}}
-
         <div class="modal fade" id="modalEditAdd" tabindex="-1" role="dialog" aria-labelledby="modalEditAddLabel"
              aria-hidden="true">
             <form v-on:submit.prevent="submit('edit')" class="modal-dialog modal-xl" role="document">
@@ -331,7 +328,7 @@
                                        v-if="(formBuilder.edit || formBuilder.add) && formBuilder.type === 'text'"
                                        v-model="sousService[formBuilder.key]"
                                        :type="formBuilder.input"
-                                       class="form-control form-control-normal" :placeholder="formBuilder.name">
+                                       class="form-control form-control-normal sensible" :placeholder="formBuilder.name">
                                 <textarea :disabled="(!formBuilder.add && isAdd) || (!formBuilder.edit && !isAdd) "
                                           :id="formBuilder.key" :name="formBuilder.key" rows="5"
                                           v-if="(formBuilder.edit || formBuilder.add) && formBuilder.type === 'textarea'"
@@ -381,8 +378,8 @@
             </form>
         </div>
         {{--  MODAL ADD UPDATE END  --}}
-        {{--  MODAL DETAILS START  --}}
 
+        {{--  MODAL DETAILS START  --}}
         <div class="modal  fade" id="modalDetails" tabindex="-1" role="dialog" aria-labelledby="modalDetailsLabel"
              aria-hidden="true">
             <div class="modal-dialog modal-xl" role="document">
@@ -415,6 +412,56 @@
                     </div>
                 </div>
             </div>
+        </div>
+        {{--  MODAL DETAILS END  --}}
+
+
+        {{--  MODAL DETAILS START  --}}
+        <div class="modal  fade" id="addSubServiceModal" tabindex="-1" role="dialog" aria-labelledby="modalDetailsLabel"
+             aria-hidden="true">
+            <div class="modal-dialog modal-xl" role="document">
+                <form v-on:submit.prevent="saveSubServicePermit()"  class="modal-content ">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalDetailsLabel"> Services Autorisés pour le partenaire @{{ partners.name }}</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+
+         {{-- ---------------------------------------------------------------------------------------------------------------------------------- --}}
+
+                        <div class="form-group row" >
+                            {{--                 DATE START                --}}
+                            <label class="col-sm-12 col-form-label">Services Autorisés</label>
+                            <hr>
+                            <div class="col-sm-12">
+                                <select v-if="init" multiple v-select2 id="_autorise_service"
+                                        v-model="sousServicePartners"
+                                        class="form-control form-control-normal" placeholder="Services autorisé">
+                                    {{--                                    <option  value="">Please select one</option>--}}
+                                    <option v-for="(ss,key) in allSousServices" :value="ss.id">
+                                        @{{ ss.name }}
+                                    </option>
+                                </select>
+
+                            </div>
+
+
+          {{-- ---------------------------------------------------------------------------------------------------------------------------------- --}}
+
+                    </div>
+                    <div class="modal-footer">
+                        <button style="margin: 0 !important;" type="submit"
+                                class="primary-api-digital btn btn-primary btn-outline-primary btn-block"
+                        >Enregistrer
+                        </button>
+                        <button style="margin: 0 !important;" type="button"
+                                class="btn btn-secondary btn-outline-secondary btn-block" data-dismiss="modal">Fermer
+                        </button>
+                    </div>
+                </div>
+            </form>
         </div>
         {{--  MODAL DETAILS END  --}}
     </div>
