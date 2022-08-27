@@ -69,7 +69,7 @@ class PartnersController
             'amount_confirm' => 'required|integer|min:1000',
         ]);
         $amount =(float) $request->get('amount');
-        updateSolde($partners,$amount);
+        updateSolde($partners,$amount,'solde');
         $partners = Parteners::find($id);
         $data = [
          'amount'=>(float)$amount,
@@ -78,8 +78,7 @@ class PartnersController
             'date_creation'=>nowIso(),
             'date_success'=>nowIso(),
             'date_processing'=>nowIso(),
-            'operation'=>nowIso(),
-            'operation'=>OPERATIONS['APROVISIONNEMENT'],
+            'operation'=>OPERATIONS_PARTNERS['APROVISIONNEMENT'],
             'solde_befor'=>$partners->solde,
             'solde_after'=>$partners->solde + $amount,
             'fee'=>0,

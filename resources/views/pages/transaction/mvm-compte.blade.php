@@ -23,7 +23,7 @@
                                 <h4>Les mouvements compte pour  {{partner()->name}}</h4>
                                 <span>Donne la liste de toutes les entrées et sorties du compte : <span style="color:green;font-weight: bold"> {{partner()->name}}</span>  </span>
                             @else
-                                <h4>Services </h4>
+                                <h4>Mouvement Compte </h4>
                                 <span>Donne la liste de toutes les entrées et sorties des comptes partenaires </span>
                             @endif
                         </div>
@@ -78,6 +78,11 @@
                             </div>
                             <div class="form-group row">
                                 <x-partner col_l="3" col_s="3"/>
+                                <x-operation col_l="3" col_s="3"/>
+                            </div>
+                            <div class="form-group row">
+
+                                <x-type-operation col_l="3" col_s="3"/>
                                 <div class="col-sm-3">
                                     <button type="submit"
                                             class="primary-api-digital btn btn-primary btn-outline-primary btn-block"><i

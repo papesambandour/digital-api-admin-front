@@ -51,8 +51,11 @@ Route::group(['middleware'=>['admin-auth']],function(){
     /*TRANSACTION START*/
     Route::post('/transaction/{transaction}',[TransactionsController::class,'reFund'] );
     Route::get('/transaction',[TransactionsController::class,'transaction'] );
+
     Route::get('/versement',[TransactionsController::class,'versement'] );
     Route::get('/mvm-compte',[TransactionsController::class,'mvmCompte'] );
+    Route::get('/versement-phones',[TransactionsController::class,'versementPhones'] );
+    Route::get('/mvm-compte-phones',[TransactionsController::class,'mvmComptePhones'] );
     /*TRANSACTION END*/
 
     /*CONFIGURATIONS START*/
@@ -69,6 +72,8 @@ Route::group(['middleware'=>['admin-auth']],function(){
     Route::resource('/partners',PartnersController::class );
     /*PARTNERS END*/
     /*PARTNERS END*/
+    Route::get('/phones/verser/{id}',[PhonesController::class ,'versement']);
+    Route::post('/phones/verser/{id}',[PhonesController::class ,'versementSave']);
     Route::resource('/phones', PhonesController::class );
     /*PARTNERS END*/
 });

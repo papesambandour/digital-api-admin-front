@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -25,9 +26,13 @@ use Illuminate\Database\Eloquent\Model;
  * @property float $solde_after
  * @property Phones $phone
  * @property OperationPhones $operationPhone
+ * @property Users $user
  */
 class OperationPhones extends Model
 {
+    public function user():Attribute{
+        return  Attribute::make(fn()=> Users::find($this->users_id));
+    }
     /**
      * @var array
      */

@@ -14,7 +14,9 @@ use Illuminate\Database\Eloquent\Collection;
 class PhonesServices
 {
     public function paginate(): LengthAwarePaginator{
-        $query= Phones::query()->orderBy('id','DESC');
+        $query= Phones::query()
+            ->orderBy('number','DESC')
+        ->orderBy('id','DESC');
         if(request('date_start')){
             $query->where('created_at','>=',dateFilterStart(request('date_start')));
         }
@@ -27,8 +29,11 @@ class PhonesServices
         if(request('amount_min')){
             $query->where('solde','>=',request('amount_min'));
         }
-        if(sousServiceId()){
-            $query->whereHas('sousServicesPhones',fn($query)=> $query->where('sous_services_id',sousServiceId()));
+        if(request('number')){
+            $query->where('number',request('number'));
+        }
+        if(getSousServiceId()){
+            $query->whereHas('sousServicesPhones',fn($query)=> $query->where('sous_services_id',getSousServiceId()));
         }
         return $query->paginate(size());
     }

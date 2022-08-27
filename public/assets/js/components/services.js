@@ -90,7 +90,7 @@ class Helper{
     static copy(object) {
         return JSON.parse(JSON.stringify(object));
     }
-    static async handleResponseApiSaveUpdate(url,sent,isAdd,modelMapping,code=2001){
+    static async handleResponseApiSaveUpdate(url,sent,isAdd,modelMapping,code=201){
         try {
             const rest =isAdd
                 ? await HttpClient.post(url,sent)

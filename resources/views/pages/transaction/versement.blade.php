@@ -118,7 +118,7 @@
                                     <td> <span class="currency"> {{ $versement->partener->name }} </span> </td>
 
                                     <td> <span class="statut-success">{{$versement->type_operation}} </span> </td>
-                                    <td> <span class="statut-success">{{@$versement->user->f_name ?: 'unknown'}} {{@$versement->user->f_name ?: 'unknown'}} </span> </td>
+                                    <td> <span class="statut-success">{{@$versement->user->f_name ?: 'unknown'}} {{@$versement->user->l_name ?: 'unknown'}} </span> </td>
                                     <td>
                                         {{ $versement->created_at }}
                                     </td>

@@ -75,6 +75,20 @@
                     <span class="pcoded-mcaret"></span>
                 </a>
             </li>
+            <li class="active">
+                <a href="/mvm-compte-phones">
+                    <span class="pcoded-micon"><i class="ti-direction-alt"></i><b>D</b></span>
+                    <span class="pcoded-mtext" >Mvm Service Provider</span>
+                    <span class="pcoded-mcaret"></span>
+                </a>
+            </li>
+            <li class="active">
+                <a href="/versement-phones">
+                    <span class="pcoded-micon"><i class="ti-direction-alt"></i><b>D</b></span>
+                    <span class="pcoded-mtext" >Versement  Service Provider</span>
+                    <span class="pcoded-mcaret"></span>
+                </a>
+            </li>
            {{-- <li class="active">
                 <a href="/apikey">
                     <span class="pcoded-micon"><i class="ti-direction-alt"></i><b>D</b></span>

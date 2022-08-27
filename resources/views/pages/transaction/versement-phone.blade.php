@@ -5,22 +5,12 @@
 @extends('layouts.main')
 <?php
 /**
- * @var \App\Models\Phones[] $phones ;
+ * @var \App\Models\OperationParteners[] $versements ;
  */
 ?>
 @section('page')
 
     <div class="page-wrapper">
-        <div class="col-md-12">
-            @if(Session::has('success'))
-                <p class="alert alert-success">{{ Session::get('success') }}</p>
-            @endif
-        </div>
-        <div class="col-md-12">
-            @if(Session::has('error'))
-                <p class="alert alert-danger">{{ Session::get('error') }}</p>
-            @endif
-        </div>
         <!-- Page-header start -->
         <div class="page-header card">
             <div class="row align-items-end">
@@ -28,17 +18,12 @@
                     <div class="page-header-title">
                         <i class="icofont icofont-table bg-c-blue"></i>
                         <div class="d-inline">
-                            <h4>Les Providers</h4>
-                            <span>Donne la liste de tous API providers utilisé dans INTECH API </span>
+                            <h4>Les Versements services providers</h4>
+                            <span>Donne la liste de tous les versements des services providers </span>
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-4">
-                    <button onclick="window.location.href='/phones/create'" type="button"
-                            class="primary-api-digital btn btn-primary btn-outline-primary btn-block ">
-                        <i title="Ajouter un service provider" class="ti-plus "></i>
-                        <span style=""> Ajouter un service provider</span>
-                    </button>
                 </div>
             </div>
         </div>
@@ -86,19 +71,24 @@
                                 </div>
                             </div>
                             <div class="form-group row">
-                                {{--                 DATE START                --}}
-                                {{--                 DATE START                --}}
-                                <label class="col-sm-3 col-form-label"> Numéro de telephone - Identifiant</label>
+                                <label class="col-sm-3 col-form-label">Services Providers</label>
                                 <div class="col-sm-3">
-                                    <input value="{{$number}}" name="number" id="number" type="text"
-                                           class="form-control form-control-normal" placeholder="Numéro">
+                                    <select name="phones_id" id="phones_id" class=""
+                                            placeholder="Services">
+                                        <option value="" selected> Tous les services providers</option>
+
+                                        @foreach($phones as $phone)
+                                            <option @if($phones_id ==  $phone->id) selected
+                                                    @endif value="{{$phone->id}}">
+
+                                                ({{$phone->id}})   {{$phone->number }}
+                                                - {{@$phone->sousServicesPhones[0]->sousService->name ?: 'Pas encore souscrit a un sous service'}}
+
+
+                                            </option>
+                                        @endforeach
+                                    </select>
                                 </div>
-
-                                <x-sous-service col_l="3" col_s="3"/>
-                            </div>
-                            <div class="form-group row">
-
-
 
                                 <div class="col-sm-3">
                                     <button type="submit"
@@ -107,7 +97,7 @@
                                     </button>
                                 </div>
                                 <div class="col-sm-3">
-                                    <button onclick="window.location.href='/phones'" type="button"
+                                    <button onclick="window.location.href='/versement-phones'" type="button"
                                             class="warning-api-digital btn btn-primary btn-outline-primary btn-block"><i
                                             class="icofont icofont-delete"></i>Annuler
                                     </button>
@@ -126,52 +116,32 @@
                             <thead>
                             <tr>
                                 <th># Id</th>
-                                <th>Identifiant</th>
-                                <th>Solde</th>
-                                <th>Solde Api</th>
-                                <th>Sous Services</th>
-                                <th>Service</th>
+                                <th>Montant</th>
+                                <th>Services Provider</th>
+                                <th>Operation de </th>
+                                <th>Utilisateur Responsable  </th>
                                 <th>Date</th>
-                                <th>Options</th>
                             </tr>
                             </thead>
                             <tbody>
-                            @foreach($phones as $phone)
+                            @foreach($versements as $versement)
                                 <tr>
                                     <th scope="row">
                                         <span style="font-weight: bold;color: #324960;text-decoration: underline">
-                                            {{$phone->id}}
+                                            {{$versement->id}}
                                         </span>
                                     </th>
-                                    <td> <span class="currency"> {{ $phone->number }} </span> </td>
-                                    <td> <span class="currency"> {{ $phone->solde}} XOF</span> </td>
+                                    <td> <span class="currency"> {{ $versement->amount }} XOF</span> </td>
+                                    <td> <span class="currency">
 
-                                    <td> <span class="statut-success">{{$phone->solde_api}} XOF </span> </td>
-                                    <td>
-                                        <span class="currency">  {{@$phone->sousServicesPhones[0]->sousService->name ?: 'Pas encore souscrit a un sous service'}}</span>
+                                        ({{$versement->phone->id}})   {{$versement->phone->number }}
+                                                - {{@$versement->phone->sousServicesPhones[0]->sousService->name ?: 'Pas encore souscrit a un sous service'}}
+                                        </span> </td>
 
-                                    </td>
+                                    <td> <span class="statut-success">{{$versement->type_operation}} </span> </td>
+                                    <td> <span class="statut-success">{{@$versement->user->f_name ?: 'unknown'}} {{@$versement->user->l_name ?: 'unknown'}} </span> </td>
                                     <td>
-                                        <span class="currency">  {{$phone->service->name}}</span>
-
-                                    </td>
-                                    <td>
-                                        {{ $phone->created_at }}
-                                    </td>
-                                    <td>
-                                        <div class="btn-group dropdown-split-success">
-
-                                            <button style="background: transparent;color: #4fc3a1;border: none;width: 100%;height: 30px" type="button" class="btn btn-success  dropdown-toggle-split waves-effect waves-light icofont icofont-navigation-menu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                <span class="sr-only"></span>
-                                            </button>
-                                            <div class="dropdown-menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(113px, 40px, 0px); top: 0px; left: 0px; will-change: transform;">
-                                                <div class="dropdown-divider"></div>
-                                                <a class="dropdown-item waves-light waves-effect" href="/phones/{{$phone->id}}/edit">Modifier</a>
-                                                <a class="dropdown-item waves-light waves-effect" href="/phones/verser/{{$phone->id}}">Verser</a>
-                                                <a class="dropdown-item waves-light waves-effect" href="/versement-phones/?phones_id={{$phone->id}}">Versement</a>
-                                                <a class="dropdown-item waves-light waves-effect" href="/mvm-compte-phones/?phones_id={{$phone->id}}">Mouvement compte</a>
-                                            </div>
-                                        </div>
+                                        {{ $versement->created_at }}
                                     </td>
                                 </tr>
                             @endforeach
@@ -182,7 +152,7 @@
                 </div>
             </div>
             <div style="float: right">
-                {{ $phones->links('pagination::bootstrap-4') }}
+                {{ $versements->links('pagination::bootstrap-4') }}
             </div>
 
         </div>
@@ -194,7 +164,9 @@
 @endsection
 
 @section('js')
-
+    <script>
+        $("#phones_id").select2();
+    </script>
 @endsection
 
 @section('css')

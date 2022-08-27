@@ -10,6 +10,7 @@
 ?>
 @section('page')
     <div id="app">
+
         <div class="page-wrapper">
             <!-- Page-header start -->
             <div class="page-header card">
@@ -110,6 +111,7 @@
                                 <tr>
                                     <th># Id</th>
                                     <th>Libelle</th>
+                                    <th>Type Operation</th>
                                     <th>Service</th>
                                     <th>Type Service</th>
                                     <th>Date</th>
@@ -125,6 +127,7 @@
                                             </span>
                                         </th>
                                         <td class="text-left"><span class="currency"> {{ $sousService->name }} </span>
+                                        <td class="text-left"><span class="currency"> {{ $sousService->type_operation }} </span>
                                         </td>
                                         <td class="text-left"><span class=""> {{ $sousService->service->name }} </span>
                                         </td>
@@ -325,9 +328,16 @@
                             <div class="col-sm-8">
                                 <input :disabled="(!formBuilder.add && isAdd) || (!formBuilder.edit && !isAdd) "
                                        :id="formBuilder.key" :name="formBuilder.key"
-                                       v-if="(formBuilder.edit || formBuilder.add) && formBuilder.type === 'text'"
+                                       v-if="(formBuilder.edit || formBuilder.add) && formBuilder.type === 'text' && formBuilder.input !== 'number'"
                                        v-model="sousService[formBuilder.key]"
                                        :type="formBuilder.input"
+                                       class="form-control form-control-normal sensible" :placeholder="formBuilder.name">
+                                <input :disabled="(!formBuilder.add && isAdd) || (!formBuilder.edit && !isAdd) "
+                                       :id="formBuilder.key" :name="formBuilder.key"
+                                       v-if="(formBuilder.edit || formBuilder.add) && formBuilder.input === 'number' "
+                                       v-model="sousService[formBuilder.key]"
+                                       :type="formBuilder.input"
+                                       step="0.0001"
                                        class="form-control form-control-normal sensible" :placeholder="formBuilder.name">
                                 <textarea :disabled="(!formBuilder.add && isAdd) || (!formBuilder.edit && !isAdd) "
                                           :id="formBuilder.key" :name="formBuilder.key" rows="5"

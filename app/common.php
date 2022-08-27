@@ -81,13 +81,21 @@ const STATE = [
     'INACTIVED' => 'INACTIVED',
     'DELETED' => 'DELETED',
 ];
-const OPERATIONS=[
+const OPERATIONS_PARTNERS=[
     'TRANSACTION'=>'TRANSACTION',
     'ANNULATION_TRANSACTION'=> 'ANNULATION_TRANSACTION',
     'APROVISIONNEMENT'=>'APROVISIONNEMENT',
     'ANNULATION_APROVISIONNEMENT'=> 'ANNULATION_APROVISIONNEMENT',
     'APPEL_DE_FOND'=>'APPEL_DE_FOND',
     'ANNULATION_APPEL_DE_FOND'=> 'ANNULATION_APPEL_DE_FOND',
+];
+const OPERATIONS_PHONES=[
+    'APPEL_DE_FONS'=>'APPEL_DE_FONS',
+    'APPROVISIONNEMENT'=> 'APPROVISIONNEMENT',
+    'TRANSACTION'=>'TRANSACTION',
+    'ANNULATION_APPELS_FONDS'=> 'ANNULATION_APPELS_FONDS',
+    'ANNULATION_APPROVISIONNEMENT'=>'ANNULATION_APPROVISIONNEMENT',
+    'ANNULATION_TRANSACTION'=> 'ANNULATION_TRANSACTION',
 ];
 function status($status): string{
     return  @STATUS[$status] ?? '';
@@ -137,6 +145,7 @@ function amountStatusSubService(string $statut, int $sousServicesId){
 function getPartnerI(){
     return request('_partener_',null);
 }
+
 
  function amountState($status): float|int
  {
@@ -265,11 +274,27 @@ function sousServiceName(): string
 {
     return '_sous_services_id';
 }
-function sousServiceId(): int
+function getSousServiceId(): int
 {
     return (int) request(sousServiceName());
 }
 
 function getSousServicesByServiceId($serviceId){
     return \App\Models\SousServices::where('services_id', $serviceId)->get();
+}
+
+function getOperationRequestName(): string
+{
+    return '_operation_';
+}
+function getOperation(){
+    return request(getOperationRequestName(),null);
+}
+
+function getTypeOperationRequestName(): string
+{
+    return '_type_operation_';
+}
+function getTypeOperation(){
+    return request(getTypeOperationRequestName(),null);
 }

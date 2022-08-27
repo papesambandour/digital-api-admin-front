@@ -57,6 +57,15 @@
         if( $('#_partener_').text()){
             $('#_partener_').select2();
         }
+        if( $('#_operation_').text()){
+            $('#_operation_').select2();
+        }
+        if( $('#_type_operation_').text()){
+            $('#_type_operation_').select2();
+        }
+        if( $('#_sous_services_id').text()){
+            $('#_sous_services_id').select2();
+        }
     });
 
 </script>

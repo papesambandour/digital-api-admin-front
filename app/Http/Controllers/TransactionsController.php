@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Phones;
 use App\Models\Transactions;
 use App\Services\ConfigServices;
 use App\Services\TransactionServices;
@@ -63,6 +64,29 @@ class TransactionsController extends Controller
     public function reFund(Transactions $transaction): \Illuminate\Http\RedirectResponse
     {
         return $this->transactions->reFund($transaction);
+    }
+
+    public function versementPhones(): Factory|View|Application
+    {
+        $versements = $this->transactions->versementPaginatePhones();
+        $date_start= request('date_start');
+        $date_end= request('date_end');
+        $amount_min = request('amount_min');
+        $amount_max = request('amount_max');
+        $phones_id = request('phones_id');
+        $phones = Phones::query()->orderBy('number','desc')->get();
+        return view('pages/transaction.versement-phone',compact('phones','phones_id','versements','amount_min','amount_max','date_end','date_start',));
+    }
+    public function mvmComptePhones(): Factory|View|Application
+    {
+        $mouvements = $this->transactions->mouvementsPhones();
+        $date_start= request('date_start');
+        $date_end= request('date_end');
+        $amount_min = request('amount_min');
+        $amount_max = request('amount_max');
+        $phones_id = request('phones_id');
+        $phones = Phones::query()->orderBy('number','desc')->get();
+        return view('pages/transaction.mvm-compte-phones',compact('phones','phones_id','mouvements','amount_min','amount_max','date_end','date_start',));
     }
 
 }

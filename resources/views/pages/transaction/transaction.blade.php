@@ -74,18 +74,7 @@
                                 {{--                 DATE START                --}}
                             </div>
                             <div class="form-group row">
-                                <label class="col-sm-2 col-form-label">Services</label>
-                                <div class="col-sm-2">
-                                    <select name="sous_services_id" id="sous_services_id" class=""
-                                            placeholder="Services">
-                                        <option value="" selected> Tous les services</option>
-
-                                        @foreach($sous_services as $sous_service)
-                                            <option @if($sous_services_id ==  $sous_service->id) selected
-                                                    @endif value="{{$sous_service->id}}"> {{$sous_service->name}} </option>
-                                        @endforeach
-                                    </select>
-                                </div>
+                                <x-sous-service col_l="2" col_s="2"/>
                                 <label class="col-sm-2 col-form-label">Statut transaction </label>
                                 <div class="col-sm-2">
                                     <select name="statut" id="statut" class=""
@@ -122,6 +111,8 @@
                                 </div>
 
                                 <x-partner />
+
+                                <x-type-operation col_l="2" col_s="2"/>
                                 <div class="col-sm-2">
                                     <button type="submit"
                                             class="primary-api-digital btn btn-primary btn-outline-primary btn-block"><i
@@ -150,6 +141,7 @@
                                 <th># Transaction Id</th>
                                 <th>Numéro </th>
                                 <th>Montant</th>
+                                <th>Type Operation</th>
                                 <th>Partenaire</th>
                                 <th>Commission</th>
                                 <th>Frais</th>
@@ -170,6 +162,7 @@
                                     </th>
                                     <td>{{ $transaction->phone }} </td>
                                     <td class="currency">{{ $transaction->amount }} <span>XOF</span></td>
+                                    <td> <span class="statut-success">{{$transaction->type_operation}} </span> </td>
                                     <td class="currency" title="{{ $transaction->partener->name}} : {{ $transaction->partener->email}}">{{ $transaction->partener_name }} <span></span></td>
                                     <td class="currency">{{ $transaction->commission_amount }} <span>XOF</span></td>
                                     <td class="currency">{{ $transaction->fee_amount }} <span>XOF</span></td>

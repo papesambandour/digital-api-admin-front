@@ -129,28 +129,9 @@
         "adress": "nullable"
     },
     "phones": {
-        "solde": "required|numeric",
         "number": "required|max:255",
         "codeSecret": "nullable|max:255",
-        "pin": "nullable|max:255",
-        "ltd": "nullable|max:255",
-        "lgd": "nullable|max:255",
-        "imei": "nullable|max:255|unique:phones,imei",
-        "uid": "nullable|max:255|unique:phones,uid",
-        "state": "required",
-        "socket": "required",
-        "amount_reserved": "required|numeric",
-        "max_solde": "required|numeric",
-        "alert_level_1_solde": "required|numeric",
-        "alert_level_2_solde": "required|numeric",
-        "alert_level_3_solde": "required|numeric",
-        "alert_level_4_solde": "required|numeric",
-        "alert_level_5_solde": "required|numeric",
-        "services_id": "required|integer|min:-2147483648|max:2147483647",
-        "phone_state": "required",
-        "last_used": "nullable|date",
-        "last_unused": "nullable|date",
-        "solde_api": "required|numeric"
+        "_sous_services_id": "required|integer|min:-2147483648|max:2147483647"
     },
     "plateforme": {
         "name": "required|max:255",

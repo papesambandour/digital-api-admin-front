@@ -287,5 +287,5 @@ li.page-item > a:hover{
     margin-top:50px;
 }
 .sensible{
-    pointer-events:none;
+    /*pointer-events:none;*/
 }
