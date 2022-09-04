@@ -12,6 +12,17 @@
     <div id="app">
 
         <div class="page-wrapper">
+            <div class="col-md-12">
+                @if(Session::has('success'))
+                    <p class="alert alert-success">{{ Session::get('success') }}</p>
+                @endif
+            </div>
+
+            <div class="col-md-12">
+                @if(Session::has('error'))
+                    <p class="alert alert-danger">{{ Session::get('error') }}</p>
+                @endif
+            </div>
             <!-- Page-header start -->
             <div class="page-header card">
                 <div class="row align-items-end">
@@ -111,6 +122,7 @@
                                 <tr>
                                     <th># Id</th>
                                     <th>Libelle</th>
+                                    <th>Statut</th>
                                     <th>Type Operation</th>
                                     <th>Service</th>
                                     <th>Type Service</th>
@@ -126,7 +138,19 @@
                                                 {{$sousService->id}}
                                             </span>
                                         </th>
-                                        <td class="text-left"><span class="currency"> {{ $sousService->name }} </span>
+                                        <td class="text-left"><span class="currency"> {{ $sousService->name }} </span> </td>
+                                        <td class="text-left">
+
+                                            @if($sousService->state == STATE['ACTIVED'])
+                                                <span class="currency">
+                                                {{ $sousService->state }}
+                                            </span>
+                                            @else
+                                                <span >
+                                                {{ $sousService->state }}
+                                            </span>
+                                            @endif
+                                        </td>
                                         <td class="text-left"><span class="currency"> {{ $sousService->type_operation }} </span>
                                         </td>
                                         <td class="text-left"><span class=""> {{ $sousService->service->name }} </span>
@@ -167,6 +191,20 @@
                                                             class="dropdown-item waves-light waves-effect pointer">
                                                         Modifier le service
                                                     </button>
+
+                                                    @if($sousService->state == STATE['ACTIVED'])
+                                                        <button v-on:click='toggleService("Voulez-vous désactiver le service ?","{{$sousService->id}}")'
+                                                                type="button"
+                                                                class="dropdown-item waves-light waves-effect pointer">
+                                                            Désactiver
+                                                        </button>
+                                                    @else
+                                                        <button  v-on:click='toggleService("Voulez-vous activer le service ?","{{$sousService->id}}")'
+                                                                type="button"
+                                                                class="dropdown-item waves-light waves-effect pointer">
+                                                              Activer
+                                                        </button>
+                                                    @endif
 
                                                 </div>
                                             </div>

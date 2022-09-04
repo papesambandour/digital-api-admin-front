@@ -63,7 +63,7 @@ class PhonesController extends Controller
     {
         DB::beginTransaction();
         $request->validate(Utils::getRuleModel(new Phones()));
-        $data= $request->only(['number','codeSecret']);
+        $data= $request->only(['number','codeSecret','sim_provider']);
         $sousServices = SousServices::query()->find(id:request('_sous_services_id'));
         $data['services_id'] = $sousServices->services_id;
         $phoneServices = Phones::query()->where('number',$data['number'])->get();
@@ -126,7 +126,7 @@ class PhonesController extends Controller
         DB::beginTransaction();
         $phones = Phones::find($id);
         $request->validate(Utils::getRuleModel(new Phones(),$phones->id,$request->all()));
-        $data= $request->only(['number','codeSecret']);
+        $data= $request->only(['number','codeSecret','sim_provider']);
 
         //check
         $sousServices = SousServices::query()->find(id:request('_sous_services_id'));
@@ -140,10 +140,11 @@ class PhonesController extends Controller
             return   redirect()->back()->with('error',"Le sous services $sousServices->name est deja configuré avec le numéro ". $data['number']);
         }
         //check
+      //  dd($data);
         $phones->update($data);
         SousServicesPhones::query()->where('sous_services_id', $sousServices->id)->where('phones_id',$phones->id)->delete();
         SousServicesPhones::create(['sous_services_id'=> $sousServices->id,'phones_id'=>$phones->id]);
-       // DB::commit();
+        DB::commit();
         return redirect('/phones/?number='.$phones->number)->with('success','Le service provider est mise a jour avec succès');
     }
 

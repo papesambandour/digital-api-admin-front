@@ -35,6 +35,12 @@
                     </div>
                 </div>
                 <div class="col-lg-4">
+                    <button  onclick="downloadVirementExcel()" type="button" id="import-virement-bank"
+                            class="primary-api-digital btn btn-primary btn-outline-primary btn-block ">
+                        <i title="" class="ti-download "></i>
+                        <span style=""> Importer les virements bancaires en cours</span>
+                        <i hidden id="spinner_import" class="fas fa-spinner fa-pulse"></i>
+                    </button>
                 </div>
             </div>
         </div>
@@ -75,18 +81,8 @@
                             </div>
                             <div class="form-group row">
                                 <x-sous-service col_l="2" col_s="2"/>
-                                <label class="col-sm-2 col-form-label">Statut transaction </label>
-                                <div class="col-sm-2">
-                                    <select name="statut" id="statut" class=""
-                                            placeholder="Services">
-                                        <option value="" selected> Sélectionnez une statut</option>
 
-                                        @foreach($statuts as $s)
-                                            <option @if($statut ==  $s) selected
-                                                    @endif value="{{$s}}"> {{$s}} </option>
-                                        @endforeach
-                                    </select>
-                                </div>
+                                <x-type-operation col_l="2" col_s="2"/>
 
                                 <label class="col-sm-2 col-form-label">Numéro de téléphone</label>
                                 <div class="col-sm-2">
@@ -112,7 +108,16 @@
 
                                 <x-partner />
 
-                                <x-type-operation col_l="2" col_s="2"/>
+                                <label class="col-sm-2 col-form-label">Statut transaction </label>
+                                <div class="col-sm-2">
+                                    <select multiple name="statut[]" id="statut" class=""
+                                            placeholder="Services">
+                                        @foreach($statuts as $s)
+                                            <option @if( in_array($s,$statut)) selected
+                                                    @endif value="{{$s}}"> {{$s}} </option>
+                                        @endforeach
+                                    </select>
+                                </div>
                                 <div class="col-sm-2">
                                     <button type="submit"
                                             class="primary-api-digital btn btn-primary btn-outline-primary btn-block"><i
@@ -235,6 +240,29 @@
                     () => {document.getElementById(idForm).submit()},
                     () => {console.log('If you say so...');},
                     { messageMaxLength: msg.length + 90,},);
+        }
+
+        function downloadVirementExcel(){
+            document.getElementById('spinner_import').removeAttribute('hidden');
+            document.getElementById('import-virement-bank').setAttribute('disabled', 'disabled')
+            HttpClient.get('/transaction/import-virement-bank')
+                .then((res)=>{
+                    if(res.code ===200){
+                        let date= Helper.nowDMY()
+                        Helper.downloadPDF(res.data,`virement-intech-api-du-${date}.xlsx`);
+                    }else {
+                        alert(res.msg);
+                    }
+                    document.getElementById('import-virement-bank').removeAttribute('disabled')
+                    document.getElementById('spinner_import').setAttribute('hidden','hidden');
+
+                }).catch(async (error)=>{
+                    document.getElementById('import-virement-bank').removeAttribute('disabled')
+                    document.getElementById('spinner_import').setAttribute('hidden','hidden');
+                    //console.log(  error);
+                    alert( error.message);
+            })
+
         }
 
     </script>

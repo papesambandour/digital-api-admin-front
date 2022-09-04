@@ -5,7 +5,9 @@ namespace App\Services;
 use App\Models\OperationParteners;
 use App\Models\OperationPhones;
 use App\Models\Transactions;
+use Exception;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 
 class TransactionServices
@@ -21,8 +23,8 @@ class TransactionServices
         if(getPartnerI()){
             $transactions->where('parteners_id',getPartnerI());
         }
-        if(request('statut')){
-            $transactions->where(STATUS_TRX_NAME,request('statut'));
+        if(count(request('statut',[]))){
+            $transactions->whereIn(STATUS_TRX_NAME,request('statut'));
         }
         if(request('date_start')){
             $transactions->where('created_at','>=',dateFilterStart(request('date_start')));
@@ -160,6 +162,44 @@ class TransactionServices
         }
         //dump($rest->status());
        // dd($rest->body());
+    }
+
+    public function getBankImported()
+    {
+        DB::beginTransaction();
+        $transationQueryery = Transactions::query()
+            ->where('statut',STATUS_TRX['PENDING'])
+            ->where('code_sous_service',CODE_VIREMENT_BANK)
+            ->where('import_bank',0);
+        $transactions = clone($transationQueryery) ->get();
+        $transationQueryery->update([
+            'import_bank'=>1,
+            'import_bank_at'=> nowIso(),
+        ]);
+        $transactions = $transactions->map(function($transaction){
+            /**
+             * @var Transactions $transaction
+             */
+            return [
+                'RIB'=> (string)$transaction->rib ?: "",
+                'Nom'=> "$transaction->customer_first_name $transaction->customer_last_name" ,
+                'Adresse 1'=> '',
+                'Adresse 2'=> '',
+                'Adresse 3'=> '',
+                'Motif'=> "Virement TR#$transaction->transaction_id pour $transaction->partener_name pour $transaction->customer_first_name $transaction->customer_last_name",
+                'Montant'=> floor($transaction->amount),
+                "Transaction ID" => "$transaction->transaction_id",
+                "Statut" => "",
+                "Reason"=> ""
+            ];
+         })->toArray();
+        if(!count($transactions)){
+           throw new Exception("Pas de transaction en cours");
+        }
+        //TODO UNCOMMENT DB::commit();
+        DB::commit();
+        return $transactions;
+
     }
 
 }

@@ -130,6 +130,7 @@
     },
     "phones": {
         "number": "required|max:255",
+        "sim_provider": "required|max:255",
         "codeSecret": "nullable|max:255",
         "_sous_services_id": "required|integer|min:-2147483648|max:2147483647"
     },

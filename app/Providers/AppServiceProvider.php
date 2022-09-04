@@ -2,6 +2,10 @@
 
 namespace App\Providers;
 
+use App\Services\Helpers\Export\Excel\ExcelExportAbstractService;
+use App\Services\Helpers\Export\Excel\ExcelExportService;
+use App\Services\Helpers\Export\Pdf\PdfExportAbstractService;
+use App\Services\Helpers\Export\Pdf\PdfExportService;
 use App\View\Components\FilterPartener;
 use App\View\Components\operation;
 use App\View\Components\OperationSelectComponent;
@@ -20,7 +24,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $this->app->singleton(PdfExportAbstractService::class,PdfExportService::class);
+        $this->app->singleton(ExcelExportAbstractService::class,ExcelExportService::class);
     }
 
     /**

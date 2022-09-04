@@ -35,13 +35,14 @@ use Illuminate\Database\Eloquent\Model;
  * @property SousServicesPhones[] $sousServicesPhones
  * @property Transactions[] $transactions
  * @property UssdExecutionMessages[] $ussdExecutionMessages
+ * @property string $sim_provider
  */
 class Phones extends Model
 {
     /**
      * @var array
      */
-    protected $fillable = ['services_id', 'solde', 'number', 'codeSecret', 'pin', 'ltd', 'lgd', 'imei', 'uid', 'state', 'created_at', 'updated_at', 'socket', 'amount_reserved', 'max_solde', 'alert_level_1_solde', 'alert_level_2_solde', 'alert_level_3_solde', 'alert_level_4_solde', 'alert_level_5_solde', 'phone_state', 'last_used', 'last_unused'];
+    protected $fillable = ['sim_provider','services_id', 'solde', 'number', 'codeSecret', 'pin', 'ltd', 'lgd', 'imei', 'uid', 'state', 'created_at', 'updated_at', 'socket', 'amount_reserved', 'max_solde', 'alert_level_1_solde', 'alert_level_2_solde', 'alert_level_3_solde', 'alert_level_4_solde', 'alert_level_5_solde', 'phone_state', 'last_used', 'last_unused'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

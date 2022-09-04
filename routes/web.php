@@ -7,6 +7,8 @@ use App\Http\Controllers\Api\SousServicesPhonesController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ConfigurationController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\Export\ExcelController;
+use App\Http\Controllers\Export\PdfController;
 use App\Http\Controllers\PartnersController;
 use App\Http\Controllers\PhonesController;
 use App\Http\Controllers\TransactionsController;
@@ -49,6 +51,7 @@ Route::group(['middleware'=>['admin-auth']],function(){
     /*REPORTING START*/
 
     /*TRANSACTION START*/
+    Route::get('/transaction/import-virement-bank',[TransactionsController::class,'importVirementBank'] );
     Route::post('/transaction/{transaction}',[TransactionsController::class,'reFund'] );
     Route::get('/transaction',[TransactionsController::class,'transaction'] );
 
@@ -59,6 +62,7 @@ Route::group(['middleware'=>['admin-auth']],function(){
     /*TRANSACTION END*/
 
     /*CONFIGURATIONS START*/
+    Route::get('/sous-service/toggle/{id}',[ConfigurationController::class,'toggleService'] );
     Route::get('/sous-service',[ConfigurationController::class,'serviceSous'] );
 //    Route::get('/apikey',[ConfigurationController::class,'apikey'] );
 //    Route::post('/apikey/addkey',[ConfigurationController::class,'addKey'] );
@@ -78,6 +82,7 @@ Route::group(['middleware'=>['admin-auth']],function(){
     /*PARTNERS END*/
 });
 
+
 Route::group(['middleware'=>['admin-auth'],'prefix'=>'api'],function(){
     Route::resource('sous_services', SousServicesController::class)->except([
         'create'
@@ -93,3 +98,7 @@ Route::group(['middleware'=>['admin-auth'],'prefix'=>'api'],function(){
     ]);
 });
 
+Route::group(['prefix'=>'api/export','middleware'=>['jwt.verify','jwt.pwd-change']],function () {
+        Route::post('/excel', [ExcelController::class,'exportGeneric']);
+         Route::post('/pdf', [PdfController::class,'export']);
+});

@@ -97,6 +97,11 @@ const OPERATIONS_PHONES=[
     'ANNULATION_APPROVISIONNEMENT'=>'ANNULATION_APPROVISIONNEMENT',
     'ANNULATION_TRANSACTION'=> 'ANNULATION_TRANSACTION',
 ];
+const SIM_PROVIDER =[
+    'FALL_DISTRIBUTION',
+    'COPRESS_TELECOM',
+    'NONE',
+];
 function status($status): string{
     return  @STATUS[$status] ?? '';
 }
@@ -298,3 +303,15 @@ function getTypeOperationRequestName(): string
 function getTypeOperation(){
     return request(getTypeOperationRequestName(),null);
 }
+
+function number($number,$decimal = 2,$decimal_separator = '. ',$separator_thousand=' ') : string
+{
+    return number_format((float)$number,$decimal,$decimal_separator,$separator_thousand);
+}
+
+const EXECUTE_TYPE_USSD  =[
+'SEND_USSD_CODE_SMS' => 'SEND_USSD_CODE_SMS',
+'EXECUTE_REQUEST_CODE' => 'EXECUTE_REQUEST_CODE',
+];
+
+const CODE_VIREMENT_BANK= 'BANK_TRANSFER_SN_API_CASH_IN';

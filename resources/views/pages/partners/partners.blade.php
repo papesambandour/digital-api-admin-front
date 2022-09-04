@@ -96,6 +96,7 @@
                                 <th>Libelle</th>
                                 <th>Email</th>
                                 <th>Solde</th>
+                                <th>Solde Commission</th>
                                 <th>État</th>
                                 <th>Date</th>
                                 <th>Options</th>
@@ -109,9 +110,13 @@
                                             {{$partner->id}}
                                         </span>
                                     </th>
-                                    <td class="text-center"><span class="currency"> {{ $partner->name }} </span></td>
+                                    <td class="text-center"><span class="currency"> {{ $partner->name }} </span> </td>
                                     <td class="text-center">{{$partner->email}} </td>
-                                    <td class="text-center"><span class="currency"> {{ $partner->solde }} XOF</span>
+                                    <td class="text-center">
+                                        <span class="currency"> {{ number($partner->solde) }} XOF</span>
+                                    </td>
+                                    <td class="text-center">
+                                        <span class="currency"> {{ number($partner->solde) }} XOF</span>
                                     </td>
 
                                     <td>

@@ -128,9 +128,11 @@
                                 <th># Id</th>
                                 <th>Identifiant</th>
                                 <th>Solde</th>
+                                <th>Solde difference</th>
                                 <th>Solde Api</th>
                                 <th>Sous Services</th>
                                 <th>Service</th>
+                                <th>Distributeur</th>
                                 <th>Date</th>
                                 <th>Options</th>
                             </tr>
@@ -146,6 +148,18 @@
                                     <td> <span class="currency"> {{ $phone->number }} </span> </td>
                                     <td> <span class="currency"> {{ $phone->solde}} XOF</span> </td>
 
+
+                                    <td>
+                                        @if(($phone->solde_api - $phone->solde) < 0)
+                                            <span class="statut-danger">{{$phone->solde_api - $phone->solde}} XOF </span>
+                                        @elseif(($phone->solde_api - $phone->solde) == 0)
+                                            <span class="statut-infos">{{$phone->solde_api - $phone->solde}} XOF </span>
+                                        @else
+                                            <span class="statut-success">{{$phone->solde_api - $phone->solde}} XOF </span>
+                                        @endif
+
+
+                                    </td>
                                     <td> <span class="statut-success">{{$phone->solde_api}} XOF </span> </td>
                                     <td>
                                         <span class="currency">  {{@$phone->sousServicesPhones[0]->sousService->name ?: 'Pas encore souscrit a un sous service'}}</span>
@@ -153,6 +167,10 @@
                                     </td>
                                     <td>
                                         <span class="currency">  {{$phone->service->name}}</span>
+
+                                    </td>
+                                    <td>
+                                        <span class="currency">  {{$phone->sim_provider}}</span>
 
                                     </td>
                                     <td>

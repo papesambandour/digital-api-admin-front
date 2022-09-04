@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $updated_at
  * @property string $state
  * @property float $solde
+ * @property float $solde_commission
  * @property float $amount_reserved
  * @property string $name
  * @property string $phone
