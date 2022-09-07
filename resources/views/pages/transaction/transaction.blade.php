@@ -11,7 +11,7 @@
 ?>
 @section('page')
 
-    <div class="page-wrapper">
+    <div id="app" class="page-wrapper">
         <div class="col-md-12">
             @if(Session::has('success'))
                 <p class="alert alert-success">{{ Session::get('success') }}</p>
@@ -35,9 +35,15 @@
                     </div>
                 </div>
                 <div class="col-lg-4">
-                    <button  onclick="downloadVirementExcel()" type="button" id="import-virement-bank"
+                    <button v-on:click="downloadVirementExcel()"    type="button" id="import-virement-bank"
                             class="primary-api-digital btn btn-primary btn-outline-primary btn-block ">
                         <i title="" class="ti-download "></i>
+                        <span style=""> Exporter les virements bancaires en cours</span>
+                        <i hidden id="spinner_import" class="fas fa-spinner fa-pulse"></i>
+                    </button>
+                    <button v-on:click="importDankTransaction()"  type="button" id="import-virement-bank"
+                            class="primary-api-digital btn btn-primary btn-outline-primary btn-block ">
+                        <i title="" class="ti-upload "></i>
                         <span style=""> Importer les virements bancaires en cours</span>
                         <i hidden id="spinner_import" class="fas fa-spinner fa-pulse"></i>
                     </button>
@@ -197,7 +203,7 @@
                                                 <div class="dropdown-divider"></div>
                                                 <form id="{{$transaction->id}}" action="/transaction/{{$transaction->id}}" method="POST">
                                                     @csrf
-                                                    <button style="cursor: pointer" onclick='refund("{{$transaction->id}}")' type="button" class="dropdown-item text-center" >Rembourser</button>
+                                                    <button style="cursor: pointer" v-on:click='refund("{{$transaction->id}}")' type="button" class="dropdown-item text-center" >Rembourser</button>
                                                 </form>
                                             </div>
                                         </div>
@@ -217,56 +223,191 @@
 
         </div>
         <!-- Contextual classes table ends -->
+
+        {{--  MODAL FRAIX START  --}}
+
+        <div class="modal fade" id="importTRXBank" tabindex="-1" role="dialog"
+             aria-labelledby="modalFraisSouServiceLabel" aria-hidden="true">
+            <div class="modal-dialog modal-xl" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalFraisSouServiceLabel">
+                            Configuration des frais du service
+                        </h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form {{--v-on:submit.prevent="addCommission()" --}}class="modal-body">
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">Date de début</label>
+                            <form class="col-sm-4">
+                                <input multiple @change="parseToJson" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"  id="importedFile" name="importedFile" type="file"
+                                       class="form-control form-control-normal" placeholder="Transaction a importer">
+                            </form>
+                        </div>
+
+                        <table class="fl-table">
+                            <thead>
+                            <tr>
+                                <th>RIB</th>
+                                <th>Nom</th>
+                                <th>Adresse 1</th>
+                                <th>Adresse 2</th>
+                                <th>Adresse 3</th>
+                                <th>Motif</th>
+                                <th>Montant</th>
+                                <th>Transaction ID</th>
+                                <th>Statut</th>
+                                <th>Reason</th>
+
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr v-for="trx in transactionImports">
+                                <td>@{{ trx.rib }}</td>
+                                <td>@{{ trx.name }}</td>
+                                <td>@{{ trx.address1 }}</td>
+                                <td>@{{ trx.address2 }}</td>
+                                <td>@{{ trx.address3 }}</td>
+                                <td>@{{ trx.motif }}</td>
+                                <td>@{{ trx.amount }}</td>
+                                <td>@{{ trx.trxId }}</td>
+                                <td>@{{ trx.statut }}</td>
+                                <td>@{{ trx.reason }}</td>
+                            </tr>
+
+                            {{-- <tr v-for="commission in commissions">
+                                 <td>@{{ commission.amount_start }}</td>
+                             </tr>--}}
+                            </tbody>
+                        </table>
+
+                    </form>
+                    <div class="modal-footer">
+                        <button  style="margin: 0 !important;" type="button"
+                                 class="btn btn-secondary btn-outline-secondary btn-block" data-dismiss="modal">Fermer
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{--  MODAL FRAIX END  --}}
     </div>
 
     <!-- Page-body end -->
 
+
 @endsection
 
 @section('js')
+
     <script>
-        $(document).ready(function () {
-            $('#sous_services_id').select2();
-            $('#statut').select2();
+        const app = new Vue({
+            el: '#app',
+            data: {
+                transactionImports:[],
+            },
+            methods:{
+                downloadVirementExcel(){
+                    document.getElementById('spinner_import').removeAttribute('hidden');
+                    document.getElementById('import-virement-bank').setAttribute('disabled', 'disabled')
+                    HttpClient.get('/transaction/import-virement-bank')
+                        .then((res)=>{
+                            if(res.code ===200){
+                                let date= Helper.nowDMY()
+                                Helper.downloadPDF(res.data,`virement-intech-api-du-${date}.xlsx`);
+                            }else {
+                                alert(res.msg);
+                            }
+                            document.getElementById('import-virement-bank').removeAttribute('disabled')
+                            document.getElementById('spinner_import').setAttribute('hidden','hidden');
+
+                        }).catch(async (error)=>{
+                        document.getElementById('import-virement-bank').removeAttribute('disabled')
+                        document.getElementById('spinner_import').setAttribute('hidden','hidden');
+                        //console.log(  error);
+                        alert( error.message);
+                    })
+
+                },
+                refund(idForm) {
+                    let msg='Voulez-vous confirmer le remboursement ?';
+                    Notiflix
+                        .Confirm
+                        .show('Remboursement ',msg,
+                            'Oui',
+                            'Non',
+                            () => {document.getElementById(idForm).submit()},
+                            () => {console.log('If you say so...');},
+                            { messageMaxLength: msg.length + 90,},);
+                },
+                importDankTransaction(){
+                    $("#importTRXBank").modal('show');
+                },
+                 parseToJson($event) {
+                     // console.log('ii',$event)
+                    try {
+                        let fileInput = $event.target.files[0];
+                        let name = $event.target.files[0].name;
+                        console.log("FILE AND EXTENSION", name)
+                        let reader = new FileReader();
+                        let first=0 ;
+                        let init =false;
+                        let tabs= [];
+                        reader.onload = async () => {
+                            const rawExcel= reader?.result;
+                            const wb = XLSX.read(rawExcel, {type: 'binary'});
+                            const wsname = wb.SheetNames[0];
+                            const ws = wb.Sheets[wsname];
+                            const clients = XLSX.utils.sheet_to_json(ws, {header: 1});
+                            let cpt=0;
+                            clients.map((c) => {
+                                console.log('c',c)
+                                let line = {};
+                                if(c.length && cpt){
+                                    line.rib = c[0]?.toString()?.trim() || 'N\A';
+                                    line.name = c[1]?.toString()?.trim() || 'N\A';
+                                    line.address1 = c[2]?.toString()?.trim() || 'N\A';
+                                    line.address2 = c[3]?.toString()?.trim() || 'N\A';
+                                    line.address3 = c[4]?.toString()?.trim() || 'N\A';
+                                    line.motif = c[5]?.toString()?.trim() || 'N\A';
+                                    line.amount = +c[6]?.toString().trim() || 'N\A';
+                                    line.trxId = c[7]?.toString()?.trim() || 'N\A';
+                                    line.statut = c[8]?.toString()?.trim() || 'N\A';
+                                    line.reason = c[9]?.toString()?.trim() || 'N\A';
+                                    if(cpt && line.rib){
+                                        tabs.push(line);
+                                    }
+                                }
+                                cpt++;
+                            });
+                            console.log('CLIENT',tabs);
+                            this.transactionImports =  tabs ;
+                        };
+                        reader.readAsBinaryString(fileInput);
+                    } catch (e) {
+                        alert('Fichier non comptatible');
+                    }
+                },
+            },
+            computed: {},
+            async created() {
+                $(document).ready(function () {
+                    $('#sous_services_id').select2();
+                    $('#statut').select2();
+                });
+            }
         });
 
-        function refund(idForm) {
-            let msg='Voulez-vous confirmer le remboursement ?';
-            Notiflix
-                .Confirm
-                .show('Remboursement ',msg,
-                    'Oui',
-                    'Non',
-                    () => {document.getElementById(idForm).submit()},
-                    () => {console.log('If you say so...');},
-                    { messageMaxLength: msg.length + 90,},);
-        }
-
-        function downloadVirementExcel(){
-            document.getElementById('spinner_import').removeAttribute('hidden');
-            document.getElementById('import-virement-bank').setAttribute('disabled', 'disabled')
-            HttpClient.get('/transaction/import-virement-bank')
-                .then((res)=>{
-                    if(res.code ===200){
-                        let date= Helper.nowDMY()
-                        Helper.downloadPDF(res.data,`virement-intech-api-du-${date}.xlsx`);
-                    }else {
-                        alert(res.msg);
-                    }
-                    document.getElementById('import-virement-bank').removeAttribute('disabled')
-                    document.getElementById('spinner_import').setAttribute('hidden','hidden');
-
-                }).catch(async (error)=>{
-                    document.getElementById('import-virement-bank').removeAttribute('disabled')
-                    document.getElementById('spinner_import').setAttribute('hidden','hidden');
-                    //console.log(  error);
-                    alert( error.message);
-            })
-
-        }
 
     </script>
 @endsection
 
 @section('css')
+  <style>
+      .modal-xl{
+          min-width: 90% !important;
+      }
+  </style>
 @endsection
