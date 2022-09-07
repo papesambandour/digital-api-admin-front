@@ -123,6 +123,8 @@
                             <tr>
                                 <th># Id</th>
                                 <th>Montant</th>
+                                <th>Solde Avant</th>
+                                <th>Solde Apres</th>
                                 <th>Services Provider</th>
                                 <th>Operation de </th>
                                 <th>Provenance </th>
@@ -138,6 +140,8 @@
                                         </span>
                                     </th>
                                     <td> <span class="currency"> {{ $mouvement->amount }} XOF</span> </td>
+                                    <td> <span class="currency"> {{ $mouvement->solde_before }} XOF</span> </td>
+                                    <td> <span class="currency"> {{ $mouvement->solde_after }} XOF</span> </td>
                                     <td> <span class="currency">
 
                                         ({{$mouvement->phone->id}})   {{$mouvement->phone->number }}
