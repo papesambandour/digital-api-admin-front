@@ -53,8 +53,25 @@
             <div class="card widget-card-1">
                 <div class="card-block-small">
                     <i class="icofont icofont-money bg-c-blue card1-icon"></i>
-                    <span class="text-c-blue f-w-600">Solde Intech API</span>
-                    <h4 class="currency">{{soldeIntech()}} XOF</h4>
+                    <span class="text-c-blue f-w-600">Solde Intech (Systeme)</span>
+                    <h4 class="currency">{{soldeIntechSystem()}} XOF</h4>
+                    <div>
+                                                            <span class="f-left m-t-10 text-muted">
+                                                                <i class="text-c-blue f-16 icofont icofont-money-bag m-r-10"></i>Le solde total de intech API
+                                                            </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- card1 end -->
+
+        <!-- card1 start -->
+        <div class="col-md-6 col-xl-4">
+            <div class="card widget-card-1">
+                <div class="card-block-small">
+                    <i class="icofont icofont-money bg-c-blue card1-icon"></i>
+                    <span class="text-c-blue f-w-600">Solde Intech (Provider)</span>
+                    <h4 class="currency">{{soldeIntechStock()}} XOF</h4>
                     <div>
                                                             <span class="f-left m-t-10 text-muted">
                                                                 <i class="text-c-blue f-16 icofont icofont-money-bag m-r-10"></i>Le solde total de intech API
@@ -189,9 +206,10 @@
                     <div class="card-block-small">
                         <i class="icofont icofont-money bg-c-green card1-icon"></i>
                         <span class="text-c-green f-w-600">{{$service->name}}</span>
-                        <h4> <span style="font-size: 15px;color: #93be52">Solde</span>  <span style="font-size: 16px;color: #303549">{{soldeService($service->id) }} XOF</span> </h4>
+                        <h4> <span style="font-size: 15px;color: #93be52">Solde Systeme</span>  <span style="font-size: 16px;color: #303549">{{soldeServiceSystem($service->id) }} XOF</span> </h4>
+                        <h4> <span style="font-size: 15px;color: #93be52">Solde Stock</span>  <span style="font-size: 16px;color: #303549">{{soldeServiceStock($service->id) }} XOF</span> </h4>
                         <hr style="display: block; border-bottom: 1px solid #93be52">
-                        <h4> <span style="font-size: 15px;color: #93be52">Gain</span> <span style="font-size: 16px;color: #303549">{{  '--' }} XOF <br>  {!! period2() !!} </span></h4>
+                        <h4> <span style="font-size: 15px;color: #93be52">Gain</span> <span style="font-size: 16px;color: #303549">{{  gainIntechByService($service->code) }} XOF <br>  {!! period2() !!} </span></h4>
                         <div>
                                                             <span class="f-left m-t-10 text-muted">
                                                                 <i class="text-c-green f-16 icofont icofont-calendar m-r-10"></i>

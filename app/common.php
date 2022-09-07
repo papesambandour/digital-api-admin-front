@@ -233,19 +233,38 @@ const STATUS_TRX_NAME = 'pre_statut';
 //UPDATE transactions set pre_statut = statut;
 
 
-function soldeIntech(){
+function soldeIntechSystem(){
    return  Phones::query()->sum('solde');
+}
+
+function soldeIntechStock(){
+   return  Phones::query()->sum('solde_api');
 }
 
 function balancePartners(){
    return  Parteners::query()->sum('solde');
 }
+
 function gainIntech(){
-   return  '---';
+    $start= request('date_start', gmdate('Y-m-d')  );
+    $end= request('date_end', gmdate('Y-m-d'));
+   return  Transactions::query()->whereBetween('created_at', [$start, $end])->sum('win');
 }
-function soldeService(int $serviceId){
+
+function gainIntechByService($codeService){
+    $start= request('date_start', gmdate('Y-m-d')  );
+    $end= request('date_end', gmdate('Y-m-d'));
+   return  Transactions::query()->where('code_sous_service', $codeService)->whereBetween('created_at', [$start, $end])->sum('win');
+}
+
+function soldeServiceSystem(int $serviceId){
   return  Phones::query()->where('services_id',$serviceId)->sum('solde');
 }
+
+function soldeServiceStock(int $serviceId){
+  return  Phones::query()->where('services_id',$serviceId)->sum('solde_api');
+}
+
 function partnerDetail(): bool
 {
     return (int)request('partner_details') === 1;
