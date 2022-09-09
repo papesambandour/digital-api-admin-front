@@ -176,7 +176,7 @@ class TransactionServices
             ->where('import_bank',0);
         $transactions = clone($transationQueryery) ->get();
         $transationQueryery->update([
-            'import_bank'=>0,
+            'import_bank'=>1,
             'import_bank_at'=> nowIso(),
             'export_batch_id'=>Utils::GUID()
         ]);
