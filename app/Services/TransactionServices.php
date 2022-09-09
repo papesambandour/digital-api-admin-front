@@ -190,9 +190,9 @@ class TransactionServices
                 'Adresse 1'=> '',
                 'Adresse 2'=> '',
                 'Adresse 3'=> '',
-                'Motif'=> "Virement TR#$transaction->transaction_id pour $transaction->partener_name pour $transaction->customer_first_name $transaction->customer_last_name",
+                'Motif'=> "Virement TR#$transaction->id pour $transaction->partener_name pour $transaction->customer_first_name $transaction->customer_last_name",
                 'Montant'=> floor($transaction->amount),
-                "Transaction ID" => "$transaction->transaction_id",
+                "Transaction ID" => "$transaction->id",
                 "Statut" => "",
                 "Reason"=> ""
             ];
