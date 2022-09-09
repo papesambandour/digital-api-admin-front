@@ -78,6 +78,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $customer_email;
  * @property int $import_bank;
  * @property string $import_bank_at;
+ * @property string $export_batch_id;
+ * @property string $import_batch_id;
  */
 class Transactions extends Model
 {

@@ -247,45 +247,54 @@
                             </form>
                         </div>
 
-                        <table class="fl-table">
-                            <thead>
-                            <tr>
-                                <th>RIB</th>
-                                <th>Nom</th>
-                                <th>Adresse 1</th>
-                                <th>Adresse 2</th>
-                                <th>Adresse 3</th>
-                                <th>Motif</th>
-                                <th>Montant</th>
-                                <th>Transaction ID</th>
-                                <th>Statut</th>
-                                <th>Reason</th>
+                      <div class="table-responsive">
+                          <table class="fl-table " style="width: 100%;overflow: auto">
+                              <thead>
+                              <tr>
+                                  <th>RIB</th>
+                                  <th>Nom</th>
+                                  {{--                                <th>Adresse 1</th>--}}
+                                  {{--                                <th>Adresse 2</th>--}}
+                                  {{--                                <th>Adresse 3</th>--}}
+                                  <th>Motif</th>
+                                  <th>Montant</th>
+                                  <th>Transaction ID</th>
+                                  <th>Statut </th>
+                                  <th>Reason</th>
+                                  <th>Statut Traitement</th>
+                                  <th>Reason Traitement</th>
 
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr v-for="trx in transactionImports">
-                                <td>@{{ trx.rib }}</td>
-                                <td>@{{ trx.name }}</td>
-                                <td>@{{ trx.address1 }}</td>
-                                <td>@{{ trx.address2 }}</td>
-                                <td>@{{ trx.address3 }}</td>
-                                <td>@{{ trx.motif }}</td>
-                                <td>@{{ trx.amount }}</td>
-                                <td>@{{ trx.trxId }}</td>
-                                <td>@{{ trx.statut }}</td>
-                                <td>@{{ trx.reason }}</td>
-                            </tr>
+                              </tr>
+                              </thead>
+                              <tbody>
+                              <tr v-for="trx in transactionImports" :class="{ isOk: trx.statut === 'SUCCESS' ||trx.statut ==='FAILED' ,isNotOk: trx.statut !== 'SUCCESS' && trx.statut !=='FAILED' , failedImport: trx?.statutTreatment === 'FAILED'}">
+                                  <td>@{{ trx.rib }}</td>
+                                  <td>@{{ trx.name }}</td>
+                                  {{--                                <td>@{{ trx.address1 }}</td>--}}
+                                  {{--                                <td>@{{ trx.address2 }}</td>--}}
+                                  {{--                                <td>@{{ trx.address3 }}</td>--}}
+                                  <td>@{{ trx.motif }}</td>
+                                  <td>@{{ trx.amount }}</td>
+                                  <td>@{{ trx.trxId }}</td>
+                                  <td class="statut">@{{ trx.statut }}</td>
+                                  <td>@{{ trx.reason }}</td>
+                                  <td>@{{ trx.statutTreatment }}</td>
+                                  <td>@{{ trx.messageTreatment }}</td>
+                              </tr>
 
-                            {{-- <tr v-for="commission in commissions">
-                                 <td>@{{ commission.amount_start }}</td>
-                             </tr>--}}
-                            </tbody>
-                        </table>
+                              {{-- <tr v-for="commission in commissions">
+                                   <td>@{{ commission.amount_start }}</td>
+                               </tr>--}}
+                              </tbody>
+                          </table>
+                      </div>
 
                     </form>
                     <div class="modal-footer">
-                        <button  style="margin: 0 !important;" type="button"
+                        <button :disabled="!importOk" v-on:click="updateTransactions()"  style="margin: 0 !important;" type="button"
+                                 class="btn btn-primary btn-outline-secondary btn-block" >Importer
+                        </button>
+                        <button :disabled="requesting"  style="margin: 0 !important;" type="button"
                                  class="btn btn-secondary btn-outline-secondary btn-block" data-dismiss="modal">Fermer
                         </button>
                     </div>
@@ -307,12 +316,14 @@
             el: '#app',
             data: {
                 transactionImports:[],
+                importOk:false,
+                requesting:false,
             },
             methods:{
                 downloadVirementExcel(){
                     document.getElementById('spinner_import').removeAttribute('hidden');
                     document.getElementById('import-virement-bank').setAttribute('disabled', 'disabled')
-                    HttpClient.get('/transaction/import-virement-bank')
+                    HttpClient.get('/transaction/export-virement-bank')
                         .then((res)=>{
                             if(res.code ===200){
                                 let date= Helper.nowDMY()
@@ -362,6 +373,7 @@
                             const ws = wb.Sheets[wsname];
                             const clients = XLSX.utils.sheet_to_json(ws, {header: 1});
                             let cpt=0;
+                            let isOk = true;
                             clients.map((c) => {
                                 console.log('c',c)
                                 let line = {};
@@ -376,6 +388,10 @@
                                     line.trxId = c[7]?.toString()?.trim() || 'N\A';
                                     line.statut = c[8]?.toString()?.trim() || 'N\A';
                                     line.reason = c[9]?.toString()?.trim() || 'N\A';
+                                    line.checked = true;
+                                    if(line.statut !== 'SUCCESS' && line.statut !== 'FAILED'){
+                                        isOk= false;
+                                    }
                                     if(cpt && line.rib){
                                         tabs.push(line);
                                     }
@@ -384,12 +400,64 @@
                             });
                             console.log('CLIENT',tabs);
                             this.transactionImports =  tabs ;
+                            this.importOk = this.transactionImports.length > 0 && isOk;
                         };
                         reader.readAsBinaryString(fileInput);
                     } catch (e) {
                         alert('Fichier non comptatible');
                     }
                 },
+
+                async updateTransactions() {
+                    this.requesting = true;
+                    let rest = await HttpClient.put('/transaction/import-virement-bank',{
+                        trx: this.transactionImports?.map((trx)=>{
+                            return {
+                                statut: trx.statut,
+                                id: trx.trxId,
+                                message: trx.reason,
+                            }
+                        }),
+                    });
+                    if(rest.code === 201) {
+                        let tabs = [];
+                        rest.data.map((item)=>{
+                            let trx = this.transactionImports?.find((tr)=> tr.trxId == item.id);
+                            console.log('jj', trx);
+
+                             trx.statutTreatment= item.statutTreatment;
+                            trx.messageTreatment= item.messageTreatment;
+                            tabs.push(trx);
+                        })
+                        this.transactionImports = [...tabs];
+                        Notiflix
+                            .Report
+                            .info(
+                                "SUCCESS",
+                                'Transactions mise a jour avec success',
+                                'FERMER',
+                                {
+                                    svgSize: '42px',
+                                    messageMaxLength: 10000,
+                                    plainText: true,
+                                },
+                            );
+                    }else{
+                        Notiflix
+                            .Report
+                            .info(
+                                'Erreur',
+                                rest.msg ||  `Une erreur est survenue`,
+                                'FERMER',
+                                {
+                                    svgSize: '42px',
+                                    messageMaxLength: 100000,
+                                    plainText: true,
+                                },
+                            );
+                    }
+                  //  this.requesting = false;
+                }
             },
             computed: {},
             async created() {
@@ -408,6 +476,19 @@
   <style>
       .modal-xl{
           min-width: 90% !important;
+      }
+      .isOk td{
+          color: green;
+      }
+      .isNotOk td{
+          color: red;
+      }
+      .isNotOk td.statut{
+          color: white;
+          background: red;
+      }
+      .failedImport td{
+          color: orange !important;
       }
   </style>
 @endsection

@@ -51,7 +51,8 @@ Route::group(['middleware'=>['admin-auth']],function(){
     /*REPORTING START*/
 
     /*TRANSACTION START*/
-    Route::get('/transaction/import-virement-bank',[TransactionsController::class,'importVirementBank'] );
+    Route::get('/transaction/export-virement-bank',[TransactionsController::class,'exportVirementBank'] );
+    Route::put('/transaction/import-virement-bank',[TransactionsController::class,'importVirementBank'] );
     Route::post('/transaction/{transaction}',[TransactionsController::class,'reFund'] );
     Route::get('/transaction',[TransactionsController::class,'transaction'] );
 

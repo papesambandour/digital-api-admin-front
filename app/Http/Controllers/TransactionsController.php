@@ -93,8 +93,11 @@ class TransactionsController extends Controller
         return view('pages/transaction.mvm-compte-phones',compact('phones','phones_id','mouvements','amount_min','amount_max','date_end','date_start',));
     }
 
-    public function importVirementBank(Request $request){
+    public function exportVirementBank(Request $request){
         return $this->excelExportService->exportInternal($this->transactions->getBankImported());
+    }
+    public function importVirementBank(Request $request){
+        return $this->transactions->importTransaction($request);
     }
 
 }

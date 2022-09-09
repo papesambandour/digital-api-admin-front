@@ -5,8 +5,11 @@ namespace App\Services;
 use App\Models\OperationParteners;
 use App\Models\OperationPhones;
 use App\Models\Transactions;
+use App\Services\Helpers\Utils;
 use Exception;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 
@@ -168,13 +171,14 @@ class TransactionServices
     {
         DB::beginTransaction();
         $transationQueryery = Transactions::query()
-            ->where('statut',STATUS_TRX['PENDING'])
+            ->where('statut',STATUS_TRX['PROCESSING'])
             ->where('code_sous_service',CODE_VIREMENT_BANK)
             ->where('import_bank',0);
         $transactions = clone($transationQueryery) ->get();
         $transationQueryery->update([
             'import_bank'=>1,
             'import_bank_at'=> nowIso(),
+            'export_batch_id'=>Utils::GUID()
         ]);
         $transactions = $transactions->map(function($transaction){
             /**
@@ -200,6 +204,20 @@ class TransactionServices
         DB::commit();
         return $transactions;
 
+    }
+
+    public function importTransaction(Request $request): JsonResponse|array
+    {
+        $rest = Http::withHeaders([
+            'apikey'=>env('SECRETE_API_DIGITAL')
+        ])->post(env('API_DIGITAL_URL') . '/api/v1.0/partner/transaction/import_bank_transfer',
+         $request->get('trx')
+        );
+        if($rest->status() === 201){
+            return Utils::respond('updated',$rest->object());
+        }else{
+            return Utils::respond('error',$rest->object());
+        }
     }
 
 }
