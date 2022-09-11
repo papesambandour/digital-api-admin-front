@@ -234,35 +234,39 @@ const STATUS_TRX_NAME = 'pre_statut';
 
 
 function soldeIntechSystem(){
-   return  Phones::query()->sum('solde');
+   return  fMoney(Phones::query()->sum('solde'));
 }
 
 function soldeIntechStock(){
-   return  Phones::query()->sum('solde_api');
+   return  fMoney(Phones::query()->sum('solde_api'));
 }
 
 function balancePartners(){
-   return  Parteners::query()->sum('solde');
+   return  fMoney(Parteners::query()->sum('solde'));
 }
 
 function gainIntech(){
     $start= request('date_start', gmdate('Y-m-d')  );
     $end= request('date_end', gmdate('Y-m-d'));
-   return  Transactions::query()->whereBetween('created_at', [$start, $end])->sum('win');
+   return  fMoney(Transactions::query()->whereBetween('created_at', [$start, $end])->sum('win'));
 }
 
 function gainIntechByService($codeService){
     $start= request('date_start', gmdate('Y-m-d')  );
     $end= request('date_end', gmdate('Y-m-d'));
-   return  Transactions::query()->where('code_sous_service', $codeService)->whereBetween('created_at', [$start, $end])->sum('win');
+   return  fMoney(Transactions::query()->where('code_sous_service', $codeService)->whereBetween('created_at', [$start, $end])->sum('win'));
 }
 
 function soldeServiceSystem(int $serviceId){
-  return  Phones::query()->where('services_id',$serviceId)->sum('solde');
+  return  fMoney(Phones::query()->where('services_id',$serviceId)->sum('solde'));
+}
+
+function fMoney($v){
+    return number_format($v, 1, ',', ' ');
 }
 
 function soldeServiceStock(int $serviceId){
-  return  Phones::query()->where('services_id',$serviceId)->sum('solde_api');
+  return  fMoney(Phones::query()->where('services_id',$serviceId)->sum('solde_api'));
 }
 
 function partnerDetail(): bool
