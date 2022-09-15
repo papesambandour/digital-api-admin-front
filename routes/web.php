@@ -52,9 +52,12 @@ Route::group(['middleware'=>['admin-auth']],function(){
     /*REPORTING START*/
 
     /*TRANSACTION START*/
+    Route::get('/transaction/details/{transaction}',[TransactionsController::class,'details'] );
     Route::get('/transaction/export-virement-bank',[TransactionsController::class,'exportVirementBank'] );
     Route::put('/transaction/import-virement-bank',[TransactionsController::class,'importVirementBank'] );
-    Route::post('/transaction/{transaction}',[TransactionsController::class,'reFund'] );
+    Route::post('/transaction/refund/{transaction}',[TransactionsController::class,'reFund'] );
+    Route::post('/transaction/success/{transaction}',[TransactionsController::class,'setSuccessTransaction'] );
+    Route::post('/transaction/failed/{transaction}',[TransactionsController::class,'setFailTransaction'] );
     Route::get('/transaction',[TransactionsController::class,'transaction'] );
 
     Route::get('/versement',[TransactionsController::class,'versement'] );

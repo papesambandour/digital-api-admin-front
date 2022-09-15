@@ -10,8 +10,8 @@
  */
 ?>
 @section('page')
-
-    <div id="app" class="page-wrapper">
+<section id="app">
+    <div  class="page-wrapper">
         <div class="col-md-12">
             @if(Session::has('success'))
                 <p class="alert alert-success">{{ Session::get('success') }}</p>
@@ -201,10 +201,25 @@
                                             <div class="dropdown-menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(113px, 40px, 0px); top: 0px; left: 0px; will-change: transform;">
                                                 <a class="dropdown-item text-center">Options</a>
                                                 <div class="dropdown-divider"></div>
-                                                <form id="{{$transaction->id}}" action="/transaction/{{$transaction->id}}" method="POST">
-                                                    @csrf
-                                                    <button style="cursor: pointer" v-on:click='refund("{{$transaction->id}}")' type="button" class="dropdown-item text-center" >Rembourser</button>
-                                                </form>
+
+                                                <button class="dropdown-item text-center " onclick="window.location.href= '/transaction/details/{{$transaction->id}}'">Details</button>
+
+                                                <button v-on:click='openModal("{{$transaction->id}}","refund")' type="button"
+                                                        class="dropdown-item text-center">
+                                                    <span style=""> Rembourser la transaction</span>
+                                                </button>
+                                                @if($transaction->pre_statut !== STATUS_TRX['SUCCESS'])
+                                                    <button v-on:click='openModal("{{$transaction->id}}","success")' type="button"
+                                                            class="dropdown-item text-center ">
+                                                        <span style=""> Valider la transaction</span>
+                                                    </button>
+                                                @endif
+                                                @if($transaction->pre_statut !== STATUS_TRX['FAILLED'])
+                                                    <button v-on:click='openModal("{{$transaction->id}}","failed")' type="button"
+                                                            class="dropdown-item text-center">
+                                                        <span style=""> Annuler la transaction </span>
+                                                    </button>
+                                                @endif
                                             </div>
                                         </div>
 
@@ -305,8 +320,43 @@
     </div>
 
     <!-- Page-body end -->
+    {{--  MODAL VALIDER/ANULER transaction START  --}}
+    <div class="modal fade" id="modalTransaction" tabindex="-1" role="dialog"
+         aria-labelledby="modalTransactionLabel" aria-hidden="true">
+        <div class="modal-dialog modal-md" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalTransactionLabel">
+                        @{{titleTransaction}}
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form :action="url_transaction" method="POST"  class="modal-body">
+                    @csrf
+                    <div >
+                        <div v-if="typeAction !== 'refund'" class="form-group row">
+                            <label for="comment" class="col-sm-12 col-form-label">Commentaire</label>
+                            <div class="col-sm-12">
+                                <textarea required v-model="message" rows="10" name="message" id="comment"
+                                          class="form-control form-control-normal" placeholder="Commentaire"></textarea>
+                            </div>
 
-
+                        </div>
+                        <div class="text-center">
+                            <button  class="primary-api-digital btn btn-primary btn-outline-primary "
+                                     type="submit" >
+                                <i class="ti-plus"></i> @{{ btnMessage }}
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    {{--  MODAL FRAIX END  --}}
+</section>
 @endsection
 
 @section('js')
@@ -318,8 +368,34 @@
                 transactionImports:[],
                 importOk:false,
                 requesting:false,
+                url_transaction:'',
+                titleTransaction:'',
+                message:'',
+                btnMessage:'',
+                idTransaction:'',
+                typeAction:'',
             },
             methods:{
+                openModal(id,type){
+                    this.idTransaction = id;
+                    this.typeAction = type;
+                    if(type ==='success'){
+                        this.url_transaction = `/transaction/success/${id}`;
+                        this.titleTransaction = '`Validation Transaction numéro ${id}';
+                        this.btnMessage = "Validation la transaction"
+                    }
+                    if(type ==='failed'){
+                        this.url_transaction = `/transaction/failed/${id}`;
+                        this.titleTransaction = `Annulation Transaction numéro ${id}`;
+                        this.btnMessage = "Annuler la transaction";
+                    }
+                    if(type ==='refund'){
+                        this.url_transaction = `/transaction/refund/${id}`;
+                        this.titleTransaction =    `Remboursement Transaction numéro ${id}`;
+                        this.btnMessage = "Remboursement la transaction"
+                    }
+                    $('#modalTransaction').modal('show');
+                },
                 downloadVirementExcel(){
                     document.getElementById('spinner_import').removeAttribute('hidden');
                     document.getElementById('import-virement-bank').setAttribute('disabled', 'disabled')

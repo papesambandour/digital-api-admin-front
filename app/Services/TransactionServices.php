@@ -152,17 +152,24 @@ class TransactionServices
         }
         return  $query->orderBy('id','DESC')->paginate(size());
     }
-    public function reFund(Transactions $transaction): \Illuminate\Http\RedirectResponse
+    public function reFund(Transactions $transaction)
     {
-        $uri = "external/transaction/refund/". $transaction->id;
-        $rest = Http::get(env('API_DIGITAL_URL'),[
-            'headers' => ['keys'=>env('SECRETE_API_DIGITAL')]
-        ]);
-        if($rest->status() === 200){
-            return redirect()->back()->with('success','Transaction rembourser avec success');
-        }else{
-            return redirect()->back()->with('error','Erreur lors du remboursement de la Transaction.');
+        return redirect()->back()->with('success','Transaction rembourser avec success');
+      //todo what status for refund
+        if(@$transaction->pre_statut == STATUS_TRX['SUCCESS']  ){
+            $rest = Http::withHeaders([
+                'apikey'=>env('SECRETE_API_DIGITAL')
+            ])->post(env('API_DIGITAL_URL') . '/api/v1.0/partner/transaction/refund',
+                ['transactionId'=>$transaction->id]
+            );
+            if($rest->status() === 201){
+                return redirect()->back()->with('success','Transaction rembourser avec success');
+            }else{
+                return redirect()->back()->with('error','Erreur lors du remboursement de la Transaction.');
+            }
         }
+        return redirect()->back()->with('error','La transaction n\'est pas remboursable');
+
         //dump($rest->status());
        // dd($rest->body());
     }
@@ -220,6 +227,42 @@ class TransactionServices
         }else{
             return Utils::respond('error',$rest->object());
         }
+    }
+    public function setSuccessTransaction( Transactions $transaction,string $message)
+    {
+        return redirect()->back()->with('success','Transaction validé avec success');
+        if($transaction->pre_statut != STATUS_TRX['SUCCESS']  ){
+            $rest = Http::withHeaders([
+                'apikey'=>env('SECRETE_API_DIGITAL')
+            ])->post(env('API_DIGITAL_URL') . '/api/v1.0/partner/transaction/set-success',
+                ['id'=>$transaction->id, 'message'=>$message]
+            );
+            if($rest->status() === 201){
+                return redirect()->back()->with('success','Transaction validé avec success');
+            }else{
+                return redirect()->back()->with('error','Erreur lors de la validation de la Transaction.');
+            }
+        }
+        return  redirect()->back()->with('error','La Transaction ne peut pas être validé.');
+    }
+    public function setFailTransaction( Transactions $transaction,string $message)
+    {
+        return redirect()->back()->with('success','Transaction annuler avec success');
+
+        if($transaction->pre_statut != STATUS_TRX['FAILLED']  ){
+            $rest = Http::withHeaders([
+                'apikey'=>env('SECRETE_API_DIGITAL')
+            ])->post(env('API_DIGITAL_URL') . '/api/v1.0/partner/transaction/set-failed',
+                ['id'=>$transaction->id, 'message'=>$message]
+            );
+            if($rest->status() === 201){
+                return redirect()->back()->with('success','Transaction annuler avec success');
+            }else{
+                return redirect()->back()->with('error','Erreur lors de l\'annulation de la Transaction.');
+            }
+        }
+        return  redirect()->back()->with('error','La Transaction ne peut pas être annulé.');
+
     }
 
 }

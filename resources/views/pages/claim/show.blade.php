@@ -165,7 +165,7 @@
                     @method('put')
                     <div >
                         <div class="form-group row">
-                            <label for="comment" class="col-sm-12 col-form-label">Taux commission</label>
+                            <label for="comment" class="col-sm-12 col-form-label">Commentaire</label>
                             <div class="col-sm-12">
                                 <textarea rows="10" name="comment" id="comment"
                                        class="form-control form-control-normal" placeholder="Commentaire"></textarea>

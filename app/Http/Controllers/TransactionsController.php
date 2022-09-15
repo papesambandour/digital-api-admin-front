@@ -47,6 +47,11 @@ class TransactionsController extends Controller
         $amount_max = request('amount_max');
         return view('pages/transaction.transaction',compact('amount_min','amount_max','phone','statuts','external_transaction_id','statut','sous_services_id','date_start','date_end','sous_services','transactions','title','subTitle'));
     }
+    public function details(int $id){
+        $transaction = Transactions::find($id);
+        return view('pages.transaction.show',compact('transaction'));
+       // dd($transactions);
+    }
     public function versement(): Factory|View|Application
     {
         $versements = $this->transactions->versementPaginate();
@@ -65,9 +70,20 @@ class TransactionsController extends Controller
         $amount_max = request('amount_max');
         return view('pages/transaction.mvm-compte',compact('mouvements','amount_min','amount_max','date_end','date_start',));
     }
-    public function reFund(Transactions $transaction): \Illuminate\Http\RedirectResponse
+    public function reFund(int $id): \Illuminate\Http\RedirectResponse
     {
+        $transaction = Transactions::find($id);
         return $this->transactions->reFund($transaction);
+    }
+    public function setSuccessTransaction(int $id): \Illuminate\Http\RedirectResponse
+    {
+        $transaction = Transactions::find($id);
+        return $this->transactions->setSuccessTransaction($transaction,\request('comment'));
+    }
+    public function setFailTransaction(int $id): \Illuminate\Http\RedirectResponse
+    {
+        $transaction = Transactions::find($id);
+        return $this->transactions->setFailTransaction($transaction,\request('comment'));
     }
 
     public function versementPhones(): Factory|View|Application
