@@ -178,7 +178,9 @@ class TransactionServices
         $transationQueryery->update([
             'import_bank'=>1,
             'import_bank_at'=> nowIso(),
-            'export_batch_id'=>Utils::GUID()
+            'export_batch_id'=>Utils::GUID(),
+//            'user_export'=>_auth()->id,
+//            'user_import'=>_auth()->id,
         ]);
         $transactions = $transactions->map(function($transaction){
             /**

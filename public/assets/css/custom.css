@@ -33,12 +33,14 @@ h2{
     width: 100%;
     max-width: 100%;
     white-space: nowrap;
+
     background-color: white;
 }
 
 .fl-table td, .fl-table th {
     text-align: center;
     padding: 8px;
+    white-space: initial !important;
 }
 .fl-table td:nth-child(1), .fl-table th:nth-child(1) {
     text-align: left;
@@ -288,4 +290,17 @@ li.page-item > a:hover{
 }
 .sensible{
     /*pointer-events:none;*/
+}
+
+.claimsNb {
+    background: red;
+    color: white;
+    border-radius: 50%;
+    height: 30px;
+    width: 30px;
+    display: inline-block;
+    position: absolute;
+    right: 28px;
+    line-height: 30px;
+    text-align: center;
 }

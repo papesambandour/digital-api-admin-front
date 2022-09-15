@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\SousServicesController;
 use App\Http\Controllers\Api\SousServicesPartnersController;
 use App\Http\Controllers\Api\SousServicesPhonesController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ClaimController;
 use App\Http\Controllers\ConfigurationController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Export\ExcelController;
@@ -81,6 +82,10 @@ Route::group(['middleware'=>['admin-auth']],function(){
     Route::post('/phones/verser/{id}',[PhonesController::class ,'versementSave']);
     Route::resource('/phones', PhonesController::class );
     /*PARTNERS END*/
+
+    /*CLAIM START*/
+    Route::resource('/claim', ClaimController::class)->only(['index','show','edit','update']);
+    /*CLAIM END*/
 });
 
 
