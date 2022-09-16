@@ -203,18 +203,19 @@
                                                 <div class="dropdown-divider"></div>
 
                                                 <button class="dropdown-item text-center " onclick="window.location.href= '/transaction/details/{{$transaction->id}}'">Details</button>
-
+                                                @if(checkRefundable($transaction))
                                                 <button v-on:click='openModal("{{$transaction->id}}","refund")' type="button"
                                                         class="dropdown-item text-center">
                                                     <span style=""> Rembourser la transaction</span>
                                                 </button>
-                                                @if($transaction->pre_statut !== STATUS_TRX['SUCCESS'])
+                                                @endif
+                                                @if(checkFailableOrSuccessable($transaction))
                                                     <button v-on:click='openModal("{{$transaction->id}}","success")' type="button"
                                                             class="dropdown-item text-center ">
                                                         <span style=""> Valider la transaction</span>
                                                     </button>
                                                 @endif
-                                                @if($transaction->pre_statut !== STATUS_TRX['FAILLED'])
+                                                @if(checkFailableOrSuccessable($transaction))
                                                     <button v-on:click='openModal("{{$transaction->id}}","failed")' type="button"
                                                             class="dropdown-item text-center">
                                                         <span style=""> Annuler la transaction </span>

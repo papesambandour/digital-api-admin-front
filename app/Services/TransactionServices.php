@@ -154,9 +154,8 @@ class TransactionServices
     }
     public function reFund(Transactions $transaction)
     {
-        return redirect()->back()->with('success','Transaction rembourser avec success');
-      //todo what status for refund
-        if(@$transaction->pre_statut == STATUS_TRX['SUCCESS']  ){
+       // return redirect()->back()->with('success','Transaction rembourser avec success');
+        if(checkRefundable($transaction)  ){
             $rest = Http::withHeaders([
                 'apikey'=>env('SECRETE_API_DIGITAL')
             ])->post(env('API_DIGITAL_URL') . '/api/v1.0/partner/transaction/refund',
@@ -230,8 +229,8 @@ class TransactionServices
     }
     public function setSuccessTransaction( Transactions $transaction,string $message)
     {
-        return redirect()->back()->with('success','Transaction validé avec success');
-        if($transaction->pre_statut != STATUS_TRX['SUCCESS']  ){
+       // return redirect()->back()->with('success','Transaction validé avec success');
+        if(checkFailableOrSuccessable($transaction)  ){
             $rest = Http::withHeaders([
                 'apikey'=>env('SECRETE_API_DIGITAL')
             ])->post(env('API_DIGITAL_URL') . '/api/v1.0/partner/transaction/set-success',
@@ -247,9 +246,9 @@ class TransactionServices
     }
     public function setFailTransaction( Transactions $transaction,string $message)
     {
-        return redirect()->back()->with('success','Transaction annuler avec success');
+        //return redirect()->back()->with('success','Transaction annuler avec success');
 
-        if($transaction->pre_statut != STATUS_TRX['FAILLED']  ){
+        if(checkFailableOrSuccessable($transaction)  ){
             $rest = Http::withHeaders([
                 'apikey'=>env('SECRETE_API_DIGITAL')
             ])->post(env('API_DIGITAL_URL') . '/api/v1.0/partner/transaction/set-failed',

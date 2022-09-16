@@ -342,3 +342,18 @@ function claimsNb(): int
 {
     return \App\Models\Claim::query()->where('statut',STATUS_CLAIM['CREATED'])->count();
 }
+
+const TYPE_SERVICES = [
+    'CASHOUT'=>'CASHOUT',
+];
+function checkRefundable(Transactions $transaction): bool
+{
+    return $transaction->statut == STATUS_TRX['SUCCESS']
+        && $transaction->type_operation === TYPE_OPERATION['DEBIT']
+        && $transaction->sousService->typeService->code === TYPE_SERVICES['CASHOUT'];
+}
+
+function checkFailableOrSuccessable(Transactions $transaction): bool
+{
+    return $transaction->statut == STATUS_TRX['PROCESSING'] || $transaction->statut == STATUS_TRX['PENDING'] ||  $transaction->pre_statut == STATUS_TRX['PROCESSING'] || $transaction->pre_statut == STATUS_TRX['PENDING'] ;
+}
