@@ -9,6 +9,7 @@ use App\Models\Users;
 use App\Services\Helpers\Mail\MailSenderService;
 use App\Services\Helpers\Utils;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class UserServices
 {
@@ -55,4 +56,28 @@ class UserServices
        $user->update($data);
        return redirect('/users')->with('success','Utilisateur mise a jour avec succès');
    }
+
+    public function account(Request $request)
+    {
+        $user = _auth();
+        $request->validate(Utils::getRuleModel(new Users(),$user->id,$request->all()));
+        $data= $request->only(['phone','profils_id','f_name','l_name','address']);
+        $user->update($data);
+        return redirect('/profil')->with('success','Infos utilisateur changer avec succès');
+    }
+    public function password(Request $request)
+    {
+        $user = _auth();
+        if(!Hash::check($request->get('password_old'),$user->password)){
+            return  redirect()->back(302)->with('error',"L'ancien mot de passe n'est est incorrect");
+        }
+        $validated  =$request->validate([
+            'password' =>'required|min:8|same:confirm_password',
+            'confirm_password' =>'required|min:8',
+            'password_old' =>'required',
+        ],$request->all());
+
+        $user->update(['password' => Hash::make($validated['password'])]);
+        return redirect('/profil')->with('success','Mot de passe utilisateur a changé avec succès');
+    }
 }

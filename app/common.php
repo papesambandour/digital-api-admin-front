@@ -44,6 +44,10 @@ function str_without_accents($str, $charset='utf-8'): array|string|null
     return Users::find(getUser()['id']);
 
 }
+function checkProfil(array $profils): bool
+{
+    return in_array(_auth()->profil->code,$profils);
+}
 
 function title(string $title): string
 {

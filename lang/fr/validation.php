@@ -177,5 +177,7 @@ return [
         'size'                  => 'taille',
         'amount_confirm'                  => 'montant confirmation',
         'amount'                  => 'montant',
+        'confirm_password'                  => 'confirmation mot de passe',
+        'password_old'                  => 'mot de passe actuel',
     ],
 ];

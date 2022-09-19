@@ -43,10 +43,11 @@ Route::group(['middleware'=>[],'prefix'=>'auth'],function(){
     Route::get('/login',[AuthController::class,'login'] );
     Route::post('/login',[AuthController::class,'loginPost'] );
     Route::get('/logout',[AuthController::class,'logOut'] );
+    Route::get('/403',[AuthController::class,'unAuthorized'] );
 });
 
 
-Route::group(['middleware'=>['admin-auth']],function(){
+Route::group(['middleware'=>['backoffice-auth']],function(){
     /*REPORTING START*/
     Route::get('/',[DashboardController::class,'dashboard'] );
     Route::get('/statistic',[DashboardController::class,'statistic'] );
@@ -91,12 +92,15 @@ Route::group(['middleware'=>['admin-auth']],function(){
     Route::resource('/claim', ClaimController::class)->only(['index','show','edit','update']);
     /*CLAIM END*/
     /*USER START*/
-    Route::resource('/users', UsersController::class)->except(['delete']);
+    Route::resource('/users', UsersController::class)->except(['delete'])->middleware('admin');
+    Route::get('/profil', [UsersController::class,'profil']);
+    Route::post('/account', [UsersController::class,'account']);
+    Route::post('/password', [UsersController::class,'password']);
     /*USER END*/
 });
 
 
-Route::group(['middleware'=>['admin-auth'],'prefix'=>'api'],function(){
+Route::group(['middleware'=>['backoffice-auth'],'prefix'=>'api'],function(){
     Route::resource('sous_services', SousServicesController::class)->except([
         'create'
     ]);

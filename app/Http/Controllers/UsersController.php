@@ -54,4 +54,17 @@ class UsersController
     {
         return $this->userServices->update($id,$request);
     }
+    public function profil(Request $request): Factory|View|Application
+    {
+        $user = _auth();
+        return view('pages.users.profil',compact('user'));
+    }
+    public function account(Request $request): Redirector|Application|\Illuminate\Http\RedirectResponse
+    {
+        return $this->userServices->account($request);
+    }
+    public function password(Request $request): Redirector|Application|\Illuminate\Http\RedirectResponse
+    {
+        return $this->userServices->password($request);
+    }
 }
