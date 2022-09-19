@@ -357,3 +357,9 @@ function checkFailableOrSuccessable(Transactions $transaction): bool
 {
     return $transaction->statut == STATUS_TRX['PROCESSING'] || $transaction->statut == STATUS_TRX['PENDING'] ||  $transaction->pre_statut == STATUS_TRX['PROCESSING'] || $transaction->pre_statut == STATUS_TRX['PENDING'] ;
 }
+
+const PROFILS=[
+    'ADMIN'=>'ADMIN',
+    'FINANCIER'=>'FINANCIER',
+    'SUPPORT'=>'SUPPORT',
+];

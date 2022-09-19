@@ -113,6 +113,18 @@
                     <span class="pcoded-mcaret"></span>
                 </a>
             </li>--}}
+
+            <div class="pcoded-navigatio-lavel" >Administration</div>
+            <ul class="pcoded-item pcoded-left-item">
+
+                <li class="active">
+                    <a href="/users">
+                        <span class="pcoded-micon"><i class="ti-direction-alt"></i><b>D</b></span>
+                        <span class="pcoded-mtext" >Utilisateurs</span>
+                        <span class="pcoded-mcaret"></span>
+                    </a>
+                </li>
+            </ul>
         </ul>
     </div>
 </nav>

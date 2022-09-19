@@ -70,5 +70,33 @@ class MailSenderService
         }
     }
 
+    public  function sendUserBackofficeCreated($dataSent =[]): JsonResponse|array|int|string
+    {
+        try {
+            $dataSent['fullName'] = $dataSent['f_name'] .' '. $dataSent['l_name'];
+            $data= array(
+                "subject"=>"Creation Compte backoffice INTECH API",
+                "title"=>"Bonjour " .  $dataSent['fullName'] ,
+                "name"=>$dataSent['fullName'] ,
+                "items"=> array(
+                    "Votre compte  a la plateforme INTECH API est crée."=>"",
+                    "<b>Login</b>    : "=>$dataSent['email'],
+                    "<b>Mot de passe</b>    : "=>$dataSent['password'],
+                    "<a href=' ".env('PROXY_URL')."'>Se connecter</a>"=>''
+                )
+            );
+
+            $data['to'] = $dataSent['email'];
+            $html = view('mail/mail')->with(['data' => $data]);
+            $data['content'] = $html->render();
+            return $this->mailer->genericSend($data);
+        } catch (Exception $e) {
+            dd($e);
+            return  Utils::respond('error',[
+                $e->getMessage()
+            ]);
+        }
+    }
+
 
 }

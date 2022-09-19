@@ -13,6 +13,7 @@ use App\Http\Controllers\Export\PdfController;
 use App\Http\Controllers\PartnersController;
 use App\Http\Controllers\PhonesController;
 use App\Http\Controllers\TransactionsController;
+use App\Http\Controllers\UsersController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\URL;
 
@@ -89,6 +90,9 @@ Route::group(['middleware'=>['admin-auth']],function(){
     /*CLAIM START*/
     Route::resource('/claim', ClaimController::class)->only(['index','show','edit','update']);
     /*CLAIM END*/
+    /*USER START*/
+    Route::resource('/users', UsersController::class)->except(['delete']);
+    /*USER END*/
 });
 
 

@@ -269,14 +269,10 @@
     },
     "users": {
         "email": "required|max:255|unique:users,email",
-        "password": "required|max:255",
         "phone": "required|max:255|unique:users,phone",
-        "state": "required",
-        "plateforme_id": "required|integer|min:-2147483648|max:2147483647",
         "profils_id": "required|integer|min:-2147483648|max:2147483647",
         "f_name": "required|max:255",
         "l_name": "required|max:255",
-        "code": "required|max:255|unique:users,code",
         "address": "nullable"
     },
     "ussd_execution_messages": {
