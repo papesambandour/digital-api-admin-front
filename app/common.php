@@ -4,7 +4,11 @@ use App\Models\Parteners;
 use App\Models\Phones;
 use App\Models\Transactions;
 use App\Models\Users;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Storage;
 use JetBrains\PhpStorm\ArrayShape;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -43,6 +47,10 @@ function str_without_accents($str, $charset='utf-8'): array|string|null
     */
     return Users::find(getUser()['id']);
 
+}
+function checkProfil(array $profils): bool
+{
+    return in_array(_auth()->profil->code,$profils);
 }
 
 function title(string $title): string
@@ -96,6 +104,11 @@ const OPERATIONS_PHONES=[
     'ANNULATION_APPELS_FONDS'=> 'ANNULATION_APPELS_FONDS',
     'ANNULATION_APPROVISIONNEMENT'=>'ANNULATION_APPROVISIONNEMENT',
     'ANNULATION_TRANSACTION'=> 'ANNULATION_TRANSACTION',
+];
+const SIM_PROVIDER =[
+    'FALL_DISTRIBUTION',
+    'COPRESS_TELECOM',
+    'NONE',
 ];
 function status($status): string{
     return  @STATUS[$status] ?? '';
@@ -320,4 +333,79 @@ function getTypeOperationRequestName(): string
 }
 function getTypeOperation(){
     return request(getTypeOperationRequestName(),null);
+}
+
+function number($number,$decimal = 2,$decimal_separator = '. ',$separator_thousand=' ') : string
+{
+    return number_format((float)$number,$decimal,$decimal_separator,$separator_thousand);
+}
+
+const EXECUTE_TYPE_USSD  =[
+'SEND_USSD_CODE_SMS' => 'SEND_USSD_CODE_SMS',
+'EXECUTE_REQUEST_CODE' => 'EXECUTE_REQUEST_CODE',
+];
+
+const CODE_VIREMENT_BANK= 'BANK_TRANSFER_SN_API_CASH_IN';
+
+
+const STATUS_CLAIM=[
+    'CREATED'=>'CREATED',
+    'OPENED'=>'OPENED',
+    'CLOSED'=>'CLOSED'
+];
+const STATUS_CLAIM_LABEL=[
+    'CREATED'=>'<label style="color: #324960;border: 2px dashed #324960;font-weight: bold;padding: 4px;border-radius: 10px;text-transform: uppercase">Crée </label>',
+    'OPENED'=> '<label style="color: #236320;border: 2px dashed #236320;font-weight: bold;padding: 4px;border-radius: 10px;text-transform: uppercase">Ouvert</label>',
+    'CLOSED'=> '<label style="color: #ba6a35;border: 2px dashed #ba6a35;font-weight: bold;padding: 4px;border-radius: 10px;text-transform: uppercase">Fermer</label>'
+];
+const STATUS_CLAIM_LABEL_TEXT=[
+    'CREATED'=>'Crée',
+    'OPENED'=> 'Ouvert',
+    'CLOSED'=> 'Ferme'
+];
+function claimStatut($status){
+    return @STATUS_CLAIM_LABEL[$status] ?: $status;
+}
+function claimStatutText($status){
+    return @STATUS_CLAIM_LABEL_TEXT[$status] ?: $status;
+}
+function claimsNb(): int
+{
+    return \App\Models\Claim::query()->where('statut',STATUS_CLAIM['CREATED'])->count();
+}
+
+const TYPE_SERVICES = [
+    'CASHOUT'=>'CASHOUT',
+];
+function checkRefundable(Transactions $transaction): bool
+{
+    return $transaction->statut == STATUS_TRX['SUCCESS']
+        && $transaction->type_operation === TYPE_OPERATION['DEBIT']
+        && $transaction->sousService->typeService->code === TYPE_SERVICES['CASHOUT'];
+}
+
+function checkFailableOrSuccessable(Transactions $transaction): bool
+{
+    return $transaction->statut == STATUS_TRX['PROCESSING'] || $transaction->statut == STATUS_TRX['PENDING'] ||  $transaction->pre_statut == STATUS_TRX['PROCESSING'] || $transaction->pre_statut == STATUS_TRX['PENDING'] ;
+}
+
+const PROFILS=[
+    'ADMIN'=>'ADMIN',
+    'FINANCIER'=>'FINANCIER',
+    'SUPPORT'=>'SUPPORT',
+];
+function saveFile(UploadedFile $file, $rootPath){
+    $date = (new \DateTime())->format('Y-m-d');
+    $path = $rootPath. '/' . $date . "-" . uniqid() . '.' . $file->extension();
+    Storage::put($path, $file->getContent());
+    return base64_encode($path);
+}
+ function readFileHelper(string $path)
+{
+    $path = storage_path('app')  .'/'. base64_decode($path);
+    $file = \Illuminate\Support\Facades\File::get($path);
+    $type = File::mimeType($path);
+    $response = Response::make($file, 200);
+    $response->header("Content-Type", $type);
+    return $response;
 }

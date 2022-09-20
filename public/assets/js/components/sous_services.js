@@ -7,7 +7,7 @@ const app = new Vue({
         init: false,
         isAdd: true,
         showModal: false,
-        frais:false,
+        frais: false,
         title: "CONFIGURATION",
         typeServices: {},
         sousServices: [],
@@ -46,10 +46,15 @@ const app = new Vue({
 
     },
     methods: {
+      async  toggleService(message, sousServiceId){
+            if(confirm(message)){
+                window.location.href = "/sous-service/toggle/" + sousServiceId
+          }
+        },
         async configCommissionModal(idService) {
             $('#modalFraisSouService').modal('show');
             this.sousService = this.getSousService(idService);
-            this.commissions = await CommissionService.getCommissionByPartnerAndService(this.partners.id,this.sousService.id);
+            this.commissions = await CommissionService.getCommissionByPartnerAndService(this.partners.id, this.sousService.id);
             this.commission.parteners_id = this.partners.id;
             this.commission.sous_services_id = this.sousService.id;
             console.log(this.commissions);
@@ -69,52 +74,52 @@ const app = new Vue({
             sousService.when_status_for_callback = sousService?.when_status_for_callback?.join('|');
             sousService.when_pre_status_for_callback = sousService?.when_pre_status_for_callback?.join('|');
         },
-       async addSubServiceModal() {
-           this.init = true;
+        async addSubServiceModal() {
+            this.init = true;
             this.isAdd = false;
-            this.allSousServices =  await SousServices.getSousServices();
-            this.sousServicePartners =  await SousServicesPartners.getSousServicePartners(this.partners.id);
-           this.sousServicePartners = this.sousServicePartners?.map((ssp)=>{
-               return ssp.sous_services_id
-           });
+            this.allSousServices = await SousServices.getSousServices();
+            this.sousServicePartners = await SousServicesPartners.getSousServicePartners(this.partners.id);
+            this.sousServicePartners = this.sousServicePartners?.map((ssp) => {
+                return ssp.sous_services_id
+            });
             $('#addSubServiceModal').modal('show');
             console.log(this.sousService);
-           Helper.select2('_autorise_service');
+            Helper.select2('_autorise_service');
         },
-        async saveSubServicePermit(){
-         let res=  await SousServicesPartners.add(this.partners,this.sousServicePartners);
-             if(res){
-                 $('#addSubServiceModal').modal('hide');
-                 Notiflix
-                     .Report
-                     .info(
-                         'SUCCÈS',
-                         'Souscription effectué avec succès',
-                         'FERMER',
-                         {
-                             svgSize: '42px',
-                             messageMaxLength: 100000,
-                             plainText: true,
-                         },
-                     );
-                 setTimeout(function(){
-                     window.location.reload();
-                 },1000)
+        async saveSubServicePermit() {
+            let res = await SousServicesPartners.add(this.partners, this.sousServicePartners);
+            if (res) {
+                $('#addSubServiceModal').modal('hide');
+                Notiflix
+                    .Report
+                    .info(
+                        'SUCCÈS',
+                        'Souscription effectué avec succès',
+                        'FERMER',
+                        {
+                            svgSize: '42px',
+                            messageMaxLength: 100000,
+                            plainText: true,
+                        },
+                    );
+                setTimeout(function () {
+                    window.location.reload();
+                }, 1000)
 
-             }else {
-                 Notiflix
-                     .Report
-                     .info(
-                         'Erreur',
-                         'La souscription a échoué',
-                         'FERMER',
-                         {
-                             svgSize: '42px',
-                             messageMaxLength: 100000,
-                             plainText: true,
-                         },
-                     );
-             }
+            } else {
+                Notiflix
+                    .Report
+                    .info(
+                        'Erreur',
+                        'La souscription a échoué',
+                        'FERMER',
+                        {
+                            svgSize: '42px',
+                            messageMaxLength: 100000,
+                            plainText: true,
+                        },
+                    );
+            }
         },
         showModalUpdateService(idService) {
             this.isAdd = false;
@@ -168,6 +173,38 @@ const app = new Vue({
                     items: [],
                     no_valid: false,
                 },
+                'sender_sms_authorize': {
+                    key: 'sender_sms_authorize',
+                    name: 'Sender autorisé pour le smm de validation. (Séparé par virgule(,))',
+                    value: sousService?.sender_sms_authorize?.split(',')?.map((item)=>item.trim())  || [] ,
+                    type: 'text',
+                    input: 'text',
+                    edit: true,
+                    add: true,
+                    items: [],
+                    //value est la valur formater
+                    //lav est la valur excate
+                },
+                'execute_country_call_code_without_plus': {
+                    key: 'execute_country_call_code_without_plus',
+                    name: 'Indicatif Pays Service pour les envoiS de SMS',
+                    value: sousService?.execute_country_call_code_without_plus ,
+                    type: 'text',
+                    input: 'text',
+                    edit: true,
+                    add: true,
+                    items: [],
+                },
+                'execute_sms_sender': {
+                    key: 'execute_sms_sender',
+                    name: 'Sender pour les envoie de SMS du service',
+                    value: sousService?.execute_sms_sender ,
+                    type: 'text',
+                    input: 'text',
+                    edit: true,
+                    add: true,
+                    items: [],
+                },
                 'code': {
                     key: 'code',
                     name: 'Code',
@@ -188,6 +225,26 @@ const app = new Vue({
                     edit: true,
                     add: true,
                     items: Helper.getSelect2(this.services),
+                },
+                'execute_type': {
+                    key: 'execute_type',
+                    name: 'TypeExecution USSD',
+                    value: sousService?.execute_type,
+                    val: sousService?.execute_type,
+                    type: 'select',
+                    input: 'select',
+                    edit: true,
+                    add: true,
+                    items: [
+                        {
+                            name: 'SEND_USSD_CODE_SMS',
+                            value: 'SEND_USSD_CODE_SMS'
+                        },
+                        {
+                            name: 'EXECUTE_REQUEST_CODE',
+                            value: 'EXECUTE_REQUEST_CODE'
+                        },
+                    ],
                 },
                 'type_services_id': {
                     key: 'type_services_id',
@@ -687,13 +744,13 @@ const app = new Vue({
                 }
             })
         },
-       async addCommission() {
-            if(confirm('Êtes-vous  sure de vouloir ajouter ces frais')){
+        async addCommission() {
+            if (confirm('Êtes-vous  sure de vouloir ajouter ces frais')) {
                 console.log('Commission', this.commission);
                 let sent = Helper.copy(this.commission);
                 let res = await CommissionService.addCommission(sent)
-                if(res.code === 201){
-                    this.commission.id = res.data.id ;
+                if (res.code === 201) {
+                    this.commission.id = res.data.id;
                     this.commissions.push(Helper.copy(this.commission));
                     this.commission = {
                         amount_start: 0,
@@ -719,7 +776,7 @@ const app = new Vue({
                                 plainText: true,
                             },
                         );
-                }else{
+                } else {
                     Notiflix
                         .Report
                         .info(
@@ -735,14 +792,14 @@ const app = new Vue({
                 }
             }
         },
-        isTheLastComm(commission){
-          return CommissionService.isTheLastComm(commission,this.commissions)  ;
+        isTheLastComm(commission) {
+            return CommissionService.isTheLastComm(commission, this.commissions);
         },
-       async deleteCommission(deleteCommission,$event) {
-           $event.disabled = true;
+        async deleteCommission(deleteCommission, $event) {
+            $event.disabled = true;
             if (confirm('Vous-vous supprimer le frais')) {
                 let res = await CommissionService.deleteCommission(deleteCommission.id);
-                if(res){
+                if (res) {
                     this.commissions = this.commissions.filter((commission) => {
                         return commission.id !== deleteCommission.id
                     });
@@ -759,7 +816,7 @@ const app = new Vue({
                                 plainText: true,
                             },
                         );
-                }else {
+                } else {
                     $event.disabled = false;
                     Notiflix
                         .Report
@@ -774,32 +831,32 @@ const app = new Vue({
                             },
                         );
                 }
-            }else {
+            } else {
                 $event.disabled = false;
             }
         },
-        getMinStart(){
-            if(this.commissions.length){
+        getMinStart() {
+            if (this.commissions.length) {
                 return +this.commissions[this.commissions.length - 1].amount_end + 1;
             }
             return 0;
         },
-        getMaxStart(){
-           let max=   +this.commission.amount_end  -1 ;
-           if(max < 1){
-               return 0 ;
-           }
-           return max;
-        },
-        getMinEnd(){
-            if(+this.commission.amount_end === -1){
-                return  -1;
+        getMaxStart() {
+            let max = +this.commission.amount_end - 1;
+            if (max < 1) {
+                return 0;
             }
-          return +this.commission.amount_start + 1
+            return max;
         },
-        isLast(){
-            if(this.commissions.length){
-                return +this.commissions[this.commissions.length - 1].amount_end  ===-1;
+        getMinEnd() {
+            if (+this.commission.amount_end === -1) {
+                return -1;
+            }
+            return +this.commission.amount_start + 1
+        },
+        isLast() {
+            if (this.commissions.length) {
+                return +this.commissions[this.commissions.length - 1].amount_end === -1;
             }
         }
     },

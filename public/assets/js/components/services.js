@@ -21,7 +21,8 @@ class  HttpClient {
        if(res.ok){
            return res.json();
        }else{
-           throw new Error(res.statusText);
+          // console.log('await res.json()',await res.json())
+           throw new Error((await res.json() )?.message || res.statusText);
        }
 
     }
@@ -40,6 +41,18 @@ class  HttpClient {
 }
 
 class Helper{
+    static nowDMY(){
+        return (new Date()).toISOString().replace('T','').substring(0,10).split('-').reverse().join('-');
+    }
+   static downloadPDF(content,fileName ) {
+        const linkSource = `${content}`;
+        const downloadLink = document.createElement("a");
+
+        downloadLink.href = linkSource;
+        downloadLink.download = fileName;
+        console.log(downloadLink)
+        downloadLink.click();
+    }
     static select2(id) {
         setTimeout(() => {
             $(`#${id}`).select2();

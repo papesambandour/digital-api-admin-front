@@ -86,6 +86,21 @@
                             </div>
                             {{-- #######################################################FILED ############################### --}}
 
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label">Distributeur</label>
+                                <div class="col-sm-3">
+                                    <select required name="sim_provider" id="sim_provider" class=""
+                                            placeholder="Services">
+                                        <option value="" selected> Tous les Distributeurs</option>
+
+                                        @foreach(SIM_PROVIDER as $simProvider)
+                                            <option @if($phones->sim_provider ==  $simProvider) selected
+                                                    @endif value="{{$simProvider}}"> {{$simProvider}} </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+
 
 
                             <div class="form-group row" style="margin-top: 100px">
@@ -121,7 +136,8 @@
 
 @section('js')
     <script>
-        $("#services_id").select2()
+        $("#services_id").select2();
+        $("#sim_provider").select2();
     </script>
 @endsection
 

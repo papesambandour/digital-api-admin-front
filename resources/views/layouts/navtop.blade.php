@@ -44,7 +44,12 @@
                     <ul class="show-notification profile-notification">
                         <li >
                             <a  class="currency">
-                                <i class="ti-user "></i> Profil  {{_auth()->profil->name}}
+                                Profil  {{_auth()->profil->name}}
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/profil">
+                                <i class="ti-user"></i> Modifier mot de passe
                             </a>
                         </li>
                         <li>

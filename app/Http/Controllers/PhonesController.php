@@ -63,7 +63,7 @@ class PhonesController extends Controller
     {
         DB::beginTransaction();
         $request->validate(Utils::getRuleModel(new Phones()));
-        $data= $request->only(['number','codeSecret']);
+        $data= $request->only(['number','codeSecret','sim_provider']);
         $sousServices = SousServices::query()->find(id:request('_sous_services_id'));
         $data['services_id'] = $sousServices->services_id;
         $phoneServices = Phones::query()->where('number',$data['number'])->get();
@@ -94,6 +94,7 @@ class PhonesController extends Controller
         $request->validate([
             'amount' =>"required|integer|min:1000|required_with:amount_confirm|same:amount_confirm",
             'amount_confirm' => 'required|integer|min:1000',
+            'attachment_path' => 'required|mimes:pdf,docx,doc|max:20048',
         ]);
         $amount =(float) $request->get('amount');
         updateSolde($phones,$amount,'solde');
@@ -117,16 +118,67 @@ class PhonesController extends Controller
             'users_id'=>_auth()->id,
 
         ];
-        OperationPhones::create($data);
+        $operationPhone = OperationPhones::create($data);
+        $operationPhone->attachment_path =  saveFile($request->file('attachment_path'),"versement/$phones->id");
+        $operationPhone->save();
         DB::commit();
         return redirect('/phones')->with('success','Versement vers le services est effectué avec succès');
     }
+    public function callFund( $id)
+    {
+        $phones = Phones::find($id);
+        if(!@$phones->sousServicesPhones[0]){
+            return  redirect()->back()->with('error','Vous ne pouvez pas effectué d\'appels de fonds.  Pas de sous Services configuré!!!');
+        }
+        return view('pages.phones.phone-callfund',compact('phones'));
+    }
+    public function callFundSave($id,Request $request): Redirector|Application|\Illuminate\Http\RedirectResponse
+    {
+        DB::beginTransaction();
+        $phones = Phones::find($id);
+        $request->validate([
+            'amount' =>"required|integer|min:1000|required_with:amount_confirm|same:amount_confirm",
+            'amount_confirm' => 'required|integer|min:1000',
+            'attachment_path' => 'required|mimes:pdf,docx,doc|max:20048',
+        ]);
+        $amount =(float) $request->get('amount');
+        if($amount > floatval($phones->solde)){
+            return redirect()->back(302)->with('error','Le solde du telephone est insuffisant');
+        }
+        updateSolde($phones,-$amount,'solde');
+        updateSolde($phones,$amount,'solde_api');
+        $phones = Phones::find($id);
+        $data = [
+            'amount'=>-(float)$amount,
+            'type_operation'=>TYPE_OPERATION['CREDIT'],
+            'statut'=>STATUS_TRX['SUCCESS'],
+            'date_creation'=>nowIso(),
+            'date_success'=>nowIso(),
+            'date_processing'=>nowIso(),
+            'operation'=>OPERATIONS_PHONES['APPEL_DE_FONS'],
+            'solde_before'=>$phones->solde,
+            'solde_after'=>$phones->solde - $amount,
+            'fee'=>0,
+            'commission'=>0,
+            'fee_owner'=>0,
+            'commission_owner'=>0,
+            'phones_id'=>$phones->id,
+            'users_id'=>_auth()->id,
+
+        ];
+        $operationPhone = OperationPhones::create($data);
+        $operationPhone->attachment_path =  saveFile($request->file('attachment_path'),"versement/$phones->id");
+        $operationPhone->save();
+        DB::commit();
+        return redirect('/phones')->with('success','Appel de fonds vers le services est effectué avec succès');
+    }
+
     public function update($id,Request $request): Redirector|Application|\Illuminate\Http\RedirectResponse
     {
         DB::beginTransaction();
         $phones = Phones::find($id);
         $request->validate(Utils::getRuleModel(new Phones(),$phones->id,$request->all()));
-        $data= $request->only(['number','codeSecret']);
+        $data= $request->only(['number','codeSecret','sim_provider']);
 
         //check
         $sousServices = SousServices::query()->find(id:request('_sous_services_id'));
@@ -140,10 +192,11 @@ class PhonesController extends Controller
             return   redirect()->back()->with('error',"Le sous services $sousServices->name est deja configuré avec le numéro ". $data['number']);
         }
         //check
+      //  dd($data);
         $phones->update($data);
         SousServicesPhones::query()->where('sous_services_id', $sousServices->id)->where('phones_id',$phones->id)->delete();
         SousServicesPhones::create(['sous_services_id'=> $sousServices->id,'phones_id'=>$phones->id]);
-       // DB::commit();
+        DB::commit();
         return redirect('/phones/?number='.$phones->number)->with('success','Le service provider est mise a jour avec succès');
     }
 

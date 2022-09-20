@@ -42,4 +42,9 @@ class AuthController extends Controller
         logOut();
        return redirect("/auth/login");
     }
+
+    public function unAuthorized(): Factory|View|Application
+    {
+        return view('pages.security.403');
+    }
 }

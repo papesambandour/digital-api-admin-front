@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -20,9 +21,13 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $address
  * @property Plateforme $plateforme
  * @property Profils $profil
+ * @property string $fullName
  */
 class Users extends Model
 {
+    public function fullName():Attribute{
+        return Attribute::make(fn()=> $this->f_name .' ' . $this->l_name);
+    }
     /**
      * @var array
      */

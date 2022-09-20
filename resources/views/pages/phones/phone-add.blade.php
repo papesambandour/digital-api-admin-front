@@ -105,6 +105,26 @@
                                 <x-sous-service col_name="-" col_require="true" col_l="3" col_s="3"/>
                             </div>
                   {{-- #######################################################FILED ############################### --}}
+                  {{-- #######################################################FILED ############################### --}}
+                            <div class="form-group row">
+                            <label class="col-sm-3 col-form-label">Distributeur</label>
+                            <div class="col-sm-3">
+                                <select required name="sim_provider" id="sim_provider" class=""
+                                        placeholder="Services">
+                                    <option value="" selected> Tous les Distributeurs</option>
+
+                                    @foreach(SIM_PROVIDER as $simProvider)
+                                        <option value="{{$simProvider}}"> {{$simProvider}} </option>
+                                    @endforeach
+                                </select>
+                                @error('sim_provider')
+                                <div  class="invalid-feedback ">
+                                    {{ $message }}
+                                </div>
+                                @enderror
+                            </div>
+                          </div>
+                  {{-- #######################################################FILED ############################### --}}
 
 
 
@@ -142,6 +162,7 @@
 @section('js')
     <script>
         $("#services_id").select2()
+        $("#sim_provider").select2()
     </script>
 @endsection
 

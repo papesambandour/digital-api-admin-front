@@ -44,7 +44,7 @@
             <div class="card">
                 <div class="card-header">
                     <div class="card-block">
-                        <form method="POST" action="/partners/versement/{{$partners->id}}" onsubmit="document.getElementById('submit_partner').setAttribute('disabled', 'disabled')">
+                        <form enctype="multipart/form-data" method="POST" action="/partners/versement/{{$partners->id}}" onsubmit="document.getElementById('submit_partner').setAttribute('disabled', 'disabled')">
 
                   {{-- #############################################FILED ############################## --}}
                             <div class="form-group row">
@@ -75,6 +75,20 @@
                                 </div>
                             </div>
                   {{-- #######################################################FILED ############################### --}}
+                            {{-- #############################################FILED ############################## --}}
+                            <div class="form-group row">
+                                <label for="attachment_path" class="col-sm-3 col-form-label">Justificatif (pdf)</label>
+                                <div class="col-sm-3">
+                                    <input required   name="attachment_path" id="attachment_path" type="file" accept=".doc, .docx, .pdf"
+                                           class="form-control form-control-normal" placeholder="Justificatif (pdf)">
+                                    @error('attachment_path')
+                                    <div  class="invalid-feedback ">
+                                        {{ $message }}
+                                    </div>
+                                    @enderror
+                                </div>
+                            </div>
+                            {{-- #######################################################FILED ############################### --}}
 
 
                             <div class="form-group row" style="margin-top: 100px">

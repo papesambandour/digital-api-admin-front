@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\SousServices;
 use App\Services\ConfigServices;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
@@ -27,6 +28,16 @@ class ConfigurationController extends Controller
         $date_start= request('date_start');
         $date_end= request('date_end');
         return view('pages/config.sous_service',compact('typeServices','services','sousServices','date_start','date_end'));
+    }
+    public function toggleService($idService)
+    {
+        $sousService = SousServices::query()->where('id',$idService)->whereIn('state',[STATE['ACTIVED'],STATE['INACTIVED'] ])->first();
+        if(!$sousService){
+            return redirect('/sous-service')->with('error','Sous service introuvable');
+        }
+        $sousService->state = $sousService->state == STATE['ACTIVED'] ? STATE['INACTIVED']  : STATE['ACTIVED'] ;
+        $sousService->save();
+        return redirect('/sous-service')->with('success',"Le sous service $sousService->name est est mise à jour avec succès");
     }
     /*public function apikey(): Factory|View|Application
     {

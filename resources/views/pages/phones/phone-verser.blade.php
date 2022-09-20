@@ -20,6 +20,16 @@
     @endif
 
     <div class="page-wrapper">
+        <div class="col-md-12">
+            @if(Session::has('success'))
+                <p class="alert alert-success">{{ Session::get('success') }}</p>
+            @endif
+        </div>
+        <div class="col-md-12">
+            @if(Session::has('error'))
+                <p class="alert alert-danger">{{ Session::get('error') }}</p>
+            @endif
+        </div>
         <!-- Page-header start -->
         <div class="page-header card">
             <div class="row align-items-end">
@@ -44,7 +54,7 @@
             <div class="card">
                 <div class="card-header">
                     <div class="card-block">
-                        <form method="POST" action="/phones/verser/{{$phones->id}}" onsubmit="document.getElementById('submit_partner').setAttribute('disabled', 'disabled')">
+                        <form enctype="multipart/form-data" method="POST" action="/phones/verser/{{$phones->id}}" onsubmit="document.getElementById('submit_partner').setAttribute('disabled', 'disabled')">
 
                   {{-- #############################################FILED ############################## --}}
                             <div class="form-group row">
@@ -95,6 +105,21 @@
                                 </div>
                             </div>
                   {{-- #######################################################FILED ############################### --}}
+                            {{-- #############################################FILED ############################## --}}
+                            <div class="form-group row">
+                                <label for="attachment_path" class="col-sm-3 col-form-label">Justificatif (pdf)</label>
+                                <div class="col-sm-3">
+                                    <input required   name="attachment_path" id="attachment_path" type="file" accept=".doc, .docx, .pdf"
+                                           class="form-control form-control-normal" placeholder="Justificatif (pdf)">
+                                    @error('attachment_path')
+                                    <div  class="invalid-feedback ">
+                                        {{ $message }}
+                                    </div>
+                                    @enderror
+                                </div>
+                            </div>
+                            {{-- #######################################################FILED ############################### --}}
+
 
 
                             <div class="form-group row" style="margin-top: 100px">

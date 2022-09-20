@@ -96,6 +96,7 @@
                                 <th>Libelle</th>
                                 <th>Email</th>
                                 <th>Solde</th>
+                                <th>Solde Commission</th>
                                 <th>État</th>
                                 <th>Date</th>
                                 <th>Options</th>
@@ -109,9 +110,13 @@
                                             {{$partner->id}}
                                         </span>
                                     </th>
-                                    <td class="text-center"><span class="currency"> {{ $partner->name }} </span></td>
+                                    <td class="text-center"><span class="currency"> {{ $partner->name }} </span> </td>
                                     <td class="text-center">{{$partner->email}} </td>
-                                    <td class="text-center"><span class="currency"> {{ $partner->solde }} XOF</span>
+                                    <td class="text-center">
+                                        <span class="currency"> {{ number($partner->solde) }} XOF</span>
+                                    </td>
+                                    <td class="text-center">
+                                        <span class="currency"> {{ number($partner->solde_commission) }} XOF</span>
                                     </td>
 
                                     <td>
@@ -129,8 +134,10 @@
                                             <div class="dropdown-menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(113px, 40px, 0px); top: 0px; left: 0px; will-change: transform;">
                                                 <div class="dropdown-divider"></div>
                                                 <a class="dropdown-item waves-light waves-effect" href="/partners/versement/{{$partner->id}}">Verser</a>
+                                                <a class="dropdown-item waves-light waves-effect" href="/partners/callFund/{{$partner->id}}"> Cree un Appel de fonds</a>
                                                 <a class="dropdown-item waves-light waves-effect" href="/partners/{{$partner->id}}/edit">Modifier infos</a>
                                                 <a class="dropdown-item waves-light waves-effect" href="/versement?_partener_={{$partner->id}}">Versements</a>
+                                                <a class="dropdown-item waves-light waves-effect" href="/mvm-compte?_partener_={{$partner->id}}&_operation_=APPEL_DE_FOND">Appels de fonds</a>
                                                 <a class="dropdown-item waves-light waves-effect" href="/mvm-compte?_partener_={{$partner->id}}">Mouvements comptes</a>
                                                 <a class="dropdown-item waves-light waves-effect" href="/transaction?_partener_={{$partner->id}}">Afficher ses transactions</a>
                                                 <a class="dropdown-item waves-light waves-effect" href="/?_partener_={{$partner->id}}">Dashboard</a>

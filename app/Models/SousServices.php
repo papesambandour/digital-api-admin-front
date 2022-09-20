@@ -53,6 +53,10 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property SousServicesParteners[] $sousServicesParteners
  * @property SousServicesPhones[] $sousServicesPhones
  * @property Transactions[] $transactions
+ * @property string $execute_type;
+ * @property string $execute_country_call_code_without_plus;
+ * @property string $execute_sms_sender;
+ * @property string $sender_sms_authorize;
  */
 class SousServices extends Model
 {
@@ -60,7 +64,7 @@ class SousServices extends Model
     /**
      * @var array
      */
-    protected $fillable = ['services_id', 'type_services_id', 'name', 'ussd_code', 'regex_message_validation', 'position_validation_index', 'valid_ength', 'icon', 'code', 'state', 'created_at', 'updated_at', 'max_limit_transaction', 'max_limit_day', 'max_limit_week', 'max_limit_month', 'max_limit_trimest', 'type_operation', 'regex_phone', 'message_retour_ussd', 'need_phone', 'has_solde_api', 'api_manager_class_name', 'api_manager_namespace', 'amount_commssion', 'taux_commission', 'taux_fee', 'amount_fee', 'pending_timeout', 'pre_status_error_type', 'status_error_type', 'pre_status_success_type', 'status_success_type', 'when_pre_status_for_callback', 'when_status_for_callback', 'pre_status_timeout_type', 'status_timeout_type', 'min_limit_transaction'];
+    protected $fillable = ['sender_sms_authorize','execute_type','execute_country_call_code_without_plus','execute_sms_sender','services_id', 'type_services_id', 'name', 'ussd_code', 'regex_message_validation', 'position_validation_index', 'valid_ength', 'icon', 'code', 'state', 'created_at', 'updated_at', 'max_limit_transaction', 'max_limit_day', 'max_limit_week', 'max_limit_month', 'max_limit_trimest', 'type_operation', 'regex_phone', 'message_retour_ussd', 'need_phone', 'has_solde_api', 'api_manager_class_name', 'api_manager_namespace', 'amount_commssion', 'taux_commission', 'taux_fee', 'amount_fee', 'pending_timeout', 'pre_status_error_type', 'status_error_type', 'pre_status_success_type', 'status_success_type', 'when_pre_status_for_callback', 'when_status_for_callback', 'pre_status_timeout_type', 'status_timeout_type', 'min_limit_transaction'];
 
     /**
      * @return BelongsTo

@@ -70,13 +70,23 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $success_redirect_url;
  * @property string $error_redirect_url;
  * @property int $transaction_is_finish;
+ * @property string $reached_timeout;
+ * @property string $timeout_at;
+ * @property string $rib;
+ * @property string $customer_last_name;
+ * @property string $customer_first_name;
+ * @property string $customer_email;
+ * @property int $import_bank;
+ * @property string $import_bank_at;
+ * @property string $export_batch_id;
+ * @property string $import_batch_id;
  */
 class Transactions extends Model
 {
     /**
      * @var array
      */
-    protected $fillable = ['sous_services_id', 'phones_id', 'partener_comptes_id', 'parteners_id', 'type_operation', 'solde', 'commission_amount', 'fee_amount', 'created_at', 'updated_at', 'state', 'statut', 'date_creation', 'date_success', 'date_canceled', 'date_processing', 'date_failled', 'service_name', 'message', 'transaction_id', 'external_transaction_id', 'sous_service_name', 'operateur_name', 'telephone_number_service', 'partner_compte_name', 'partener_name', 'commentaire', 'data', 'amount', 'url_ipn', 'phone', 'sous_service_transaction_id', 'data_sended_callback', 'data_response_callback', 'callback_is_send', 'code_sous_service', 'error_message'];
+    protected $fillable = ['import_bank_at','import_bank','sous_services_id', 'phones_id', 'partener_comptes_id', 'parteners_id', 'type_operation', 'solde', 'commission_amount', 'fee_amount', 'created_at', 'updated_at', 'state', 'statut', 'date_creation', 'date_success', 'date_canceled', 'date_processing', 'date_failled', 'service_name', 'message', 'transaction_id', 'external_transaction_id', 'sous_service_name', 'operateur_name', 'telephone_number_service', 'partner_compte_name', 'partener_name', 'commentaire', 'data', 'amount', 'url_ipn', 'phone', 'sous_service_transaction_id', 'data_sended_callback', 'data_response_callback', 'callback_is_send', 'code_sous_service', 'error_message'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

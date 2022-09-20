@@ -10,8 +10,8 @@
  */
 ?>
 @section('page')
-
-    <div class="page-wrapper">
+<section id="app">
+    <div  class="page-wrapper">
         <div class="col-md-12">
             @if(Session::has('success'))
                 <p class="alert alert-success">{{ Session::get('success') }}</p>
@@ -35,6 +35,18 @@
                     </div>
                 </div>
                 <div class="col-lg-4">
+                    <button v-on:click="downloadVirementExcel()"    type="button" id="import-virement-bank"
+                            class="primary-api-digital btn btn-primary btn-outline-primary btn-block ">
+                        <i title="" class="ti-download "></i>
+                        <span style=""> Exporter les virements bancaires en cours</span>
+                        <i hidden id="spinner_import" class="fas fa-spinner fa-pulse"></i>
+                    </button>
+                    <button v-on:click="importDankTransaction()"  type="button" id="import-virement-bank"
+                            class="primary-api-digital btn btn-primary btn-outline-primary btn-block ">
+                        <i title="" class="ti-upload "></i>
+                        <span style=""> Importer les virements bancaires en cours</span>
+                        <i hidden id="spinner_import" class="fas fa-spinner fa-pulse"></i>
+                    </button>
                 </div>
             </div>
         </div>
@@ -75,18 +87,8 @@
                             </div>
                             <div class="form-group row">
                                 <x-sous-service col_l="2" col_s="2"/>
-                                <label class="col-sm-2 col-form-label">Statut transaction </label>
-                                <div class="col-sm-2">
-                                    <select name="statut" id="statut" class=""
-                                            placeholder="Services">
-                                        <option value="" selected> Sélectionnez une statut</option>
 
-                                        @foreach($statuts as $s)
-                                            <option @if($statut ==  $s) selected
-                                                    @endif value="{{$s}}"> {{$s}} </option>
-                                        @endforeach
-                                    </select>
-                                </div>
+                                <x-type-operation col_l="2" col_s="2"/>
 
                                 <label class="col-sm-2 col-form-label">Numéro de téléphone</label>
                                 <div class="col-sm-2">
@@ -112,7 +114,16 @@
 
                                 <x-partner />
 
-                                <x-type-operation col_l="2" col_s="2"/>
+                                <label class="col-sm-2 col-form-label">Statut transaction </label>
+                                <div class="col-sm-2">
+                                    <select multiple name="statut[]" id="statut" class=""
+                                            placeholder="Services">
+                                        @foreach($statuts as $s)
+                                            <option @if( in_array($s,$statut)) selected
+                                                    @endif value="{{$s}}"> {{$s}} </option>
+                                        @endforeach
+                                    </select>
+                                </div>
                                 <div class="col-sm-2">
                                     <button type="submit"
                                             class="primary-api-digital btn btn-primary btn-outline-primary btn-block"><i
@@ -190,10 +201,26 @@
                                             <div class="dropdown-menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(113px, 40px, 0px); top: 0px; left: 0px; will-change: transform;">
                                                 <a class="dropdown-item text-center">Options</a>
                                                 <div class="dropdown-divider"></div>
-                                                <form id="{{$transaction->id}}" action="/transaction/{{$transaction->id}}" method="POST">
-                                                    @csrf
-                                                    <button style="cursor: pointer" onclick='refund("{{$transaction->id}}")' type="button" class="dropdown-item text-center" >Rembourser</button>
-                                                </form>
+
+                                                <button class="dropdown-item text-center " onclick="window.location.href= '/transaction/details/{{$transaction->id}}'">Details</button>
+                                                @if(checkRefundable($transaction))
+                                                <button v-on:click='openModal("{{$transaction->id}}","refund")' type="button"
+                                                        class="dropdown-item text-center">
+                                                    <span style=""> Rembourser la transaction</span>
+                                                </button>
+                                                @endif
+                                                @if(checkFailableOrSuccessable($transaction))
+                                                    <button v-on:click='openModal("{{$transaction->id}}","success")' type="button"
+                                                            class="dropdown-item text-center ">
+                                                        <span style=""> Valider la transaction</span>
+                                                    </button>
+                                                @endif
+                                                @if(checkFailableOrSuccessable($transaction))
+                                                    <button v-on:click='openModal("{{$transaction->id}}","failed")' type="button"
+                                                            class="dropdown-item text-center">
+                                                        <span style=""> Annuler la transaction </span>
+                                                    </button>
+                                                @endif
                                             </div>
                                         </div>
 
@@ -212,33 +239,333 @@
 
         </div>
         <!-- Contextual classes table ends -->
+
+        {{--  MODAL FRAIX START  --}}
+
+        <div class="modal fade" id="importTRXBank" tabindex="-1" role="dialog"
+             aria-labelledby="modalFraisSouServiceLabel" aria-hidden="true">
+            <div class="modal-dialog modal-xl" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalFraisSouServiceLabel">
+                            Configuration des frais du service
+                        </h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form {{--v-on:submit.prevent="addCommission()" --}}class="modal-body">
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">Date de début</label>
+                            <form class="col-sm-4">
+                                <input multiple @change="parseToJson" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"  id="importedFile" name="importedFile" type="file"
+                                       class="form-control form-control-normal" placeholder="Transaction a importer">
+                            </form>
+                        </div>
+
+                      <div class="table-responsive">
+                          <table class="fl-table " style="width: 100%;overflow: auto">
+                              <thead>
+                              <tr>
+                                  <th>RIB</th>
+                                  <th>Nom</th>
+                                  {{--                                <th>Adresse 1</th>--}}
+                                  {{--                                <th>Adresse 2</th>--}}
+                                  {{--                                <th>Adresse 3</th>--}}
+                                  <th>Motif</th>
+                                  <th>Montant</th>
+                                  <th>Transaction ID</th>
+                                  <th>Statut </th>
+                                  <th>Reason</th>
+                                  <th>Statut Traitement</th>
+                                  <th>Reason Traitement</th>
+
+                              </tr>
+                              </thead>
+                              <tbody>
+                              <tr v-for="trx in transactionImports" :class="{ isOk: trx.statut === 'SUCCESS' ||trx.statut ==='FAILED' ,isNotOk: trx.statut !== 'SUCCESS' && trx.statut !=='FAILED' , failedImport: trx?.statutTreatment === 'FAILED'}">
+                                  <td>@{{ trx.rib }}</td>
+                                  <td>@{{ trx.name }}</td>
+                                  {{--                                <td>@{{ trx.address1 }}</td>--}}
+                                  {{--                                <td>@{{ trx.address2 }}</td>--}}
+                                  {{--                                <td>@{{ trx.address3 }}</td>--}}
+                                  <td>@{{ trx.motif }}</td>
+                                  <td>@{{ trx.amount }}</td>
+                                  <td>@{{ trx.trxId }}</td>
+                                  <td class="statut">@{{ trx.statut }}</td>
+                                  <td>@{{ trx.reason }}</td>
+                                  <td>@{{ trx.statutTreatment }}</td>
+                                  <td>@{{ trx.messageTreatment }}</td>
+                              </tr>
+
+                              {{-- <tr v-for="commission in commissions">
+                                   <td>@{{ commission.amount_start }}</td>
+                               </tr>--}}
+                              </tbody>
+                          </table>
+                      </div>
+
+                    </form>
+                    <div class="modal-footer">
+                        <button :disabled="!importOk" v-on:click="updateTransactions()"  style="margin: 0 !important;" type="button"
+                                 class="btn btn-primary btn-outline-secondary btn-block" >Importer
+                        </button>
+                        <button :disabled="requesting"  style="margin: 0 !important;" type="button"
+                                 class="btn btn-secondary btn-outline-secondary btn-block" data-dismiss="modal">Fermer
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{--  MODAL FRAIX END  --}}
     </div>
 
     <!-- Page-body end -->
+    {{--  MODAL VALIDER/ANULER transaction START  --}}
+    <div class="modal fade" id="modalTransaction" tabindex="-1" role="dialog"
+         aria-labelledby="modalTransactionLabel" aria-hidden="true">
+        <div class="modal-dialog modal-md" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalTransactionLabel">
+                        @{{titleTransaction}}
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form :action="url_transaction" method="POST"  class="modal-body">
+                    @csrf
+                    <div >
+                        <div v-if="typeAction !== 'refund'" class="form-group row">
+                            <label for="comment" class="col-sm-12 col-form-label">Commentaire</label>
+                            <div class="col-sm-12">
+                                <textarea required v-model="message" rows="10" name="message" id="comment"
+                                          class="form-control form-control-normal" placeholder="Commentaire"></textarea>
+                            </div>
 
+                        </div>
+                        <div class="text-center">
+                            <button  class="primary-api-digital btn btn-primary btn-outline-primary "
+                                     type="submit" >
+                                <i class="ti-plus"></i> @{{ btnMessage }}
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    {{--  MODAL FRAIX END  --}}
+</section>
 @endsection
 
 @section('js')
+
     <script>
-        $(document).ready(function () {
-            $('#sous_services_id').select2();
-            $('#statut').select2();
+        const app = new Vue({
+            el: '#app',
+            data: {
+                transactionImports:[],
+                importOk:false,
+                requesting:false,
+                url_transaction:'',
+                titleTransaction:'',
+                message:'',
+                btnMessage:'',
+                idTransaction:'',
+                typeAction:'',
+            },
+            methods:{
+                openModal(id,type){
+                    this.idTransaction = id;
+                    this.typeAction = type;
+                    if(type ==='success'){
+                        this.url_transaction = `/transaction/success/${id}`;
+                        this.titleTransaction = '`Validation Transaction numéro ${id}';
+                        this.btnMessage = "Validation la transaction"
+                    }
+                    if(type ==='failed'){
+                        this.url_transaction = `/transaction/failed/${id}`;
+                        this.titleTransaction = `Annulation Transaction numéro ${id}`;
+                        this.btnMessage = "Annuler la transaction";
+                    }
+                    if(type ==='refund'){
+                        this.url_transaction = `/transaction/refund/${id}`;
+                        this.titleTransaction =    `Remboursement Transaction numéro ${id}`;
+                        this.btnMessage = "Remboursement la transaction"
+                    }
+                    $('#modalTransaction').modal('show');
+                },
+                downloadVirementExcel(){
+                    document.getElementById('spinner_import').removeAttribute('hidden');
+                    document.getElementById('import-virement-bank').setAttribute('disabled', 'disabled')
+                    HttpClient.get('/transaction/export-virement-bank')
+                        .then((res)=>{
+                            if(res.code ===200){
+                                let date= Helper.nowDMY()
+                                Helper.downloadPDF(res.data,`virement-intech-api-du-${date}.xlsx`);
+                            }else {
+                                alert(res.msg);
+                            }
+                            document.getElementById('import-virement-bank').removeAttribute('disabled')
+                            document.getElementById('spinner_import').setAttribute('hidden','hidden');
+
+                        }).catch(async (error)=>{
+                        document.getElementById('import-virement-bank').removeAttribute('disabled')
+                        document.getElementById('spinner_import').setAttribute('hidden','hidden');
+                        //console.log(  error);
+                        alert( error.message);
+                    })
+
+                },
+                refund(idForm) {
+                    let msg='Voulez-vous confirmer le remboursement ?';
+                    Notiflix
+                        .Confirm
+                        .show('Remboursement ',msg,
+                            'Oui',
+                            'Non',
+                            () => {document.getElementById(idForm).submit()},
+                            () => {console.log('If you say so...');},
+                            { messageMaxLength: msg.length + 90,},);
+                },
+                importDankTransaction(){
+                    $("#importTRXBank").modal('show');
+                },
+                 parseToJson($event) {
+                     // console.log('ii',$event)
+                    try {
+                        let fileInput = $event.target.files[0];
+                        let name = $event.target.files[0].name;
+                        console.log("FILE AND EXTENSION", name)
+                        let reader = new FileReader();
+                        let first=0 ;
+                        let init =false;
+                        let tabs= [];
+                        reader.onload = async () => {
+                            const rawExcel= reader?.result;
+                            const wb = XLSX.read(rawExcel, {type: 'binary'});
+                            const wsname = wb.SheetNames[0];
+                            const ws = wb.Sheets[wsname];
+                            const clients = XLSX.utils.sheet_to_json(ws, {header: 1});
+                            let cpt=0;
+                            let isOk = true;
+                            clients.map((c) => {
+                                console.log('c',c)
+                                let line = {};
+                                if(c.length && cpt){
+                                    line.rib = c[0]?.toString()?.trim() || 'N\A';
+                                    line.name = c[1]?.toString()?.trim() || 'N\A';
+                                    line.address1 = c[2]?.toString()?.trim() || 'N\A';
+                                    line.address2 = c[3]?.toString()?.trim() || 'N\A';
+                                    line.address3 = c[4]?.toString()?.trim() || 'N\A';
+                                    line.motif = c[5]?.toString()?.trim() || 'N\A';
+                                    line.amount = +c[6]?.toString().trim() || 'N\A';
+                                    line.trxId = c[7]?.toString()?.trim() || 'N\A';
+                                    line.statut = c[8]?.toString()?.trim() || 'N\A';
+                                    line.reason = c[9]?.toString()?.trim() || 'N\A';
+                                    line.checked = true;
+                                    if(line.statut !== 'SUCCESS' && line.statut !== 'FAILED'){
+                                        isOk= false;
+                                    }
+                                    if(cpt && line.rib){
+                                        tabs.push(line);
+                                    }
+                                }
+                                cpt++;
+                            });
+                            console.log('CLIENT',tabs);
+                            this.transactionImports =  tabs ;
+                            this.importOk = this.transactionImports.length > 0 && isOk;
+                        };
+                        reader.readAsBinaryString(fileInput);
+                    } catch (e) {
+                        alert('Fichier non comptatible');
+                    }
+                },
+
+                async updateTransactions() {
+                    this.requesting = true;
+                    let rest = await HttpClient.put('/transaction/import-virement-bank',{
+                        trx: this.transactionImports?.map((trx)=>{
+                            return {
+                                statut: trx.statut,
+                                id: trx.trxId,
+                                message: trx.reason,
+                            }
+                        }),
+                    });
+                    if(rest.code === 201) {
+                        let tabs = [];
+                        rest.data.map((item)=>{
+                            let trx = this.transactionImports?.find((tr)=> tr.trxId == item.id);
+                            console.log('jj', trx);
+
+                             trx.statutTreatment= item.statutTreatment;
+                            trx.messageTreatment= item.messageTreatment;
+                            tabs.push(trx);
+                        })
+                        this.transactionImports = [...tabs];
+                        Notiflix
+                            .Report
+                            .info(
+                                "SUCCESS",
+                                'Transactions mise a jour avec success',
+                                'FERMER',
+                                {
+                                    svgSize: '42px',
+                                    messageMaxLength: 10000,
+                                    plainText: true,
+                                },
+                            );
+                    }else{
+                        Notiflix
+                            .Report
+                            .info(
+                                'Erreur',
+                                rest.msg ||  `Une erreur est survenue`,
+                                'FERMER',
+                                {
+                                    svgSize: '42px',
+                                    messageMaxLength: 100000,
+                                    plainText: true,
+                                },
+                            );
+                    }
+                  //  this.requesting = false;
+                }
+            },
+            computed: {},
+            async created() {
+                $(document).ready(function () {
+                    $('#sous_services_id').select2();
+                    $('#statut').select2();
+                });
+            }
         });
 
-        function refund(idForm) {
-            let msg='Voulez-vous confirmer le remboursement ?';
-            Notiflix
-                .Confirm
-                .show('Remboursement ',msg,
-                    'Oui',
-                    'Non',
-                    () => {document.getElementById(idForm).submit()},
-                    () => {console.log('If you say so...');},
-                    { messageMaxLength: msg.length + 90,},);
-        }
 
     </script>
 @endsection
 
 @section('css')
+  <style>
+      .modal-xl{
+          min-width: 90% !important;
+      }
+      .isOk td{
+          color: green;
+      }
+      .isNotOk td{
+          color: red;
+      }
+      .isNotOk td.statut{
+          color: white;
+          background: red;
+      }
+      .failedImport td{
+          color: orange !important;
+      }
+  </style>
 @endsection

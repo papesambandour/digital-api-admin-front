@@ -5,7 +5,12 @@ namespace App\Services;
 use App\Models\OperationParteners;
 use App\Models\OperationPhones;
 use App\Models\Transactions;
+use App\Services\Helpers\Utils;
+use Exception;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 
 class TransactionServices
@@ -21,8 +26,8 @@ class TransactionServices
         if(getPartnerI()){
             $transactions->where('parteners_id',getPartnerI());
         }
-        if(request('statut')){
-            $transactions->where(STATUS_TRX_NAME,request('statut'));
+        if(count(request('statut',[]))){
+            $transactions->whereIn(STATUS_TRX_NAME,request('statut'));
         }
         if(request('date_start')){
             $transactions->where('created_at','>=',dateFilterStart(request('date_start')));
@@ -147,19 +152,116 @@ class TransactionServices
         }
         return  $query->orderBy('id','DESC')->paginate(size());
     }
-    public function reFund(Transactions $transaction): \Illuminate\Http\RedirectResponse
+    public function reFund(Transactions $transaction)
     {
-        $uri = "external/transaction/refund/". $transaction->id;
-        $rest = Http::get(env('API_DIGITAL_URL'),[
-            'headers' => ['keys'=>env('SECRETE_API_DIGITAL')]
-        ]);
-        if($rest->status() === 200){
-            return redirect()->back()->with('success','Transaction rembourser avec success');
-        }else{
-            return redirect()->back()->with('error','Erreur lors du remboursement de la Transaction.');
+       // return redirect()->back()->with('success','Transaction rembourser avec success');
+        if(checkRefundable($transaction)  ){
+            $rest = Http::withHeaders([
+                'apikey'=>env('SECRETE_API_DIGITAL')
+            ])->post(env('API_DIGITAL_URL') . '/api/v1.0/partner/transaction/refund',
+                ['transactionId'=>$transaction->id]
+            );
+            if($rest->status() === 201){
+                return redirect()->back()->with('success','Transaction rembourser avec success');
+            }else{
+                return redirect()->back()->with('error','Erreur lors du remboursement de la Transaction.');
+            }
         }
+        return redirect()->back()->with('error','La transaction n\'est pas remboursable');
+
         //dump($rest->status());
        // dd($rest->body());
+    }
+
+    public function getBankImported()
+    {
+        DB::beginTransaction();
+        $transationQueryery = Transactions::query()
+            ->where('statut',STATUS_TRX['PROCESSING'])
+            ->where('code_sous_service',CODE_VIREMENT_BANK)
+            ->where('import_bank',0);
+        $transactions = clone($transationQueryery) ->get();
+        $transationQueryery->update([
+            'import_bank'=>1,
+            'import_bank_at'=> nowIso(),
+            'export_batch_id'=>Utils::GUID(),
+//            'user_export'=>_auth()->id,
+//            'user_import'=>_auth()->id,
+        ]);
+        $transactions = $transactions->map(function($transaction){
+            /**
+             * @var Transactions $transaction
+             */
+            return [
+                'RIB'=> (string)$transaction->rib ?: "",
+                'Nom'=> "$transaction->customer_first_name $transaction->customer_last_name" ,
+                'Adresse 1'=> '',
+                'Adresse 2'=> '',
+                'Adresse 3'=> '',
+                'Motif'=> "Virement TR#$transaction->id pour $transaction->partener_name pour $transaction->customer_first_name $transaction->customer_last_name",
+                'Montant'=> floor($transaction->amount),
+                "Transaction ID" => "$transaction->id",
+                "Statut" => "",
+                "Reason"=> ""
+            ];
+         })->toArray();
+        if(!count($transactions)){
+           throw new Exception("Pas de transaction en cours");
+        }
+        //TODO UNCOMMENT DB::commit();
+        DB::commit();
+        return $transactions;
+
+    }
+
+    public function importTransaction(Request $request): JsonResponse|array
+    {
+        $rest = Http::withHeaders([
+            'apikey'=>env('SECRETE_API_DIGITAL')
+        ])->post(env('API_DIGITAL_URL') . '/api/v1.0/partner/transaction/import_bank_transfer',
+         $request->get('trx')
+        );
+        if($rest->status() === 201){
+            return Utils::respond('updated',$rest->object());
+        }else{
+            return Utils::respond('error',$rest->object());
+        }
+    }
+    public function setSuccessTransaction( Transactions $transaction,string $message)
+    {
+       // return redirect()->back()->with('success','Transaction validé avec success');
+        if(checkFailableOrSuccessable($transaction)  ){
+            $rest = Http::withHeaders([
+                'apikey'=>env('SECRETE_API_DIGITAL')
+            ])->post(env('API_DIGITAL_URL') . '/api/v1.0/partner/transaction/set-success',
+                ['id'=>$transaction->id, 'message'=>$message]
+            );
+            if($rest->status() === 201){
+                return redirect()->back()->with('success','Transaction validé avec success');
+            }else{
+                return redirect()->back()->with('error','Erreur lors de la validation de la Transaction.');
+            }
+        }
+        return  redirect()->back()->with('error','La Transaction ne peut pas être validé.');
+    }
+    public function setFailTransaction( Transactions $transaction,string $message)
+    {
+        //return redirect()->back()->with('success','Transaction annuler avec success');
+
+        if(checkFailableOrSuccessable($transaction)  ){
+            $rest = Http::withHeaders([
+                'apikey'=>env('SECRETE_API_DIGITAL')
+            ])->post(env('API_DIGITAL_URL') . '/api/v1.0/partner/transaction/set-failed',
+                ['id'=>$transaction->id, 'message'=>$message]
+            );
+            if($rest->status() === 201){
+                return redirect()->back()->with('success','Transaction annuler avec success');
+            }else{
+                return redirect()->back()->with('error','Erreur lors de l\'annulation de la Transaction.');
+            }
+        }
+        return  redirect()->back()->with('error','La Transaction ne peut pas être annulé.');
+
     }
 
 }
