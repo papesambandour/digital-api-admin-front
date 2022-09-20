@@ -69,6 +69,30 @@ class MailSenderService
             ]);
         }
     }
+    public  function appelFondPartenaire($dataSent ,$amount): JsonResponse|array|int|string
+    {
+        try {
+                $data=[
+                    "subject"=>"Appel de fonds Compte Partenaire",
+                    "title"=>"Bonjour " .  $dataSent['name'] ,
+                    "name"=>$dataSent['name'] ,
+                    "items"=>[
+                        "Un montant $amount FRCFA vient d'être retirer de votre compte INTECH API."=>"",
+                        "Votre nouveau solde est de "=>$dataSent['solde'] .' FRCFA.',
+                        "L'équipe Support Intech API."=>'',
+                    ]
+                ];
+
+            $data['to'] = $dataSent['email'];
+            $html = view('mail/mail')->with(['data' => $data]);
+            $data['content'] = $html->render();
+            return $this->mailer->genericSend($data);
+        } catch (Exception $e) {
+            return  Utils::respond('error',[
+                $e->getMessage()
+            ]);
+        }
+    }
 
     public  function sendUserBackofficeCreated($dataSent =[]): JsonResponse|array|int|string
     {

@@ -186,7 +186,9 @@
                                                 <div class="dropdown-divider"></div>
                                                 <a class="dropdown-item waves-light waves-effect" href="/phones/{{$phone->id}}/edit">Modifier</a>
                                                 <a class="dropdown-item waves-light waves-effect" href="/phones/verser/{{$phone->id}}">Verser</a>
+                                                <a class="dropdown-item waves-light waves-effect" href="/phones/callFund/{{$phone->id}}">Cree un Appel de fonds</a>
                                                 <a class="dropdown-item waves-light waves-effect" href="/versement-phones/?phones_id={{$phone->id}}">Versement</a>
+                                                <a class="dropdown-item waves-light waves-effect" href="/mvm-compte-phones/?phones_id={{$phone->id}}&_operation_=APPEL_DE_FONS">Appels de fonds</a>
                                                 <a class="dropdown-item waves-light waves-effect" href="/mvm-compte-phones/?phones_id={{$phone->id}}">Mouvement compte</a>
                                             </div>
                                         </div>

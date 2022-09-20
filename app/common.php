@@ -4,7 +4,11 @@ use App\Models\Parteners;
 use App\Models\Phones;
 use App\Models\Transactions;
 use App\Models\Users;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Storage;
 use JetBrains\PhpStorm\ArrayShape;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -367,3 +371,18 @@ const PROFILS=[
     'FINANCIER'=>'FINANCIER',
     'SUPPORT'=>'SUPPORT',
 ];
+function saveFile(UploadedFile $file, $rootPath){
+    $date = (new \DateTime())->format('Y-m-d');
+    $path = $rootPath. '/' . $date . "-" . uniqid() . '.' . $file->extension();
+    Storage::put($path, $file->getContent());
+    return base64_encode($path);
+}
+ function readFileHelper(string $path)
+{
+    $path = storage_path('app')  .'/'. base64_decode($path);
+    $file = \Illuminate\Support\Facades\File::get($path);
+    $type = File::mimeType($path);
+    $response = Response::make($file, 200);
+    $response->header("Content-Type", $type);
+    return $response;
+}

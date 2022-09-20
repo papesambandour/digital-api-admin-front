@@ -103,6 +103,7 @@
                                 <th>Partenaire</th>
                                 <th>Operation de </th>
                                 <th>Utilisateur Responsable  </th>
+                                <th>Justificatif  </th>
                                 <th>Date</th>
                             </tr>
                             </thead>
@@ -119,6 +120,13 @@
 
                                     <td> <span class="statut-success">{{$versement->type_operation}} </span> </td>
                                     <td> <span class="statut-success">{{@$versement->user->f_name ?: 'unknown'}} {{@$versement->user->l_name ?: 'unknown'}} </span> </td>
+                                    <td>
+                                        @if($versement->link)
+                                            <a class="currency" href="{{$versement->link}}" target="_blank">Voir </a>
+                                        @else
+                                            N\A
+                                        @endif
+                                    </td>
                                     <td>
                                         {{ $versement->created_at }}
                                     </td>

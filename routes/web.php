@@ -80,11 +80,15 @@ Route::group(['middleware'=>['backoffice-auth']],function(){
     /*PARTNERS END*/
     Route::get('/partners/versement/{id}',[PartnersController::class ,'versement']);
     Route::post('/partners/versement/{id}',[PartnersController::class ,'versementSave']);
+    Route::get('/partners/callFund/{id}',[PartnersController::class ,'callFund']);
+    Route::post('/partners/callFund/{id}',[PartnersController::class ,'callFundSave']);
     Route::resource('/partners',PartnersController::class );
     /*PARTNERS END*/
     /*PARTNERS END*/
     Route::get('/phones/verser/{id}',[PhonesController::class ,'versement']);
     Route::post('/phones/verser/{id}',[PhonesController::class ,'versementSave']);
+    Route::get('/phones/callFund/{id}',[PhonesController::class ,'callFund']);
+    Route::post('/phones/callFund/{id}',[PhonesController::class ,'callFundSave']);
     Route::resource('/phones', PhonesController::class );
     /*PARTNERS END*/
 
@@ -97,6 +101,10 @@ Route::group(['middleware'=>['backoffice-auth']],function(){
     Route::post('/account', [UsersController::class,'account']);
     Route::post('/password', [UsersController::class,'password']);
     /*USER END*/
+
+    Route::get('/storage/{path}',function (string $path ){
+        return readFileHelper($path);
+    });
 });
 
 

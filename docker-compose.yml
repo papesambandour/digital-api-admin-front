@@ -1,6 +1,8 @@
 version: '3'
 services:
     laravel:
+       volumes:
+           -   /intech-api-data/:/var/www/html/storage/app/
        build:
            context: .
        ports:

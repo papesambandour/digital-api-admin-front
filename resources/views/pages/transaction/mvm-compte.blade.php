@@ -113,6 +113,7 @@
                                 <th>Partenaire</th>
                                 <th>Operation de </th>
                                 <th>Provenance </th>
+                                <th>Justificatif  </th>
                                 <th>Date</th>
                             </tr>
                             </thead>
@@ -129,6 +130,13 @@
 
                                     <td> <span class="statut-success">{{$mouvement->type_operation}} </span> </td>
                                     <td> <span class="statut-infos" >{{$mouvement->operation}} </span> </td>
+                                    <td>
+                                        @if($mouvement->link)
+                                            <a class="currency" href="{{$mouvement->link}}" target="_blank">Voir </a>
+                                        @else
+                                            N\A
+                                        @endif
+                                    </td>
                                     <td>
                                         {{ $mouvement->created_at }}
                                     </td>

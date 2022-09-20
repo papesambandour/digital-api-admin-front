@@ -20,6 +20,16 @@
     @endif
 
     <div class="page-wrapper">
+        <div class="col-md-12">
+            @if(Session::has('success'))
+                <p class="alert alert-success">{{ Session::get('success') }}</p>
+            @endif
+        </div>
+        <div class="col-md-12">
+            @if(Session::has('error'))
+                <p class="alert alert-danger">{{ Session::get('error') }}</p>
+            @endif
+        </div>
         <!-- Page-header start -->
         <div class="page-header card">
             <div class="row align-items-end">
@@ -27,8 +37,8 @@
                     <div class="page-header-title">
                         <i class="icofont icofont-table bg-c-blue"></i>
                         <div class="d-inline">
-                            <h4>Versement pour le partenaire <span style="color:green;font-weight: bold">{{$partners->name}}</span> </h4>
-                            <span>Donne la possibility de verser un montant pour le partenaire  <span class="currency">{{$partners->name}}   </span>
+                            <h4>Appels de fonds pour le partenaire <span style="color:green;font-weight: bold">{{$partners->name}}</span> </h4>
+                            <span>Donne la possibility de faire un appel de fonds pour le partenaire  <span class="currency">{{$partners->name}}   </span>
                         </div>
                     </div>
                 </div>
@@ -44,7 +54,7 @@
             <div class="card">
                 <div class="card-header">
                     <div class="card-block">
-                        <form enctype="multipart/form-data" method="POST" action="/partners/versement/{{$partners->id}}" onsubmit="document.getElementById('submit_partner').setAttribute('disabled', 'disabled')">
+                        <form enctype="multipart/form-data" method="POST" action="/partners/callFund/{{$partners->id}}" onsubmit="document.getElementById('submit_partner').setAttribute('disabled', 'disabled')">
 
                   {{-- #############################################FILED ############################## --}}
                             <div class="form-group row">
@@ -75,7 +85,7 @@
                                 </div>
                             </div>
                   {{-- #######################################################FILED ############################### --}}
-                            {{-- #############################################FILED ############################## --}}
+                  {{-- #############################################FILED ############################## --}}
                             <div class="form-group row">
                                 <label for="attachment_path" class="col-sm-3 col-form-label">Justificatif (pdf)</label>
                                 <div class="col-sm-3">
@@ -88,7 +98,7 @@
                                     @enderror
                                 </div>
                             </div>
-                            {{-- #######################################################FILED ############################### --}}
+                  {{-- #######################################################FILED ############################### --}}
 
 
                             <div class="form-group row" style="margin-top: 100px">

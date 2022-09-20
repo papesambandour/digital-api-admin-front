@@ -30,16 +30,21 @@ use Illuminate\Database\Eloquent\Model;
  * @property Parteners $partener
  * @property int $users_id
  * @property Users $user
+ * @property string $attachment_path
+ * @property string $link
  */
 class OperationParteners extends Model
 {
+    public function link():Attribute{
+        return   Attribute::make(fn()=> $this->attachment_path ? env('PROXY_URL') . "/storage/". $this->attachment_path : null) ;
+    }
     public function user():Attribute{
         return  Attribute::make(fn()=> Users::find($this->users_id));
     }
     /**
      * @var array
      */
-    protected $fillable = ['users_id','parteners_id', 'transactions_id', 'commentaire', 'amount', 'state', 'created_at', 'updated_at', 'type_operation', 'statut', 'date_creation', 'date_success', 'date_canceled', 'date_processing', 'date_failled', 'operation', 'solde_befor', 'solde_after', 'fee', 'commission'];
+    protected $fillable = ['attachment_path','users_id','parteners_id', 'transactions_id', 'commentaire', 'amount', 'state', 'created_at', 'updated_at', 'type_operation', 'statut', 'date_creation', 'date_success', 'date_canceled', 'date_processing', 'date_failled', 'operation', 'solde_befor', 'solde_after', 'fee', 'commission'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

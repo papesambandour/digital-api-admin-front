@@ -27,16 +27,21 @@ use Illuminate\Database\Eloquent\Model;
  * @property Phones $phone
  * @property OperationPhones $operationPhone
  * @property Users $user
+ * @property string $attachment_path
+ * @property string $link
  */
 class OperationPhones extends Model
 {
+    public function link():Attribute{
+        return   Attribute::make(fn()=> $this->attachment_path ? env('PROXY_URL') . "/storage/". $this->attachment_path : null) ;
+    }
     public function user():Attribute{
         return  Attribute::make(fn()=> Users::find($this->users_id));
     }
     /**
      * @var array
      */
-    protected $fillable = ['users_id','phones_id', 'operation_phones_id', 'commentaire', 'amount', 'state', 'created_at', 'updated_at', 'type_operation', 'statut', 'date_creation', 'date_success', 'date_canceled', 'date_processing', 'date_failled', 'operation', 'solde_before', 'solde_after'];
+    protected $fillable = ['attachment_path','users_id','phones_id', 'operation_phones_id', 'commentaire', 'amount', 'state', 'created_at', 'updated_at', 'type_operation', 'statut', 'date_creation', 'date_success', 'date_canceled', 'date_processing', 'date_failled', 'operation', 'solde_before', 'solde_after'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
