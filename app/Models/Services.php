@@ -39,7 +39,7 @@ class Services extends Model
      */
     public function operator()
     {
-        return $this->belongsTo('App\Models\Operator', 'operators_id');
+        return $this->belongsTo('App\Models\Operators', 'operators_id');
     }
 
     /**

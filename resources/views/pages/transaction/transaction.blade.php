@@ -221,6 +221,12 @@
                                                         <span style=""> Annuler la transaction </span>
                                                     </button>
                                                 @endif
+                                                @if(retroTransactionAdmin($transaction) )
+                                                    <button v-on:click='openModal("{{$transaction->id}}","retro")' type="button"
+                                                            class="dropdown-item text-center">
+                                                        <span style=""> Retro transaction</span>
+                                                    </button>
+                                                @endif
                                             </div>
                                         </div>
 
@@ -337,11 +343,22 @@
                 <form :action="url_transaction" method="POST"  class="modal-body">
                     @csrf
                     <div >
-                        <div v-if="typeAction !== 'refund'" class="form-group row">
+                        <div v-if="typeAction == 'failed' || typeAction == 'success' " class="form-group row">
                             <label for="comment" class="col-sm-12 col-form-label">Commentaire</label>
                             <div class="col-sm-12">
                                 <textarea required v-model="comment" rows="10" name="comment" id="comment"
                                           class="form-control form-control-normal" placeholder="Commentaire"></textarea>
+                            </div>
+
+                        </div>
+                        <div v-if="typeAction === 'retro'" class="form-group row">
+                            <label class="col-sm-12 col-form-label">Sous Services</label>
+                            <div class="col-sm-12">
+                                <select  required  name="codeService" id="codeService" class="form-control"
+                                        placeholder="Sous Services text-center">
+                                    <option value="" selected> ------Select------</option>
+                                    <option v-for="sousService in sousServices" :value="sousService.code"> @{{sousService.name}} </option>
+                                </select>
                             </div>
 
                         </div>
@@ -372,12 +389,15 @@
                 url_transaction:'',
                 titleTransaction:'',
                 message:'',
+                comment:'',
                 btnMessage:'',
                 idTransaction:'',
                 typeAction:'',
+                codeService:'',
+                sousServices:'',
             },
             methods:{
-                openModal(id,type){
+               async openModal(id,type){
                     this.idTransaction = id;
                     this.typeAction = type;
                     if(type ==='success'){
@@ -394,6 +414,13 @@
                         this.url_transaction = `/transaction/refund/${id}`;
                         this.titleTransaction =    `Remboursement Transaction numéro ${id}`;
                         this.btnMessage = "Remboursement la transaction"
+                    }
+                    if(type ==='retro'){
+                        this.url_transaction = `/transaction/retro-admin/${id}`;
+                        this.titleTransaction =    `Rétro-transaction ${id}`;
+                        this.btnMessage = "Faire la rétro transaction";
+                        this.sousServices = await HttpClient.get(`/transaction/sous-service/${id}`) ;
+                        $("#codeService").select2();
                     }
                     $('#modalTransaction').modal('show');
                 },

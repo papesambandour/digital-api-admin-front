@@ -8,6 +8,7 @@ use App\Models\Transactions;
 use App\Services\Helpers\Utils;
 use Exception;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -260,11 +261,34 @@ class TransactionServices
             if($rest->status() === 201 && $resBody['id']){
                 return redirect()->back()->with('success','Transaction annuler avec success. Message : '. $resBody['messageTreatment']);
             }else{
-                return redirect()->back()->with('error','Erreur lors de l\'annulation de la Transaction.');
+                return redirect()->back()->with('error','Erreur lors de l\'annulation de la Transaction. Message : '. $resBody['messageTreatment']);
             }
         }
         return  redirect()->back()->with('error','La Transaction ne peut pas être annulé.');
 
+    }
+
+    public function retroAdmin($transaction, string $codeService)
+    {
+        if(retroTransactionAdmin($transaction)  ){
+            $rest = Http::withHeaders([
+                'apikey'=>env('SECRETE_API_DIGITAL')
+            ])->post(env('API_DIGITAL_URL') . '/api/v1.0/partner/transaction/retro-admin',
+                ['transactionId'=>$transaction->id, 'codeService'=>$codeService]
+            );
+            $resBody = (array) $rest->object();
+            if($rest->status() === 201 && $resBody['statutTreatment'] === STATUS_TRX['SUCCESS']){
+                return redirect()->back()->with('success','La retro transaction  est effectif avec success. Message : '. $resBody['message']);
+            }else{
+                return redirect()->back()->with('error','Erreur lors de La retro transaction  est effectif. Message : '. $resBody['message']);
+            }
+        }
+        return  redirect()->back()->with('error','La retro Transaction ne peut pas être effectué.');
+    }
+
+    public function sousServices(Transactions $transaction): Collection|array
+    {
+        return getSousServiceCashOut($transaction->sousService);
     }
 
 }

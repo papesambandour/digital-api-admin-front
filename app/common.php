@@ -2,8 +2,11 @@
 
 use App\Models\Parteners;
 use App\Models\Phones;
+use App\Models\SousServices;
 use App\Models\Transactions;
 use App\Models\Users;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\DB;
@@ -293,7 +296,7 @@ function getSousServiceId(): int
 }
 
 function getSousServicesByServiceId($serviceId){
-    return \App\Models\SousServices::where('services_id', $serviceId)->get();
+    return SousServices::where('services_id', $serviceId)->get();
 }
 
 function getOperationRequestName(): string
@@ -353,6 +356,7 @@ function claimsNb(): int
 
 const TYPE_SERVICES = [
     'CASHOUT'=>'CASHOUT',
+    'CASHIN'=>'CASHIN',
 ];
 function checkRefundable(Transactions $transaction): bool
 {
@@ -364,6 +368,12 @@ function checkRefundable(Transactions $transaction): bool
 function checkFailableOrSuccessable(Transactions $transaction): bool
 {
     return $transaction->statut == STATUS_TRX['PROCESSING'] || $transaction->statut == STATUS_TRX['PENDING'] ||  $transaction->pre_statut == STATUS_TRX['PROCESSING'] || $transaction->pre_statut == STATUS_TRX['PENDING'] ;
+}
+function retroTransactionAdmin(Transactions $transaction): bool
+{
+    return
+        ($transaction->statut == STATUS_TRX['SUCCESS'] || $transaction->statut === STATUS_TRX['FAILLED'])
+        && $transaction->sousService->typeService->code === TYPE_SERVICES['CASHIN'];
 }
 
 const PROFILS=[
@@ -385,4 +395,15 @@ function saveFile(UploadedFile $file, $rootPath){
     $response = Response::make($file, 200);
     $response->header("Content-Type", $type);
     return $response;
+}
+function getSousServiceCashOut(SousServices $sousServices): Collection|array
+{
+    return SousServices::query()
+        ->whereHas('typeService',function ($query) use ($sousServices){
+            $query->where('code', TYPE_SERVICES['CASHIN']);
+    })->whereHas('service',function ($query) use ($sousServices){
+           $query->whereHas('operator',function ($query2) use ($sousServices){
+               $query2->where('countries_id',$sousServices->service->operator->countries_id);
+           });
+        })->get();
 }

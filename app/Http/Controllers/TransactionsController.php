@@ -85,6 +85,17 @@ class TransactionsController extends Controller
         $transaction = Transactions::find($id);
         return $this->transactions->setFailTransaction($transaction,\request('comment'));
     }
+    public function retroAdmin(int $id): \Illuminate\Http\RedirectResponse
+    {
+        $transaction = Transactions::find($id);
+        return $this->transactions->retroAdmin($transaction,\request('codeService'));
+    }
+
+    public function sousServices(int $id)
+    {
+        $transaction = Transactions::find($id);
+        return $this->transactions->sousServices($transaction);
+    }
 
     public function versementPhones(): Factory|View|Application
     {
