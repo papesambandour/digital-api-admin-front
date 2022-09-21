@@ -149,6 +149,7 @@
                         <table class="fl-table">
                             <thead>
                             <tr>
+                                <th># Id</th>
                                 <th># Transaction Id</th>
                                 <th>Numéro </th>
                                 <th>Montant</th>
@@ -168,9 +169,10 @@
                                 <tr>
                                     <th scope="row">
                                         <span style="font-weight: bold;color: #324960;text-decoration: underline">
-                                            {{$transaction->external_transaction_id}}
+                                            {{$transaction->id}}
                                         </span>
                                     </th>
+                                    <td>{{ $transaction->transaction_id }} </td>
                                     <td>{{ $transaction->phone }} </td>
                                     <td class="currency">{{ $transaction->amount }} <span>XOF</span></td>
                                     <td> <span class="statut-success">{{$transaction->type_operation}} </span> </td>
