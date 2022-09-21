@@ -280,7 +280,7 @@ class TransactionServices
             if($rest->status() === 201 && $resBody['statutTreatment'] === STATUS_TRX['SUCCESS']){
                 return redirect()->back()->with('success','La retro transaction  est effectif avec success. Message : '. $resBody['message']);
             }else{
-                return redirect()->back()->with('error','Erreur lors de La retro transaction  est effectif. Message : '. $resBody['message']);
+                return redirect()->back()->with('error','Erreur lors de La retro transaction  est effectif. Message : '. json_encode($resBody));
             }
         }
         return  redirect()->back()->with('error','La retro Transaction ne peut pas être effectué.');
