@@ -203,7 +203,7 @@
                                                 <div class="dropdown-divider"></div>
 
                                                 <button class="dropdown-item text-center " onclick="window.location.href= '/transaction/details/{{$transaction->id}}'">Details</button>
-                                                @if(checkRefundable($transaction))
+                                                @if(checkRefundable($transaction) )
                                                 <button v-on:click='openModal("{{$transaction->id}}","refund")' type="button"
                                                         class="dropdown-item text-center">
                                                     <span style=""> Rembourser la transaction</span>
@@ -340,7 +340,7 @@
                         <div v-if="typeAction !== 'refund'" class="form-group row">
                             <label for="comment" class="col-sm-12 col-form-label">Commentaire</label>
                             <div class="col-sm-12">
-                                <textarea required v-model="message" rows="10" name="message" id="comment"
+                                <textarea required v-model="comment" rows="10" name="comment" id="comment"
                                           class="form-control form-control-normal" placeholder="Commentaire"></textarea>
                             </div>
 
@@ -382,7 +382,7 @@
                     this.typeAction = type;
                     if(type ==='success'){
                         this.url_transaction = `/transaction/success/${id}`;
-                        this.titleTransaction = '`Validation Transaction numéro ${id}';
+                        this.titleTransaction = `Validation Transaction numéro ${id}`;
                         this.btnMessage = "Validation la transaction"
                     }
                     if(type ==='failed'){
