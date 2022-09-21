@@ -304,3 +304,6 @@ li.page-item > a:hover{
     line-height: 30px;
     text-align: center;
 }
+.dropdown-item {
+    cursor: pointer !important;
+}
