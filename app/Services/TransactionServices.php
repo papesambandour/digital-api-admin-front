@@ -269,6 +269,7 @@ class TransactionServices
     }
 
     public static function getErrorMessage($responseData): string{
+        return json_encode($responseData);
         $message = '';
         try {
             $response = @$responseData->apiResponse;
