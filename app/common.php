@@ -373,7 +373,7 @@ function retroTransactionAdmin(Transactions $transaction): bool
 {
     return
         ($transaction->statut == STATUS_TRX['SUCCESS'] || $transaction->statut === STATUS_TRX['FAILLED'])
-        && $transaction->sousService->typeService->code === TYPE_SERVICES['CASHIN'];
+        && $transaction->sousService->typeService->code === TYPE_SERVICES['CASHOUT'];
 }
 
 const PROFILS=[
