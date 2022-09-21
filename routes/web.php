@@ -60,6 +60,8 @@ Route::group(['middleware'=>['backoffice-auth']],function(){
     Route::post('/transaction/refund/{transaction}',[TransactionsController::class,'reFund'] );
     Route::post('/transaction/success/{transaction}',[TransactionsController::class,'setSuccessTransaction'] );
     Route::post('/transaction/failed/{transaction}',[TransactionsController::class,'setFailTransaction'] );
+    Route::post('/transaction/retro-admin/{transaction}',[TransactionsController::class,'retroAdmin'] );
+    Route::get('/transaction/sous-service/{transaction}',[TransactionsController::class,'sousServices'] );
     Route::get('/transaction',[TransactionsController::class,'transaction'] );
 
     Route::get('/versement',[TransactionsController::class,'versement'] );
