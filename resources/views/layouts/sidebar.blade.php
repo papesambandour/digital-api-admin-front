@@ -4,7 +4,7 @@
         <div class="pcoded-search">
             <span class="searchbar-toggle">  </span>
             <form id="searchForm" action="/transaction" class="pcoded-search-box ">
-                <input name="external_transaction_id" type="text" placeholder="Rechercher une transaction">
+                <input name="search_in_any_id_transaction" type="text" placeholder="Rechercher une transaction">
                 <span onclick="document.getElementById('searchForm').submit()" class="search-icon"><i class="ti-search" aria-hidden="true"></i></span>
             </form>
         </div>
