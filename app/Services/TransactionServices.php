@@ -276,7 +276,7 @@ class TransactionServices
     }
 
     public static function getErrorMessage($responseData): string{
-        return (json_encode($responseData));
+       // return (json_encode($responseData));
         $message = '';
         try {
             $response = @$responseData->apiResponse;
@@ -285,7 +285,7 @@ class TransactionServices
         } catch (Exception $e) {
         }
 
-        return $response->message.' '. $message;
+        return @$response['message'].' '. $message;
     }
 
     public function retroAdmin($transaction, string $codeService)
