@@ -102,8 +102,9 @@
                                 </tr>
                                 <tr>
                                     <th>Date de creation</th>
-{{--                                    <td class="text-center">{{$transaction->erorr_types->message}} </td>--}}
+                                    <th class="text-center">{{@$transaction->errorType->message ?: "N\A"}}
                                 </tr>
+
                             </thead>
                             <tbody>
 

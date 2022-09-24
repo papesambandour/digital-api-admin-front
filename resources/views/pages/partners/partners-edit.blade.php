@@ -107,6 +107,25 @@
                                     @enderror
                                 </div>
                             </div>
+                  {{-- #############################################FILED ############################## --}}
+                            <div class="form-group row">
+                                <label for="allow_id" class="col-sm-3 col-form-label">
+                                    IP autorisés
+                                    <span style="color: red; font-size: 10px">
+                                        les IP sont séparés par point virgule ";"
+                                    </span>
+                                </label>
+                                <div class="col-sm-3">
+                                    <textarea
+                                           name="allow_id" id="allow_id"
+                                           class="form-control form-control-normal" placeholder="IP autorisés">{{$partners->allow_id}}</textarea>
+                                    @error('allow_id')
+                                    <div  class="invalid-feedback ">
+                                        {{ $message }}
+                                    </div>
+                                    @enderror
+                                </div>
+                            </div>
                   {{-- #######################################################FILED ############################### --}}
                             <div class="form-group row">
                                 <label class="col-sm-3 col-form-label">Pays</label>

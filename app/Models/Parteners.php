@@ -29,13 +29,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property Transactions[] $transactions
  * @property int $countries_id
  * @property Country $country
+ * @property string $allow_id
  */
 class Parteners extends Model
 {
     /**
      * @var array
      */
-    protected $fillable = ['countries_id','created_at', 'updated_at', 'state', 'solde', 'amount_reserved', 'name', 'phone', 'email', 'adress', 'password', 'first_connection', 'password_expired', 'password_duration_day'];
+    protected $fillable = ['allow_id','countries_id','created_at', 'updated_at', 'state', 'solde', 'amount_reserved', 'name', 'phone', 'email', 'adress', 'password', 'first_connection', 'password_expired', 'password_duration_day'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
