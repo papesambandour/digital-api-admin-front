@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Country;
 use App\Models\Parteners;
 use App\Models\Phones;
 use App\Models\SousServices;
@@ -429,4 +430,16 @@ function getSousServiceCashOut(SousServices $sousServices): Collection|array
                $query2->where('countries_id',$sousServices->service->operator->countries_id);
            });
         })->get();
+}
+function isPhone(Phones $phones): bool
+{
+    return ($phones->sim_provider  !== 'NONE' && $phones->socket == SOCKET['CONNECTED']) || true;
+}
+const SOCKET = [
+    'CONNECTED' =>'CONNECTED',
+    'DISCONNECTED' =>'DISCONNECTED',
+];
+function countries(): Collection
+{
+    return Country::all();
 }

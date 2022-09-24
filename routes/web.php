@@ -73,6 +73,7 @@ Route::group(['middleware'=>['backoffice-auth']],function(){
     /*CONFIGURATIONS START*/
     Route::get('/sous-service/toggle/{id}',[ConfigurationController::class,'toggleService'] );
     Route::get('/sous-service',[ConfigurationController::class,'serviceSous'] );
+    Route::get('/service',[ConfigurationController::class,'service'] );
 //    Route::get('/apikey',[ConfigurationController::class,'apikey'] );
 //    Route::post('/apikey/addkey',[ConfigurationController::class,'addKey'] );
 //    Route::post('/apikey/regenerateKey/{idKey}',[ConfigurationController::class,'regenerateKey'] );
@@ -90,7 +91,11 @@ Route::group(['middleware'=>['backoffice-auth']],function(){
     Route::get('/phones/verser/{id}',[PhonesController::class ,'versement']);
     Route::post('/phones/verser/{id}',[PhonesController::class ,'versementSave']);
     Route::get('/phones/callFund/{id}',[PhonesController::class ,'callFund']);
-    Route::post('/phones/callFund/{id}',[PhonesController::class ,'callFundSave']);
+    Route::post('/phones/callFund/{id}',[PhonesController::class ,'callFundSave'])
+    ;
+    Route::get('/phones/ussd/{id}',[PhonesController::class ,'ussdExecution']);
+    Route::post('/phones/ussd/{id}',[PhonesController::class ,'ussdExecution']);
+
     Route::resource('/phones', PhonesController::class );
     /*PARTNERS END*/
 

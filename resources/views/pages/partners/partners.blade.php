@@ -97,6 +97,7 @@
                                 <th>Email</th>
                                 <th>Solde</th>
                                 <th>Solde Commission</th>
+                                <th>Pays</th>
                                 <th>État</th>
                                 <th>Date</th>
                                 <th>Options</th>
@@ -117,6 +118,10 @@
                                     </td>
                                     <td class="text-center">
                                         <span class="currency"> {{ number($partner->solde_commission) }} XOF</span>
+                                    </td>
+
+                                    <td class="text-center">
+                                        <span class="currency"> {{ @$partner->country->name }} </span>
                                     </td>
 
                                     <td>

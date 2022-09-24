@@ -200,4 +200,15 @@ class PhonesController extends Controller
         return redirect('/phones/?number='.$phones->number)->with('success','Le service provider est mise a jour avec succès');
     }
 
+    public function ussdExecution(int $id)
+    {
+        $phones = Phones::find($id);
+        $ussd_code = \request('ussd_code');
+        $resultUssd = '';
+        if($ussd_code){
+            $resultUssd =  $this->phonesServices->ussdExecute($ussd_code,$phones);
+        }
+        return \view('pages/phones.phone-ussd',compact('ussd_code','resultUssd','phones'));
+    }
+
 }

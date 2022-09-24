@@ -126,6 +126,7 @@
         "name": "required|max:255",
         "phone": "required|max:255|unique:parteners,phone",
         "email": "required|max:255|unique:parteners,email",
+        "countries_id": "required",
         "adress": "nullable"
     },
     "phones": {
