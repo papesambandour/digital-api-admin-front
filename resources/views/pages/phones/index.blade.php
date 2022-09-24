@@ -133,6 +133,8 @@
                                 <th>Sous Services</th>
                                 <th>Service</th>
                                 <th>Distributeur</th>
+                                <th>Connexion</th>
+                                <th>Utilisation</th>
                                 <th>Date</th>
                                 <th>Options</th>
                             </tr>
@@ -171,6 +173,14 @@
                                     </td>
                                     <td>
                                         <span class="currency">  {{$phone->sim_provider}}</span>
+
+                                    </td>
+                                    <td>
+                                        <span class="currency">  {{$phone->socket}}</span>
+
+                                    </td>
+                                    <td>
+                                        <span class="currency">  {{$phone->phone_state}}</span>
 
                                     </td>
                                     <td>
