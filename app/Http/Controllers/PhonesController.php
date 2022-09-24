@@ -98,7 +98,7 @@ class PhonesController extends Controller
         ]);
         $amount =(float) $request->get('amount');
         updateSolde($phones,$amount,'solde');
-        updateSolde($phones,$amount,'solde_api');
+        //updateSolde($phones,$amount,'solde_api');
         $phones = Phones::find($id);
         $data = [
             'amount'=>(float)$amount,
@@ -146,7 +146,7 @@ class PhonesController extends Controller
             return redirect()->back(302)->with('error','Le solde du telephone est insuffisant');
         }
         updateSolde($phones,-$amount,'solde');
-        updateSolde($phones,$amount,'solde_api');
+        //updateSolde($phones,$amount,'solde_api');
         $phones = Phones::find($id);
         $data = [
             'amount'=>-(float)$amount,
