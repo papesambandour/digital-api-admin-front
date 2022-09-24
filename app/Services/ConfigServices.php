@@ -45,6 +45,20 @@ class ConfigServices
         }
         return $query->orderBy('id','DESC')->with('service')->with('typeService')->with('commissions')->paginate(size());
     }
+    public function servicesPaginate()
+    {
+        $query = Services::query();
+        if(getPartnerI()){
+            $query->whereHas('sousServices',fn($query)=> $query->whereHas('sousServicesParteners',fn($query_)=> $query_->where('parteners_id',getPartnerI())));
+        }
+        if(request('date_start')){
+            $query->where('created_at','>=',dateFilterStart(request('date_start')));
+        }
+        if(request('date_end')){
+            $query->where('created_at','<=',dateFilterEnd(request('date_end')));
+        }
+        return $query->orderBy('id','DESC')->paginate(size());
+    }
     public function apikeyPaginate(): LengthAwarePaginator
     {
         $query = PartenerComptes::query();
@@ -81,5 +95,7 @@ class ConfigServices
         $partnerComptes->save();
         return $partnerComptes;
     }
+
+
 
 }

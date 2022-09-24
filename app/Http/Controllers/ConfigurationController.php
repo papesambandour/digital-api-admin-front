@@ -29,6 +29,13 @@ class ConfigurationController extends Controller
         $date_end= request('date_end');
         return view('pages/config.sous_service',compact('typeServices','services','sousServices','date_start','date_end'));
     }
+    public function service(): Factory|View|Application
+    {
+        $services= $this->configServices->servicesPaginate();
+        $date_start= request('date_start');
+        $date_end= request('date_end');
+        return view('pages/config.service',compact('services','date_start','date_end'));
+    }
     public function toggleService($idService)
     {
         $sousService = SousServices::query()->where('id',$idService)->whereIn('state',[STATE['ACTIVED'],STATE['INACTIVED'] ])->first();

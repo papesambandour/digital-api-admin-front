@@ -108,6 +108,19 @@
                                 </div>
                             </div>
                   {{-- #######################################################FILED ############################### --}}
+                          <div class="form-group row">
+                            <label class="col-sm-3 col-form-label">Pays</label>
+                            <div class="col-sm-3">
+                                <select  required  name="countries_id" id="countries_id" class="">
+                                    <option value="" selected> ---Sélectionner un Pays ---</option>
+                                    @foreach(countries() as $country)
+                                        <option @if(old('countries_id') == $country->id  ) selected @endif value="{{$country->id}}"> {{$country->name}} </option>
+                                    @endforeach
+
+                                </select>
+                             </div>
+                          </div>
+                  {{-- #######################################################FILED ############################### --}}
 
 
 
@@ -143,7 +156,9 @@
 @endsection
 
 @section('js')
-
+    <script>
+        $("#countries_id").select2()
+    </script>
 @endsection
 
 @section('css')

@@ -129,6 +129,7 @@
                                 <th>Operation de </th>
                                 <th>Provenance </th>
                                 <th>Justificatif  </th>
+                                <th>Transaction  </th>
                                 <th>Date</th>
                             </tr>
                             </thead>
@@ -154,6 +155,13 @@
                                     <td>
                                         @if($mouvement->link)
                                             <a class="currency" href="{{$mouvement->link}}" target="_blank">Voir </a>
+                                        @else
+                                            N\A
+                                        @endif
+                                    </td>
+                                    <td>
+                                        @if($mouvement->transactions_id)
+                                            <a class="currency" href="/transaction/details/{{$mouvement->transactions_id}}" >Voir </a>
                                         @else
                                             N\A
                                         @endif

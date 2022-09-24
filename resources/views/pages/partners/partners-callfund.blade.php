@@ -89,7 +89,7 @@
                             <div class="form-group row">
                                 <label for="attachment_path" class="col-sm-3 col-form-label">Justificatif (pdf)</label>
                                 <div class="col-sm-3">
-                                    <input required   name="attachment_path" id="attachment_path" type="file" accept=".doc, .docx, .pdf"
+                                    <input required   name="attachment_path" id="attachment_path" type="file" accept=".doc, .docx, .pdf, .png, .jpeg, .jpg"
                                            class="form-control form-control-normal" placeholder="Justificatif (pdf)">
                                     @error('attachment_path')
                                     <div  class="invalid-feedback ">

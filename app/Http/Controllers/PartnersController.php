@@ -49,7 +49,7 @@ class PartnersController
     {
         $request->validate(Utils::getRuleModel(new Parteners()));
         $password = Utils::generateKey();
-        $data= $request->only(['name','phone','email','adress']);
+        $data= $request->only(['name','phone','email','adress','countries_id']);
         $data['password'] = $password['hash'];
         $partner =  Parteners::create($data);
         $partner->password = $password['password'];
@@ -68,7 +68,7 @@ class PartnersController
         $request->validate([
             'amount' =>"required|integer|min:1000|required_with:amount_confirm|same:amount_confirm",
             'amount_confirm' => 'required|integer|min:1000',
-            'attachment_path' => 'required|mimes:pdf,docx,doc|max:20048',
+            'attachment_path' => 'required|mimes:pdf,docx,doc,png,jpeg,jpg|max:20048',
         ]);
         $amount =(float) $request->get('amount');
         updateSolde($partners,$amount,'solde');
@@ -102,7 +102,7 @@ class PartnersController
     {
         $partners = Parteners::find($id);
         $request->validate(Utils::getRuleModel(new Parteners(),$partners->id,$request->all()));
-        $data= $request->only(['name','phone','email','adress']);
+        $data= $request->only(['name','phone','email','adress','countries_id']);
         $partners->update($data);
         return redirect('/partners')->with('success','Partenaire mise a jour avec succès');
     }
@@ -119,7 +119,7 @@ class PartnersController
         $request->validate([
             'amount' =>"required|integer|min:1000|required_with:amount_confirm|same:amount_confirm",
             'amount_confirm' => 'required|integer|min:1000',
-            'attachment_path' => 'required|mimes:pdf,docx,doc|max:20048',
+            'attachment_path' => 'required|mimes:pdf,docx,doc,png,jpeg,jpg|max:20048',
         ]);
         $amount =(float) $request->get('amount');
         if($amount > floatval($partners->solde)){

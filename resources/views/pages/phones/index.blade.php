@@ -133,6 +133,8 @@
                                 <th>Sous Services</th>
                                 <th>Service</th>
                                 <th>Distributeur</th>
+                                <th>Connexion</th>
+                                <th>Utilisation</th>
                                 <th>Date</th>
                                 <th>Options</th>
                             </tr>
@@ -174,6 +176,14 @@
 
                                     </td>
                                     <td>
+                                        <span class="currency">  {{$phone->socket}}</span>
+
+                                    </td>
+                                    <td>
+                                        <span class="currency">  {{$phone->phone_state}}</span>
+
+                                    </td>
+                                    <td>
                                         {{ $phone->created_at }}
                                     </td>
                                     <td>
@@ -184,6 +194,9 @@
                                             </button>
                                             <div class="dropdown-menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(113px, 40px, 0px); top: 0px; left: 0px; will-change: transform;">
                                                 <div class="dropdown-divider"></div>
+                                                @if(isPhone($phone))
+                                                <a class="dropdown-item waves-light waves-effect" href="/phones/ussd/{{$phone->id}}">EXECUTION USSD</a>
+                                                @endif
                                                 <a class="dropdown-item waves-light waves-effect" href="/phones/{{$phone->id}}/edit">Modifier</a>
                                                 <a class="dropdown-item waves-light waves-effect" href="/phones/verser/{{$phone->id}}">Verser</a>
                                                 <a class="dropdown-item waves-light waves-effect" href="/phones/callFund/{{$phone->id}}">Cree un Appel de fonds</a>

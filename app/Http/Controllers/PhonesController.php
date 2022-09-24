@@ -94,7 +94,7 @@ class PhonesController extends Controller
         $request->validate([
             'amount' =>"required|integer|min:1000|required_with:amount_confirm|same:amount_confirm",
             'amount_confirm' => 'required|integer|min:1000',
-            'attachment_path' => 'required|mimes:pdf,docx,doc|max:20048',
+            'attachment_path' => 'required|mimes:pdf,docx,doc,png,jpeg,jpg|max:20048',
         ]);
         $amount =(float) $request->get('amount');
         updateSolde($phones,$amount,'solde');
@@ -139,7 +139,7 @@ class PhonesController extends Controller
         $request->validate([
             'amount' =>"required|integer|min:1000|required_with:amount_confirm|same:amount_confirm",
             'amount_confirm' => 'required|integer|min:1000',
-            'attachment_path' => 'required|mimes:pdf,docx,doc|max:20048',
+            'attachment_path' => 'required|mimes:pdf,docx,doc,png,jpeg,jpg|max:20048',
         ]);
         $amount =(float) $request->get('amount');
         if($amount > floatval($phones->solde)){
@@ -198,6 +198,17 @@ class PhonesController extends Controller
         SousServicesPhones::create(['sous_services_id'=> $sousServices->id,'phones_id'=>$phones->id]);
         DB::commit();
         return redirect('/phones/?number='.$phones->number)->with('success','Le service provider est mise a jour avec succès');
+    }
+
+    public function ussdExecution(int $id)
+    {
+        $phones = Phones::find($id);
+        $ussd_code = \request('ussd_code');
+        $resultUssd = '';
+        if($ussd_code){
+            $resultUssd =  $this->phonesServices->ussdExecute($ussd_code,$phones);
+        }
+        return \view('pages/phones.phone-ussd',compact('ussd_code','resultUssd','phones'));
     }
 
 }
