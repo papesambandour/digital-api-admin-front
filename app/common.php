@@ -433,7 +433,7 @@ function getSousServiceCashOut(SousServices $sousServices): Collection|array
 }
 function isPhone(Phones $phones): bool
 {
-    return ($phones->sim_provider  !== 'NONE' && $phones->socket == SOCKET['CONNECTED']) || true;
+    return $phones->sim_provider  !== 'NONE' && $phones->socket == SOCKET['CONNECTED'] ;
 }
 const SOCKET = [
     'CONNECTED' =>'CONNECTED',
