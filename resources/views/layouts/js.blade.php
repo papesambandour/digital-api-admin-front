@@ -38,18 +38,7 @@
 </script>
 <script>
 
-    $('li.page-item > a').on('click',function(event){
-        event.preventDefault();
-        console.log(event.target?.text)
-        let url = window.location.href;
-        url = url.replace(/(\?|&)page=\d*/,'')
-        if(url.indexOf('?') !== -1){
-            window.location.href =url + "&page="+ event.target?.text
-        }else{
-            window.location.href =url + "?page="+ event.target?.text
-        }
 
-    })
 </script>
 
 <script>
@@ -66,6 +55,19 @@
         if( $('#_sous_services_id').text()){
             $('#_sous_services_id').select2();
         }
+
+        $('li.page-item  a.page-link').on('click',function(event){
+            event.preventDefault();
+            console.log(event.target?.text)
+            let url = window.location.href;
+            url = url.replace(/(\?|&)page=\d*/,'')
+            if(url.indexOf('?') !== -1){
+                window.location.href =url + "&page="+ event.target?.text
+            }else{
+                window.location.href =url + "?page="+ event.target?.text
+            }
+
+        })
     });
 
 </script>

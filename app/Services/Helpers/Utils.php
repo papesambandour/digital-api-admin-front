@@ -664,6 +664,21 @@ class Utils
 
 
     }
+    public static function respondAbord($status, $data = [], $error = false, $json = true): JsonResponse|array
+    {
+
+        return response()->json([
+            "code" => @self::$statusCodes[$status]['code'] ?: $status,
+            "error" => $error,
+            "msg" => @__("resapi." . $status) ?: $status,
+            "data" => $data,
+            'from' => env('APP_NAME')
+
+        ], 200)->send();
+
+
+
+    }
 
     public static function respondRaw($code, $msg, $data = [], $error = false, $json = true): JsonResponse|array
     {

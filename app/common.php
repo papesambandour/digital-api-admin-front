@@ -1,11 +1,13 @@
 <?php
 
 use App\Models\Country;
+use App\Models\OperationParteners;
 use App\Models\Parteners;
 use App\Models\Phones;
 use App\Models\SousServices;
 use App\Models\Transactions;
 use App\Models\Users;
+use App\Services\Helpers\Utils;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\UploadedFile;
@@ -14,6 +16,9 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Storage;
 use JetBrains\PhpStorm\ArrayShape;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Exception;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 function  tox64($path): string
@@ -442,4 +447,88 @@ const SOCKET = [
 function countries(): Collection
 {
     return Country::all();
+}
+
+function exportExcel(array $data ){
+    try {
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+        /*SET CONTENT*/
+        $y=1;
+        $alfa = range('A','Z');
+        foreach ($data as $value){
+            $x = 0 ;
+            foreach ($value as $key =>$va){
+                $sheet->setCellValue(@$alfa[$x] . $y, ucfirst($key));
+                $sheet->getColumnDimension(@$alfa[$x])->setAutoSize(true);
+                $x++;
+            }
+
+            $y++ ;
+            break;
+        }
+        foreach ($data as $value){
+            $x = 0 ;
+            foreach ($value as $key =>$va){
+                $sheet->setCellValue(@$alfa[$x] . $y,$va);
+                $sheet->getColumnDimension(@$alfa[$x])->setAutoSize(true);
+                $x++;
+            }
+            $y++ ;
+        }
+        $sheet->getStyle('A:Z')->getAlignment()->setHorizontal('left');
+
+        //  $sheet->setCellValue('A1', 'Hello World !');
+        /*SET CONTENT*/
+        $path = tempnam(sys_get_temp_dir(), '_intech_api_');
+        $writer = new Xlsx($spreadsheet);
+        $writer->save($path);
+        $res = file_get_contents($path);
+        $b64Doc = base64_encode(($res ?: ''));// file
+        unlink($path);
+        return json_encode(['data'=>"data:application/xlsx;base64," . $b64Doc,'msg'=>'exportation ok','error'=>false,'code'=>200]) ;
+    } catch (Exception $e) {
+        die($e->getMessage());
+    }
+}
+function isExportExcel(): bool
+{
+    return !!request('_exported_excel_',false);
+}
+
+/**
+ * @param Collection $partners
+ * @return array
+ */
+function mappingExportPartner(Collection $partners): array
+{
+    return $partners->map(function(Parteners $partner){
+        return [
+            'Libelle'=> $partner->name,
+            'Email'=> $partner->email,
+            'Téléphone'=> $partner->phone,
+            'Solde'=> $partner->solde,
+            'Solde Commission'=> $partner->solde_commission,
+            'Pays'=> @$partner->country->name ?: "N\A",
+            'État'=> $partner->state,
+            'Date de creation'=> $partner->created_at->format('Y-m-d'),
+        ];
+    })->toArray();
+}
+
+/**
+ * @param Collection $versements
+ * @return array
+ */
+function mappingExportVersement(Collection $versements): array
+{
+    return $versements->map(function(OperationParteners $versement){
+        return [
+            'Montant'=> $versement->amount,
+            'Partenaire'=> $versement->partener->name,
+            'Type Opération'=> $versement->type_operation,
+            'Utilisateur'=> @$versement->user->f_name . ' ' . @$versement->user->l_name  ,
+            'Date de creation'=> $versement->created_at->format('Y-m-d'),
+        ];
+    })->toArray();
 }

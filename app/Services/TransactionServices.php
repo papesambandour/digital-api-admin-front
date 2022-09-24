@@ -85,7 +85,11 @@ class TransactionServices
         if(request('date_end')){
             $query->where('created_at','<=',dateFilterEnd(request('date_end')));
         }
-       return  $query->orderBy('id','DESC')->paginate(size());
+        $query->orderBy('id','DESC');
+        if(isExportExcel()){
+            die (exportExcel(mappingExportVersement($query->get())));
+        }
+       return  $query->paginate(size());
     }
     public function versementPaginatePhones(): LengthAwarePaginator
     {

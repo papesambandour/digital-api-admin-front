@@ -53,7 +53,7 @@ class ClaimController
            $claim->opened_at =  nowIso();
            $claim->save();
        }
-       return redirect("/claim/$claim->id")->with('success','Le ticket numéro est bien réceptionner');
+       return redirect("/claim/$claim->id")->with('success','Le ticket numéro '.$claim->claim_ref .' est bien réceptionné');
     }
     public function update($id,Request $request)
     {
@@ -68,7 +68,7 @@ class ClaimController
             $claim->close_at = nowIso();
             $claim->statut = STATUS_CLAIM['CLOSED'];
             $claim->save();
-            return redirect("/claim/$claim->id")->with('success','Réclamation est fermer avec  succès');
+            return redirect("/claim/$claim->id")->with('success','Réclamation numéro'.$claim->claim_ref.' est fermé avec  succès');
         }else{
             return redirect("/claim/$claim->id")->with('error','La reclamation est deja traiter');
         }
