@@ -80,13 +80,15 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $import_bank_at;
  * @property string $export_batch_id;
  * @property string $import_batch_id;
+ * @property string $error_types_id;
+ * @property ErrorType $errorType;
  */
 class Transactions extends Model
 {
     /**
      * @var array
      */
-    protected $fillable = ['import_bank_at','import_bank','sous_services_id', 'phones_id', 'partener_comptes_id', 'parteners_id', 'type_operation', 'solde', 'commission_amount', 'fee_amount', 'created_at', 'updated_at', 'state', 'statut', 'date_creation', 'date_success', 'date_canceled', 'date_processing', 'date_failled', 'service_name', 'message', 'transaction_id', 'external_transaction_id', 'sous_service_name', 'operateur_name', 'telephone_number_service', 'partner_compte_name', 'partener_name', 'commentaire', 'data', 'amount', 'url_ipn', 'phone', 'sous_service_transaction_id', 'data_sended_callback', 'data_response_callback', 'callback_is_send', 'code_sous_service', 'error_message'];
+    protected $fillable = ['error_types_id','import_bank_at','import_bank','sous_services_id', 'phones_id', 'partener_comptes_id', 'parteners_id', 'type_operation', 'solde', 'commission_amount', 'fee_amount', 'created_at', 'updated_at', 'state', 'statut', 'date_creation', 'date_success', 'date_canceled', 'date_processing', 'date_failled', 'service_name', 'message', 'transaction_id', 'external_transaction_id', 'sous_service_name', 'operateur_name', 'telephone_number_service', 'partner_compte_name', 'partener_name', 'commentaire', 'data', 'amount', 'url_ipn', 'phone', 'sous_service_transaction_id', 'data_sended_callback', 'data_response_callback', 'callback_is_send', 'code_sous_service', 'error_message'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -134,5 +136,12 @@ class Transactions extends Model
     public function ussdExecutionMessages()
     {
         return $this->hasMany('App\Models\UssdExecutionMessages', 'transactions_id');
+    }
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function errorType()
+    {
+        return $this->belongsTo(ErrorType::class, 'error_types_id');
     }
 }

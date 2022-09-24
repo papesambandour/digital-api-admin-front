@@ -43,7 +43,11 @@ class ConfigServices
         if(request('date_end')){
             $query->where('created_at','<=',dateFilterEnd(request('date_end')));
         }
-        return $query->orderBy('id','DESC')->with('service')->with('typeService')->with('commissions')->paginate(size());
+        $query->orderBy('id','DESC');
+        if(isExportExcel()){
+            die (exportExcel(mappingExportSousService($query->get())));
+        }
+        return $query->with('service')->with('typeService')->with('commissions')->paginate(size());
     }
     public function servicesPaginate()
     {
@@ -57,7 +61,11 @@ class ConfigServices
         if(request('date_end')){
             $query->where('created_at','<=',dateFilterEnd(request('date_end')));
         }
-        return $query->orderBy('id','DESC')->paginate(size());
+        $query->orderBy('id','DESC');
+        if(isExportExcel()){
+            die (exportExcel(mappingExportService($query->get())));
+        }
+        return $query->paginate(size());
     }
     public function apikeyPaginate(): LengthAwarePaginator
     {

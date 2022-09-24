@@ -58,7 +58,10 @@ class TransactionServices
         if(request('amount_min')){
             $transactions->where('amount','>=',request('amount_min'));
         }
-
+        $transactions->orderBy('id','DESC');
+        if(isExportExcel()){
+            die (exportExcel(mappingExportTransaction($transactions->get())));
+        }
         return $transactions->paginate(size());
     }
 
@@ -85,7 +88,11 @@ class TransactionServices
         if(request('date_end')){
             $query->where('created_at','<=',dateFilterEnd(request('date_end')));
         }
-       return  $query->orderBy('id','DESC')->paginate(size());
+        $query->orderBy('id','DESC');
+        if(isExportExcel()){
+            die (exportExcel(mappingExportVersement($query->get())));
+        }
+       return  $query->paginate(size());
     }
     public function versementPaginatePhones(): LengthAwarePaginator
     {
@@ -105,7 +112,11 @@ class TransactionServices
         if(request('date_end')){
             $query->where('created_at','<=',dateFilterEnd(request('date_end')));
         }
-       return  $query->orderBy('id','DESC')->paginate(size());
+        $query->orderBy('id','DESC');
+        if(isExportExcel()){
+            die (exportExcel(mappingExportVersementPhones($query->get())));
+        }
+       return  $query->paginate(size());
     }
 
     public function mouvements(): LengthAwarePaginator
@@ -132,7 +143,11 @@ class TransactionServices
         if(getTypeOperation()){
             $query->where('type_operation',getTypeOperation());
         }
-        return  $query->orderBy('id','DESC')->paginate(size());
+        $query->orderBy('id','DESC');
+        if(isExportExcel()){
+            die (exportExcel(mappingExportVersement($query->get())));
+        }
+        return  $query->paginate(size());
     }
     public function mouvementsPhones(): LengthAwarePaginator
     {
@@ -158,7 +173,11 @@ class TransactionServices
         if(getTypeOperation()){
             $query->where('type_operation',getTypeOperation());
         }
-        return  $query->orderBy('id','DESC')->paginate(size());
+        $query->orderBy('id','DESC');
+        if(isExportExcel()){
+            die (exportExcel(mappingExportVersementPhones($query->get())));
+        }
+        return  $query->paginate(size());
     }
     public function reFund(Transactions $transaction)
     {

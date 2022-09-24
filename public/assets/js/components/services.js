@@ -279,3 +279,36 @@ class SousServicesPartners{
 //     $(elem).css('pointerEvents','all')
 //     alert()
 // });
+
+
+    function exportExcel(idButton="",fileName="",url=""){
+        if(!url){
+            url = window.location.href;
+        }
+        if(url.includes('?')){
+            url += "&_exported_excel_=1"
+        }else {
+            url += "?_exported_excel_=1"
+        }
+        document.getElementById(`${idButton}-sniper`).removeAttribute('hidden');
+        document.getElementById(`${idButton}`).setAttribute('disabled', 'disabled')
+        HttpClient.get(url)
+            .then((res)=>{
+                if(res.code ===200){
+                    let date= Helper.nowDMY()
+                    Helper.downloadPDF(res.data,`${fileName+'-'}${date}.xlsx`);
+                }else {
+                    alert(res.msg);
+                }
+                document.getElementById(`${idButton}`).removeAttribute('disabled')
+                document.getElementById(`${idButton}-sniper`).setAttribute('hidden','hidden');
+
+            }).catch(async (error)=>{
+            document.getElementById(`${idButton}`).removeAttribute('disabled')
+            document.getElementById(`${idButton}-sniper`).setAttribute('hidden','hidden');
+            //console.log(  error);
+            alert( error.message);
+        })
+
+    }
+

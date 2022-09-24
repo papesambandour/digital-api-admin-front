@@ -1,11 +1,14 @@
 <?php
 
 use App\Models\Country;
+use App\Models\OperationParteners;
 use App\Models\Parteners;
 use App\Models\Phones;
+use App\Models\Services;
 use App\Models\SousServices;
 use App\Models\Transactions;
 use App\Models\Users;
+use App\Services\Helpers\Utils;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\UploadedFile;
@@ -14,6 +17,9 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Storage;
 use JetBrains\PhpStorm\ArrayShape;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Exception;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 function  tox64($path): string
@@ -442,4 +448,175 @@ const SOCKET = [
 function countries(): Collection
 {
     return Country::all();
+}
+
+function exportExcel(array $data ){
+    try {
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+        /*SET CONTENT*/
+        $y=1;
+        $alfa = range('A','Z');
+        foreach ($data as $value){
+            $x = 0 ;
+            foreach ($value as $key =>$va){
+                $sheet->setCellValue(@$alfa[$x] . $y, ucfirst($key));
+                $sheet->getColumnDimension(@$alfa[$x])->setAutoSize(true);
+                $x++;
+            }
+
+            $y++ ;
+            break;
+        }
+        foreach ($data as $value){
+            $x = 0 ;
+            foreach ($value as $key =>$va){
+                $sheet->setCellValue(@$alfa[$x] . $y,$va);
+                $sheet->getColumnDimension(@$alfa[$x])->setAutoSize(true);
+                $x++;
+            }
+            $y++ ;
+        }
+        $sheet->getStyle('A:Z')->getAlignment()->setHorizontal('left');
+
+        //  $sheet->setCellValue('A1', 'Hello World !');
+        /*SET CONTENT*/
+        $path = tempnam(sys_get_temp_dir(), '_intech_api_');
+        $writer = new Xlsx($spreadsheet);
+        $writer->save($path);
+        $res = file_get_contents($path);
+        $b64Doc = base64_encode(($res ?: ''));// file
+        unlink($path);
+        return json_encode(['data'=>"data:application/xlsx;base64," . $b64Doc,'msg'=>'exportation ok','error'=>false,'code'=>200]) ;
+    } catch (Exception $e) {
+        die($e->getMessage());
+    }
+}
+function isExportExcel(): bool
+{
+    return !!request('_exported_excel_',false);
+}
+
+/**
+ * @param Collection $partners
+ * @return array
+ */
+function mappingExportPartner(Collection $partners): array
+{
+    return $partners->map(function(Parteners $partner){
+        return [
+            'Libelle'=> $partner->name,
+            'Email'=> $partner->email,
+            'Téléphone'=> $partner->phone,
+            'Solde'=> $partner->solde,
+            'Solde Commission'=> $partner->solde_commission,
+            'Pays'=> @$partner->country->name ?: "N\A",
+            'État'=> $partner->state,
+            'Date de creation'=> $partner->created_at->format('Y-m-d'),
+        ];
+    })->toArray();
+}
+
+/**
+ * @param Collection $versements
+ * @return array
+ */
+function mappingExportVersement(Collection $versements): array
+{
+    return $versements->map(function(OperationParteners $versement){
+        return [
+            'Montant'=> $versement->amount,
+            'Partenaire'=> $versement->partener->name,
+            'Type Opération'=> $versement->type_operation,
+            'Provenance'=> $versement->operation,
+            'Utilisateur'=> @$versement->user->f_name . ' ' . @$versement->user->l_name  ,
+            'Date de creation'=> $versement->created_at->format('Y-m-d'),
+        ];
+    })->toArray();
+}
+
+/**
+ * @param Collection $transactions
+ * @return array
+ */
+function mappingExportTransaction(Collection $transactions): array
+{
+    return $transactions->map(function(Transactions $transaction){
+        return [
+            'ID'=> $transaction->id,
+            'Transaction Id'=> $transaction->transaction_id,
+            'Numéro'=> $transaction->phone,
+            'Montant'=> $transaction->amount  ,
+            'Type Operation'=> $transaction->type_operation  ,
+            'Partenaire'=> $transaction->partener_name  ,
+            'Commission'=> $transaction->commission_amount ,
+            'Frais'=> $transaction->fee_amount  ,
+            'Services'=> $transaction->sous_service_name  ,
+            'Sous Services'=> $transaction->service_name  ,
+            'Statut'=>  $transaction->{STATUS_TRX_NAME},
+            'Date de creation'=> $transaction->created_at->format('Y-m-d'),
+        ];
+    })->toArray();
+}
+
+/**
+ * @param Collection $services
+ * @return array
+ */
+function mappingExportService(Collection $services): array
+{
+    return $services->map(function(Services $service){
+        return [
+            'Code'=> $service->code,
+            'Libelle'=> $service->name,
+            'Opérateur'=> $service->operator->name,
+            'Catégorie Service'=> $service->categoriesService->name  ,
+            'Solde Système'=>soldeServiceSystem($service->id)   ,
+            'Solde Stock'=>soldeServiceStock($service->id)   ,
+            'Date de creation'=> $service->created_at->format('Y-m-d'),
+        ];
+    })->toArray();
+}
+
+/**
+ * @param Collection $sousServices
+ * @return array
+ */
+function mappingExportSousService(Collection $sousServices): array
+{
+    return $sousServices->map(function(SousServices $sousService){
+        return [
+            'Code'=> $sousService->code,
+            'Libelle'=> $sousService->name,
+            'Type Service'=> $sousService->typeService->name,
+            'Service'=> $sousService->service->name  ,
+            'Type Opération'=> $sousService->type_operation  ,
+            'Statut'=> $sousService->state,
+            'Date de creation'=> $sousService->created_at->format('Y-m-d'),
+        ];
+    })->toArray();
+}
+
+
+/**
+ * @param Collection $versements
+ * @return array
+ */
+function mappingExportVersementPhones(Collection $versements): array
+{
+    return $versements->map(function(\App\Models\OperationPhones $versement){
+        $name ="(";
+        $name .= $versement->phone->id;
+        $name .=") ";
+        $name .= $versement->phone->number ." ";
+        $name .= @$versement->phone->sousServicesPhones[0]->sousService->name ? : 'Pas encore souscrit a un sous service';
+        return [
+            'Montant'=> $versement->amount,
+            'Services Providers'=> $name,
+            'Type Opération'=> $versement->type_operation,
+            'Provenance'=> $versement->operation,
+            'Utilisateur'=> @$versement->user->f_name . ' ' . @$versement->user->l_name  ,
+            'Date de creation'=> $versement->created_at->format('Y-m-d'),
+        ];
+    })->toArray();
 }

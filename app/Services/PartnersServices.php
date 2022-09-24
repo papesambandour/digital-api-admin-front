@@ -13,7 +13,7 @@ class PartnersServices
     {
         return Parteners::all();
     }
-    public function partnersPaginate(): LengthAwarePaginator
+    public function partnersPaginate()
     {
         $query =  Parteners::query();
         if(getPartnerI()){
@@ -25,6 +25,10 @@ class PartnersServices
         if(request('date_end')){
             $query->where('created_at','<=',dateFilterEnd(request('date_end')));
         }
-        return  $query->orderBy('id','DESC')->paginate(size());
+        $query->orderBy('id','DESC') ;
+        if(isExportExcel()){
+           die (exportExcel(mappingExportPartner($query->get())));
+        }
+        return  $query->paginate(size());
     }
 }

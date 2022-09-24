@@ -318,3 +318,6 @@ li.page-item > a:hover{
 .dropdown-item {
     cursor: pointer !important;
 }
+.import-excel{
+    margin: 10px 1px;
+}

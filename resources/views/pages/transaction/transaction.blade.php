@@ -47,6 +47,14 @@
                         <span style=""> Importer les virements bancaires en cours</span>
                         <i hidden id="spinner_import" class="fas fa-spinner fa-pulse"></i>
                     </button>
+                    {{--IMPORT BUTTON START--}}
+                    <button onclick="exportExcel('import-excel','Transaction')"    type="button" id="import-excel"
+                            class="primary-api-digital btn btn-primary btn-outline-primary import-excel">
+                        <i title="" class="ti-import "></i>
+                        <span style=""> Exporter Excel</span>
+                        <i hidden id="import-excel-sniper" class="fas fa-spinner fa-pulse"></i>
+                    </button>
+                    {{--IMPORT BUTTON END--}}
                 </div>
             </div>
         </div>
@@ -160,6 +168,7 @@
                                 <th>Services</th>
                                 <th>Statut</th>
                                 <th>Date</th>
+                                <th>Erreur Type </th>
                                 <th>Options</th>
                             </tr>
                             </thead>
@@ -193,6 +202,17 @@
                                     </td>
                                     <td>
                                         {{ $transaction->created_at }}
+                                    </td>
+                                    <td>
+                                        @if($transaction->error_types_id)
+                                            {{ $transaction->error_types_id }}
+                                            <details>
+                                                <summary>voir message</summary>
+                                                <p>
+                                                    {{@$transaction->errorType->message ?: "N\A"}}
+                                                </p>
+                                            </details>
+                                         @endif
                                     </td>
                                     <td>
                                         <div class="btn-group dropdown-split-success">
