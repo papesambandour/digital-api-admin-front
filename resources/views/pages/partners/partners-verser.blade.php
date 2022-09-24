@@ -28,8 +28,9 @@
                         <i class="icofont icofont-table bg-c-blue"></i>
                         <div class="d-inline">
                             <h4>Versement pour le partenaire <span style="color:green;font-weight: bold">{{$partners->name}}</span> </h4>
-                            <span>Donne la possibility de verser un montant pour le partenaire  <span class="currency">{{$partners->name}}   </span>
+                            <span>Donne la possibility de verser un montant pour le partenaire  <span class="currency">{{$partners->name}}   </span> </span>
                         </div>
+
                     </div>
                 </div>
                 <div class="col-lg-4">
@@ -79,7 +80,7 @@
                             <div class="form-group row">
                                 <label for="attachment_path" class="col-sm-3 col-form-label">Justificatif (pdf)</label>
                                 <div class="col-sm-3">
-                                    <input required   name="attachment_path" id="attachment_path" type="file" accept=".doc, .docx, .pdf"
+                                    <input required   name="attachment_path" id="attachment_path" type="file" accept=".doc, .docx, .pdf, .png, .jpeg, .jpg"
                                            class="form-control form-control-normal" placeholder="Justificatif (pdf)">
                                     @error('attachment_path')
                                     <div  class="invalid-feedback ">

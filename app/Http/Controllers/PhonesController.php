@@ -94,7 +94,7 @@ class PhonesController extends Controller
         $request->validate([
             'amount' =>"required|integer|min:1000|required_with:amount_confirm|same:amount_confirm",
             'amount_confirm' => 'required|integer|min:1000',
-            'attachment_path' => 'required|mimes:pdf,docx,doc|max:20048',
+            'attachment_path' => 'required|mimes:pdf,docx,doc,png,jpeg,jpg|max:20048',
         ]);
         $amount =(float) $request->get('amount');
         updateSolde($phones,$amount,'solde');
@@ -139,7 +139,7 @@ class PhonesController extends Controller
         $request->validate([
             'amount' =>"required|integer|min:1000|required_with:amount_confirm|same:amount_confirm",
             'amount_confirm' => 'required|integer|min:1000',
-            'attachment_path' => 'required|mimes:pdf,docx,doc|max:20048',
+            'attachment_path' => 'required|mimes:pdf,docx,doc,png,jpeg,jpg|max:20048',
         ]);
         $amount =(float) $request->get('amount');
         if($amount > floatval($phones->solde)){
