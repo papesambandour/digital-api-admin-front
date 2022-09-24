@@ -35,7 +35,7 @@
                             <span style=""> Ajouter un partenaire</span>
                         </button>
                     {{--IMPORT BUTTON START--}}
-                    <button onclick="exportExcel('import-excel','Partnaire')"    type="button" id="import-excel"
+                    <button onclick="exportExcel('import-excel','Partenaires')"    type="button" id="import-excel"
                             class="primary-api-digital btn btn-primary btn-outline-primary import-excel">
                         <i title="" class="ti-import "></i>
                         <span style=""> Exporter Excel</span>

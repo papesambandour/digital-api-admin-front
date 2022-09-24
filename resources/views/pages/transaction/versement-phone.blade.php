@@ -24,6 +24,14 @@
                     </div>
                 </div>
                 <div class="col-lg-4">
+                    {{--IMPORT BUTTON START--}}
+                    <button onclick="exportExcel('import-excel','Versement Services Providers')"    type="button" id="import-excel"
+                            class="primary-api-digital btn btn-primary btn-outline-primary import-excel">
+                        <i title="" class="ti-import "></i>
+                        <span style=""> Exporter Excel</span>
+                        <i hidden id="import-excel-sniper" class="fas fa-spinner fa-pulse"></i>
+                    </button>
+                    {{--IMPORT BUTTON END--}}
                 </div>
             </div>
         </div>

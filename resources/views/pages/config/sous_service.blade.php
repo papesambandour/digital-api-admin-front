@@ -57,6 +57,14 @@
                                 <span style=""> Configurer sous services pour <span class="currency"> {{partner()->name}}</span></span>
                             </button>
                         @endif
+                            {{--IMPORT BUTTON START--}}
+                            <button onclick="exportExcel('import-excel','Sous Services')"    type="button" id="import-excel"
+                                    class="primary-api-digital btn btn-primary btn-outline-primary import-excel">
+                                <i title="" class="ti-import "></i>
+                                <span style=""> Exporter Excel</span>
+                                <i hidden id="import-excel-sniper" class="fas fa-spinner fa-pulse"></i>
+                            </button>
+                            {{--IMPORT BUTTON END--}}
                     </div>
                 </div>
             </div>

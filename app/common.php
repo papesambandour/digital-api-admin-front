@@ -4,6 +4,7 @@ use App\Models\Country;
 use App\Models\OperationParteners;
 use App\Models\Parteners;
 use App\Models\Phones;
+use App\Models\Services;
 use App\Models\SousServices;
 use App\Models\Transactions;
 use App\Models\Users;
@@ -527,6 +528,93 @@ function mappingExportVersement(Collection $versements): array
             'Montant'=> $versement->amount,
             'Partenaire'=> $versement->partener->name,
             'Type Opération'=> $versement->type_operation,
+            'Provenance'=> $versement->operation,
+            'Utilisateur'=> @$versement->user->f_name . ' ' . @$versement->user->l_name  ,
+            'Date de creation'=> $versement->created_at->format('Y-m-d'),
+        ];
+    })->toArray();
+}
+
+/**
+ * @param Collection $transactions
+ * @return array
+ */
+function mappingExportTransaction(Collection $transactions): array
+{
+    return $transactions->map(function(Transactions $transaction){
+        return [
+            'ID'=> $transaction->id,
+            'Transaction Id'=> $transaction->transaction_id,
+            'Numéro'=> $transaction->phone,
+            'Montant'=> $transaction->amount  ,
+            'Type Operation'=> $transaction->type_operation  ,
+            'Partenaire'=> $transaction->partener_name  ,
+            'Commission'=> $transaction->commission_amount ,
+            'Frais'=> $transaction->fee_amount  ,
+            'Services'=> $transaction->sous_service_name  ,
+            'Sous Services'=> $transaction->service_name  ,
+            'Statut'=>  $transaction->{STATUS_TRX_NAME},
+            'Date de creation'=> $transaction->created_at->format('Y-m-d'),
+        ];
+    })->toArray();
+}
+
+/**
+ * @param Collection $services
+ * @return array
+ */
+function mappingExportService(Collection $services): array
+{
+    return $services->map(function(Services $service){
+        return [
+            'Code'=> $service->code,
+            'Libelle'=> $service->name,
+            'Opérateur'=> $service->operator->name,
+            'Catégorie Service'=> $service->categoriesService->name  ,
+            'Solde Système'=>soldeServiceSystem($service->id)   ,
+            'Solde Stock'=>soldeServiceStock($service->id)   ,
+            'Date de creation'=> $service->created_at->format('Y-m-d'),
+        ];
+    })->toArray();
+}
+
+/**
+ * @param Collection $sousServices
+ * @return array
+ */
+function mappingExportSousService(Collection $sousServices): array
+{
+    return $sousServices->map(function(SousServices $sousService){
+        return [
+            'Code'=> $sousService->code,
+            'Libelle'=> $sousService->name,
+            'Type Service'=> $sousService->typeService->name,
+            'Service'=> $sousService->service->name  ,
+            'Type Opération'=> $sousService->type_operation  ,
+            'Statut'=> $sousService->state,
+            'Date de creation'=> $sousService->created_at->format('Y-m-d'),
+        ];
+    })->toArray();
+}
+
+
+/**
+ * @param Collection $versements
+ * @return array
+ */
+function mappingExportVersementPhones(Collection $versements): array
+{
+    return $versements->map(function(\App\Models\OperationPhones $versement){
+        $name ="(";
+        $name .= $versement->phone->id;
+        $name .=") ";
+        $name .= $versement->phone->number ." ";
+        $name .= @$versement->phone->sousServicesPhones[0]->sousService->name ? : 'Pas encore souscrit a un sous service';
+        return [
+            'Montant'=> $versement->amount,
+            'Services Providers'=> $name,
+            'Type Opération'=> $versement->type_operation,
+            'Provenance'=> $versement->operation,
             'Utilisateur'=> @$versement->user->f_name . ' ' . @$versement->user->l_name  ,
             'Date de creation'=> $versement->created_at->format('Y-m-d'),
         ];
