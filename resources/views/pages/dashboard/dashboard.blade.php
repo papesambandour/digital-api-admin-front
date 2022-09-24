@@ -200,7 +200,7 @@
         <!-- Data widget start -->
 
        <h1 class="h3 " style="width: 100%;display: block;text-align: left;font-size: 17px;color: #303549">Solde intech par services</h1>
-       @foreach($sousServices as $service)
+       @foreach($services as $service)
             <div class="col-md-6 col-xl-4">
                 <div class="card widget-card-1">
                     <div class="card-block-small">
