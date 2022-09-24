@@ -176,11 +176,24 @@
 
                                     </td>
                                     <td>
-                                        <span class="currency">  {{$phone->socket}}</span>
+                                        @if($phone->sim_provider !== 'NONE')
+                                            @if($phone->socket === SOCKET['CONNECTED'])
+                                                <span class="statut-success">{{$phone->socket}} </span>
+                                            @else
+                                                <span class="statut-danger">{{$phone->socket}}</span>
+                                            @endif
+
+                                     @else
+                                            <span class="statut-success">API ACTIVE </span>
+                                       @endif
 
                                     </td>
                                     <td>
-                                        <span class="currency">  {{$phone->phone_state}}</span>
+                                        @if($phone->phone_state === 'UNUSED')
+                                            <span class="statut-success">DISPONIBLE </span>
+                                        @else
+                                            <span class="statut-warning">UTILISATION ...</span>
+                                        @endif
 
                                     </td>
                                     <td>

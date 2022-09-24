@@ -222,6 +222,17 @@ tr { vertical-align: middle; }
     display: inline-block;
    min-width: 80px;
 }
+.statut-warning{
+  background: orange;
+    padding: 3px 1px;
+    color: #fff;
+    border: 1px solid orange;
+    border-radius: 10px;
+    font-weight: bold;
+    line-height:12px;
+    display: inline-block;
+   min-width: 80px;
+}
 /******************************STTATE****************************/
 
 /******************************PAGINATION****************************/
