@@ -102,7 +102,7 @@
                                 </tr>
                                 <tr>
                                     <th>Date de creation</th>
-                                    <td class="text-center">{{$transaction->erorr_types->message}} </td>
+{{--                                    <td class="text-center">{{$transaction->erorr_types->message}} </td>--}}
                                 </tr>
                             </thead>
                             <tbody>
