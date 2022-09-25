@@ -61,7 +61,7 @@
                                 </tr>
                                 <tr>
                                     <th>Sous Service</th>
-                                    <th class="text-center">{{$entity->sousService->name}}</th>
+                                    <th class="text-center">{{@$entity->sousService->name ?: 'N\A'}}</th>
                                 </tr>
                                 <tr>
                                     <th> Index</th>

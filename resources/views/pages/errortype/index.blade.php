@@ -133,7 +133,7 @@
                                         @endif
                                     </td>
                                     <td class="currency">
-                                        {{ $entity->sousService->name }}
+                                        {{ @$entity->sousService->name ?: 'N\A' }}
                                     </td>
                                     <td>
                                         {{ $entity->created_at }}
