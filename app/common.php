@@ -81,7 +81,7 @@ function  page(): int{
 }
 function  size(): int
 {
-    return (int)request('size',15);
+    return (int)request('size',30);
 }
 //'SUCCESS','PENDING','PROCESSING','FAILLED','CANCELED'
 const STATUS = [
