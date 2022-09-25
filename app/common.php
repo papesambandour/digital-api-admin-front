@@ -620,3 +620,10 @@ function mappingExportVersementPhones(Collection $versements): array
         ];
     })->toArray();
 }
+function yesNonSelect(): array
+{
+    return [
+        'Oui'=>1,
+       'Non'=>0,
+    ];
+}

@@ -135,6 +135,15 @@
         "codeSecret": "nullable|max:255",
         "_sous_services_id": "required|integer|min:-2147483648|max:2147483647"
     },
+    "errors_types": {
+        "message": "required|max:255",
+        "code": "required|max:255|unique:errors_types,code",
+        "regex": "required|max:255",
+        "index": "nullable|max:255",
+        "sous_services_id": "required|integer|min:-2147483648|max:2147483647",
+        "is_critic": "required|integer|min:-2147483648|max:2147483647",
+        "is_json": "required|integer|min:-2147483648|max:2147483647"
+    },
     "plateforme": {
         "name": "required|max:255",
         "code": "nullable|max:255",
