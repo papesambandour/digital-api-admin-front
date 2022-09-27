@@ -8,6 +8,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ClaimController;
 use App\Http\Controllers\ConfigurationController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ErrorTypeController;
 use App\Http\Controllers\Export\ExcelController;
 use App\Http\Controllers\Export\PdfController;
 use App\Http\Controllers\PartnersController;
@@ -108,6 +109,10 @@ Route::group(['middleware'=>['backoffice-auth']],function(){
     Route::post('/account', [UsersController::class,'account']);
     Route::post('/password', [UsersController::class,'password']);
     /*USER END*/
+
+    /*ERROR TYPE END*/
+    Route::resource('/error_type', ErrorTypeController::class)->except(['delete'])->middleware('admin');
+    /*ERROR TYPE END*/
 
     Route::get('/storage/{path}',function (string $path ){
         return readFileHelper($path);

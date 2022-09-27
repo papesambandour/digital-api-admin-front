@@ -131,6 +131,27 @@
                         <span class="pcoded-mcaret"></span>
                     </a>
                 </li>
+                <li class="active">
+                    <a href="/error_type">
+                        <span class="pcoded-micon"><i class="ti-direction-alt"></i><b>D</b></span>
+                        <span class="pcoded-mtext" >Type Erreur</span>
+                        <span class="pcoded-mcaret"></span>
+                    </a>
+                </li>
+                <li class="active">
+                    <a href="/sms">
+                        <span class="pcoded-micon"><i class="ti-direction-alt"></i><b>D</b></span>
+                        <span class="pcoded-mtext" >SMS téléphones</span>
+                        <span class="pcoded-mcaret"></span>
+                    </a>
+                </li>
+                <li class="active">
+                    <a href="/ussd_execution">
+                        <span class="pcoded-micon"><i class="ti-direction-alt"></i><b>D</b></span>
+                        <span class="pcoded-mtext" >Ussd Execution</span>
+                        <span class="pcoded-mcaret"></span>
+                    </a>
+                </li>
             </ul>
         </ul>
     </div>

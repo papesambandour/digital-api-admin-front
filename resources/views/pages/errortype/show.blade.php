@@ -5,7 +5,7 @@
 @extends('layouts.main')
 <?php
 /**
- * @var \App\Models\Transactions $transaction ;
+ * @var \App\Models\ErrorType $entity ;
  */
 ?>
 @section('page')
@@ -28,8 +28,8 @@
                     <div class="page-header-title">
                         <i class="icofont icofont-table bg-c-blue"></i>
                         <div class="d-inline">
-                            <h4> Details transaction</h4>
-                            <span class="currency">Transaction numéro : {{$transaction->id}}   </span>
+                            <h4> Details type erreur</h4>
+                            <span class="currency">Code : {{$entity->code}}   </span>
                         </div>
                     </div>
                 </div>
@@ -53,56 +53,55 @@
                             <thead>
                                 <tr>
                                     <th class="col-md-4"># ID</th>
-                                    <th class="text-center col-md-8">{{$transaction->id}}</th>
+                                    <th class="text-center col-md-8">{{$entity->id}}</th>
                                 </tr>
                                 <tr>
-                                    <th> #Ref</th>
-                                    <td class="text-center">{{$transaction->transaction_id}}</td>
+                                    <th> #Code</th>
+                                    <td class="text-center">{{$entity->code}}</td>
                                 </tr>
                                 <tr>
-                                    <th> Service</th>
-                                    <th class="text-center">{{$transaction->service_name}}</th>
+                                    <th>Sous Service</th>
+                                    <th class="text-center">{{@$entity->sousService->name ?: 'N\A'}}</th>
                                 </tr>
                                 <tr>
-                                    <th> Sous Service</th>
-                                    <td class="text-center">{{$transaction->sous_service_name}} </td>
+                                    <th> Index</th>
+                                    <td class="text-center">{{$entity->index}} </td>
                                 </tr>
                                 <tr>
-                                    <th> Montant transaction</th>
-                                    <th class="text-center">{{$transaction->amount}}</th>
+                                    <th> Regex</th>
+                                    <th class="text-center">{{$entity->regex}}</th>
                                 </tr>
 
                                 <tr>
-                                    <th> Numéro client</th>
-                                    <td class="text-center">{{$transaction->phone}}</td>
+                                    <th> Message</th>
+                                    <td class="text-center">{{$entity->message}}</td>
                                 </tr>
+
                                 <tr>
-                                    <th>Statut Transaction</th>
-                                    <th class="text-center">{{$transaction->statut}}</th>
+                                    <th> Message critique</th>
+                                    <th class="text-center">
+                                        @if($entity->is_critic== 1)
+                                            <span class="statut-success">OUI</span>
+                                        @else
+                                            <span class="statut-infos">NON</span>
+                                        @endif
+                                    </th>
                                 </tr>
+
                                 <tr>
-                                    <th>Type Opération Transaction</th>
-                                    <td class="text-center"><span class="currency">{{$transaction->type_operation}}</span> </td>
+                                    <th> Message en JSON</th>
+                                    <td class="text-center">
+                                        @if($entity->is_critic== 1)
+                                            <span class="statut-success">OUI</span>
+                                        @else
+                                            <span class="statut-infos">NON</span>
+                                        @endif
+                                    </td>
                                 </tr>
-                                <tr>
-                                    <th>Partenaire</th>
-                                    <th class="text-center">{{$transaction->partener_name}} </th>
-                                </tr>
-                                <tr>
-                                    <th>Commission</th>
-                                    <td class="text-center">{{$transaction->commission_amount}} </td>
-                                </tr>
-                                <tr>
-                                    <th>Frais</th>
-                                    <th class="text-center">{{$transaction->fee_amount}} </th>
-                                </tr>
+
                                 <tr>
                                     <th>Date de creation</th>
-                                    <td class="text-center">{{$transaction->created_at}} </td>
-                                </tr>
-                                <tr>
-                                    <th>Type erreur</th>
-                                    <th class="text-center">{{@$transaction->errorType->message ?: "N\A"}}
+                                    <th class="text-center">{{@$entity->errorType->message ?: "N\A"}}
                                 </tr>
 
                             </thead>
