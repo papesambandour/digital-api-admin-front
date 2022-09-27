@@ -189,7 +189,7 @@ class TransactionServices
                 ['transactionId'=>$transaction->id]
             );
             $resBody = (array) $rest->object();
-            if($rest->status() === 201 && $resBody['status'] === STATUS_TRX['SUCCESS']){
+            if($rest->status() === 201 && $resBody['statutTreatment'] === STATUS_TRX['SUCCESS']){
                 return redirect()->back()->with('success','Transaction rembourser avec success. Message : '. $resBody['message']);
             }else{
                 return redirect()->back()->with('error','Erreur lors du remboursement de la Transaction. Message : '. $resBody['message']);
