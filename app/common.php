@@ -83,6 +83,11 @@ function  size(): int
 {
     return (int)request('size',30);
 }
+
+function  timeouts(): int
+{
+    return 60;
+}
 //'SUCCESS','PENDING','PROCESSING','FAILLED','CANCELED'
 const STATUS = [
   'SUCCESS' => 'statut-success',

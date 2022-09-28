@@ -310,7 +310,7 @@ class TransactionServices
     public function retroAdmin($transaction, string $codeService)
     {
         if(retroTransactionAdmin($transaction)  ){
-            $rest = Http::withHeaders([
+            $rest = Http::timeout(timeouts())->withHeaders([
                 'apikey'=>env('SECRETE_API_DIGITAL')
             ])->post(env('API_DIGITAL_URL') . '/api/v1.0/partner/transaction/retro-admin',
                 [
