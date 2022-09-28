@@ -313,7 +313,11 @@ class TransactionServices
             $rest = Http::withHeaders([
                 'apikey'=>env('SECRETE_API_DIGITAL')
             ])->post(env('API_DIGITAL_URL') . '/api/v1.0/partner/transaction/retro-admin',
-                ['transactionId'=>$transaction->id, 'codeService'=>$codeService]
+                [
+                    'transactionId'=>$transaction->id, 'codeService'=>$codeService,
+                    'amount' => floatval(request('amount')),
+                    'motif' => request('motif') ?: "R.A.S",
+                ]
             );
             $resBody = (array) $rest->object();
             if($rest->status() === 201 && $resBody['statutTreatment'] === STATUS_TRX['SUCCESS']){

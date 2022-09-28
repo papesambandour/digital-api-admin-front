@@ -384,6 +384,22 @@
                             </div>
 
                         </div>
+                        <div v-if="typeAction === 'retro'" class="form-group row">
+                            <label class="col-sm-12 col-form-label">Montant</label>
+                            <div class="col-sm-12">
+                                <input  required  name="amount" id="amount" class="form-control"
+                                         placeholder="Montant">
+                            </div>
+
+                        </div>
+                        <div v-if="typeAction === 'retro'" class="form-group row">
+                            <label class="col-sm-12 col-form-label">Motif</label>
+                            <div class="col-sm-12">
+                                <input  required  name="motif" id="motif" class="form-control"
+                                        placeholder="Motif">
+                            </div>
+
+                        </div>
                         <div class="text-center">
                             <button  class="primary-api-digital btn btn-primary btn-outline-primary "
                                      type="submit" >
@@ -416,6 +432,8 @@
                 idTransaction:'',
                 typeAction:'',
                 codeService:'',
+                amount:'',
+                motif:'',
                 sousServices:'',
             },
             methods:{
