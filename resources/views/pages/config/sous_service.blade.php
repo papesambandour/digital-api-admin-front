@@ -294,14 +294,14 @@
                                 <label for="amount_start" class="col-sm-3 col-form-label">Montant de debut</label>
                                 <div class="col-sm-3">
                                     <input :min="getMinStart()" :max="getMinStart()" name="amount_start" id="amount_start" v-model="commission.amount_start"
-                                           type="number"
+                                           type="number" step=".01"
                                            class="form-control form-control-normal" placeholder="Montant de debut">
                                 </div>
 
 
                                 <label for="amount_start" class="col-sm-3 col-form-label">Montant de fin</label>
                                 <div class="col-sm-3">
-                                    <input :min="getMinEnd()" name="amount_end" id="amount_end" v-model="commission.amount_end" type="number"
+                                    <input :min="getMinEnd()" name="amount_end" id="amount_end" v-model="commission.amount_end" type="number" step=".01"
                                            class="form-control form-control-normal" placeholder="Montant de fin">
                                 </div>
                             </div>
@@ -309,13 +309,13 @@
 
                                 <label for="taux_fee" class="col-sm-3 col-form-label">Taux frais</label>
                                 <div class="col-sm-3">
-                                    <input name="taux_fee" id="taux_fee" v-model="commission.taux_fee" type="number"
+                                    <input name="taux_fee" id="taux_fee" v-model="commission.taux_fee" type="number" step=".01"
                                            class="form-control form-control-normal" placeholder="Taux frais">
                                 </div>
 
                                 <label for="amount_fee" class="col-sm-3 col-form-label">Montant frais</label>
                                 <div class="col-sm-3">
-                                    <input name="amount_fee" id="amount_fee" v-model="commission.amount_fee" type="number"
+                                    <input name="amount_fee" id="amount_fee" v-model="commission.amount_fee" type="number" step=".01"
                                            class="form-control form-control-normal" placeholder="Montant frais">
                                 </div>
                             </div>
@@ -323,13 +323,13 @@
                                 <label for="taux_commission" class="col-sm-3 col-form-label">Taux commission</label>
                                 <div class="col-sm-3">
                                     <input name="taux_commission" id="taux_commission" v-model="commission.taux_commission"
-                                           type="number"
+                                           type="number" step=".01"
                                            class="form-control form-control-normal" placeholder="Taux commission">
                                 </div>
                                 <label for="amount_commssion" class="col-sm-3 col-form-label">Montant commission</label>
                                 <div class="col-sm-3">
                                     <input name="amount_commssion" id="amount_commssion"
-                                           v-model="commission.amount_commssion" type="number"
+                                           v-model="commission.amount_commssion" type="number" step=".01"
                                            class="form-control form-control-normal" placeholder="Montant frais">
                                 </div>
 
