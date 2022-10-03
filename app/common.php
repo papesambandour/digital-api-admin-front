@@ -396,8 +396,9 @@ const TYPE_SERVICES = [
 function checkRefundable(Transactions $transaction): bool
 {
     return $transaction->statut == STATUS_TRX['SUCCESS']
-        && $transaction->type_operation === TYPE_OPERATION['CREDIT']
-        && $transaction->sousService->typeService->code === TYPE_SERVICES['CASHOUT'];
+/*        && $transaction->type_operation === TYPE_OPERATION['CREDIT']
+        && $transaction->sousService->typeService->code === TYPE_SERVICES['CASHOUT']*/
+        ;
 }
 
 function checkFailableOrSuccessable(Transactions $transaction): bool
