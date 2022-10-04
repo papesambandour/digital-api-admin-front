@@ -487,7 +487,8 @@
                         document.getElementById('import-virement-bank').removeAttribute('disabled')
                         document.getElementById('spinner_import').setAttribute('hidden','hidden');
                         //console.log(  error);
-                        alert( error.message);
+                       // alert( error.message);
+                        alert( "Pas de virement en cours");
                     })
 
                 },
