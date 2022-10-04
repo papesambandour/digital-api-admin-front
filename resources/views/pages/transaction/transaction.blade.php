@@ -161,6 +161,9 @@
                                 <th># Transaction Id</th>
                                 <th>Numéro </th>
                                 <th>Montant</th>
+                                <th>Gain</th>
+                                <th>Frais Part.</th>
+                                <th>Comm. Part.</th>
                                 <th>Type Operation</th>
                                 <th>Partenaire</th>
                                 <th>Commission</th>
@@ -183,7 +186,10 @@
                                     </th>
                                     <td>{{ $transaction->transaction_id }} </td>
                                     <td>{{ $transaction->phone }} </td>
-                                    <td class="currency">{{ $transaction->amount }} <span>XOF</span></td>
+                                    <td class="currency">{{ fMoney($transaction->amount) }} <span>XOF</span></td>
+                                    <td class="currency">{{ fMoney($transaction->win )}} <span>XOF</span></td>
+                                    <td class="currency">{{ fMoney($transaction->fee_amount )}} <span>XOF</span></td>
+                                    <td class="currency">{{ fMoney($transaction->commission_amount )}} <span>XOF</span></td>
                                     <td> <span class="statut-success">{{$transaction->type_operation}} </span> </td>
                                     <td class="currency" title="{{ $transaction->partener->name}} : {{ $transaction->partener->email}}">{{ $transaction->partener_name }} <span></span></td>
                                     <td class="currency">{{ $transaction->commission_amount }} <span>XOF</span></td>
@@ -205,7 +211,7 @@
                                     </td>
                                     <td>
                                         @if($transaction->error_types_id)
-                                            {{ $transaction->error_types_id }}
+                                       {{--     Error ID: {{ $transaction->error_types_id }}--}}
                                             <details>
                                                 <summary>voir message</summary>
                                                 <p>

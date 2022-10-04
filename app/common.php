@@ -95,9 +95,10 @@ const STATUS = [
   'FAILLED' => 'statut-danger',
   'PROCESSING' => 'statut-infos',
   'PENDING' => 'statut-infos',
+  'REFUNDED' => 'statut-warning',
 ];
 const STATUS_TRX=[
-    'SUCCESS'=>'SUCCESS','PENDING'=>'PENDING','PROCESSING'=>'PROCESSING','FAILLED'=>'FAILLED','CANCELED'=>'CANCELED'
+    'SUCCESS'=>'SUCCESS','PENDING'=>'PENDING','PROCESSING'=>'PROCESSING','FAILLED'=>'FAILLED','CANCELED'=>'CANCELED','REFUNDED'=>'REFUNDED',
 ];
 const STATE = [
     'ACTIVED' => 'ACTIVED',
@@ -276,13 +277,44 @@ function balancePartners(){
 function gainIntech(){
     $start= request('date_start', gmdate('Y-m-d')  );
     $end= request('date_end', gmdate('Y-m-d'));
-   return  fMoney(Transactions::query()->whereBetween('created_at', [$start, $end])->sum('win'));
+   return  fMoney(Transactions::query()->where(function ($query){
+       if(getPartnerI()){
+           $query->where('parteners_id',getPartnerI());
+       }
+   })->whereIn('statut', [STATUS_TRX['SUCCESS'],STATUS_TRX['REFUNDED']])->whereBetween('created_at', [$start, $end])->sum('win'));
 }
 
-function gainIntechByService($codeService){
+function gainIntechSousByService($codeService){
     $start= request('date_start', gmdate('Y-m-d')  );
     $end= request('date_end', gmdate('Y-m-d'));
-   return  fMoney(Transactions::query()->where('code_sous_service', $codeService)->whereBetween('created_at', [$start, $end])->sum('win'));
+   return  fMoney(Transactions::query()->where(function ($query){
+       if(getPartnerI()){
+           $query->where('parteners_id',getPartnerI());
+       }
+   })->whereIn('statut', [STATUS_TRX['SUCCESS'],STATUS_TRX['REFUNDED']])->where('code_sous_service', $codeService)->whereBetween('created_at', [$start, $end])->sum('win'));
+}
+
+function gainIntechByService($idService){
+    $start= request('date_start', gmdate('Y-m-d')  );
+    $end= request('date_end', gmdate('Y-m-d'));
+
+   return  fMoney(Transactions::query()->where(function ($query){
+       if(getPartnerI()){
+           $query->where('parteners_id',getPartnerI());
+       }
+   })->whereIn('statut', [STATUS_TRX['SUCCESS'],STATUS_TRX['REFUNDED']])->whereIn('sous_services_id', SousServices::where('services_id', $idService)
+       ->select('id'))->whereBetween('created_at', [$start, $end])->sum('win'));
+}
+
+function gainIntechAllService($idService){
+    $start= request('date_start', gmdate('Y-m-d')  );
+    $end= request('date_end', gmdate('Y-m-d'));
+
+   return  fMoney(Transactions::query()->where(function ($query){
+       if(getPartnerI()){
+           $query->where('parteners_id',getPartnerI());
+       }
+   })->whereIn('statut', [STATUS_TRX['SUCCESS'],STATUS_TRX['REFUNDED']])->whereBetween('created_at', [$start, $end])->sum('win'));
 }
 
 function soldeServiceSystem(int $serviceId){
@@ -290,7 +322,7 @@ function soldeServiceSystem(int $serviceId){
 }
 
 function fMoney($v){
-    return number_format($v, 1, ',', ' ');
+    return number_format($v, 1, '.', ' ');
 }
 
 function soldeServiceStock(int $serviceId){

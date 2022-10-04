@@ -123,7 +123,7 @@
                 <div class="card-block-small">
                     <i class="icofont icofont-ui-home  bg-c-green card1-icon"></i>
                     <span class="text-c-green f-w-600">Transactions Succès</span>
-                    <h4>{{amountState('SUCCESS')}} XOF</h4>
+                    <h4>{{fMoney(amountState('SUCCESS'))}} XOF</h4>
                     <div>
                                                             <span class="f-left m-t-10 text-muted">
                                                                 <i class="text-c-green f-16 icofont icofont-calendar m-r-10"></i>
@@ -140,7 +140,7 @@
                 <div class="card-block-small">
                     <i class="icofont icofont-warning-alt bg-c-pink card1-icon"></i>
                     <span class="text-c-pink f-w-600">Transactions Échec</span>
-                    <h4>{{amountState('FAILLED')}} XOF</h4>
+                    <h4>{{fMoney(amountState('FAILLED'))}} XOF</h4>
                     <div>
                                                             <span class="f-left m-t-10 text-muted">
                                                                 <i class="text-c-pink f-16 icofont icofont-calendar m-r-10"></i>
@@ -157,7 +157,7 @@
                 <div class="card-block-small">
                     <i class="icofont icofont-money bg-c-yellow card1-icon"></i>
                     <span class="text-c-yellow f-w-600">Transactions En cours</span>
-                    <h4> {{amountState('PENDING') + amountState('PROCESSING') }} XOF</h4>
+                    <h4> {{fMoney(amountState('PENDING') + amountState('PROCESSING')) }} XOF</h4>
                     <div>
                                                             <span class="f-left m-t-10 text-muted">
                                                                 <i class="text-c-yellow f-16 icofont icofont-calendar m-r-10"></i>
@@ -209,7 +209,8 @@
                         <h4> <span style="font-size: 15px;color: #93be52">Solde Systeme</span>  <span style="font-size: 16px;color: #303549">{{soldeServiceSystem($service->id) }} XOF</span> </h4>
                         <h4> <span style="font-size: 15px;color: #93be52">Solde Stock</span>  <span style="font-size: 16px;color: #303549">{{soldeServiceStock($service->id) }} XOF</span> </h4>
                         <hr style="display: block; border-bottom: 1px solid #93be52">
-                        <h4> <span style="font-size: 15px;color: #93be52">Gain</span> <span style="font-size: 16px;color: #303549">{{  gainIntechByService($service->code) }} XOF <br>  {!! period2() !!} </span></h4>
+                        <h4> <span style="font-size: 15px;color: #93be52">Gain</span> <span style="font-size: 16px;color: #303549">{{  gainIntechByService($service->id) }} XOF <br>  {!! period2() !!} </span></h4>
+
                         <div>
                                                             <span class="f-left m-t-10 text-muted">
                                                                 <i class="text-c-green f-16 icofont icofont-calendar m-r-10"></i>
@@ -237,6 +238,7 @@
                             <thead>
                             <tr>
                                 <th>Libelle</th>
+                                <th style="text-align: center">Gain</th>
                                 <th style="text-align: center">Montants succès</th>
                                 <th style="text-align: center">Montants Échec</th>
                                 <th style="text-align: center">Montants En cours</th>
@@ -262,6 +264,11 @@
                                     @endphp
                                     <td style="text-align: center">
                                         <p class="d-inline-block currency" style="">{{money($amountSuccess)}}
+                                            <span>XOF</span>
+                                        </p>
+                                    </td>
+                                    <td style="text-align: center">
+                                        <p class="d-inline-block currency" style="">{{  gainIntechSousByService($sousService->code) }}
                                             <span>XOF</span>
                                         </p>
                                     </td>
