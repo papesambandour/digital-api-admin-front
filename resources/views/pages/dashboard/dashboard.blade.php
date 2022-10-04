@@ -254,6 +254,11 @@
                                             <p class="d-inline-block m-l-20">{{$sousService->name}}</p>
                                         </div>
                                     </td>
+                                    <td style="text-align: center">
+                                        <p class="d-inline-block currency" style="">{{  gainIntechSousByService($sousService->code) }}
+                                            <span>XOF</span>
+                                        </p>
+                                    </td>
                                     @php
                                         $amountSuccess = amountSuccess($sousService->id);
                                         $amountFailled = amountFailled($sousService->id);
@@ -267,11 +272,7 @@
                                             <span>XOF</span>
                                         </p>
                                     </td>
-                                    <td style="text-align: center">
-                                        <p class="d-inline-block currency" style="">{{  gainIntechSousByService($sousService->code) }}
-                                            <span>XOF</span>
-                                        </p>
-                                    </td>
+
                                     <td style="text-align: center">
                                         <p class="d-inline-block currency" style="">{{money($amountFailled)}}
                                             <span>XOF</span>
