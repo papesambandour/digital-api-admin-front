@@ -160,14 +160,12 @@
                                 <th># Id</th>
                                 <th># Transaction Id</th>
                                 <th>Numéro </th>
-                                <th>Montant</th>
-                                <th>Gain</th>
-                                <th>Frais Part.</th>
-                                <th>Comm. Part.</th>
+                                <th style="width: 100px;">Montant</th>
+                                <th style="width: 100px;">Gain Intech</th>
+                                <th style="width: 100px;">Frais Part.</th>
+                                <th style="width: 100px;">Commission. Part.</th>
                                 <th>Type Operation</th>
                                 <th>Partenaire</th>
-                                <th>Commission</th>
-                                <th>Frais</th>
                                 <th>Services</th>
                                 <th>Statut</th>
                                 <th>Date</th>
@@ -181,7 +179,7 @@
                                 <tr>
                                     <th scope="row">
                                         <span style="font-weight: bold;color: #324960;text-decoration: underline">
-                                            {{$transaction->id}}
+                                           <a style="font-size: 12px" href="/transaction/details/{{$transaction->id}}">{{$transaction->id}}</a>
                                         </span>
                                     </th>
                                     <td>{{ $transaction->transaction_id }} </td>
@@ -192,8 +190,6 @@
                                     <td class="currency">{{ fMoney($transaction->commission_amount )}} <span>XOF</span></td>
                                     <td> <span class="statut-success">{{$transaction->type_operation}} </span> </td>
                                     <td class="currency" title="{{ $transaction->partener->name}} : {{ $transaction->partener->email}}">{{ $transaction->partener_name }} <span></span></td>
-                                    <td class="currency">{{ $transaction->commission_amount }} <span>XOF</span></td>
-                                    <td class="currency">{{ $transaction->fee_amount }} <span>XOF</span></td>
                                     <td>{{ $transaction->sous_service_name }}</td>
                                     <td>
                                         <span class="{{status($transaction->{STATUS_TRX_NAME})}}">
