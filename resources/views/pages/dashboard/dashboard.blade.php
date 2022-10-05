@@ -209,7 +209,9 @@
                         <h4> <span style="font-size: 15px;color: #93be52">Solde Systeme</span>  <span style="font-size: 16px;color: #303549">{{soldeServiceSystem($service->id) }} XOF</span> </h4>
                         <h4> <span style="font-size: 15px;color: #93be52">Solde Stock</span>  <span style="font-size: 16px;color: #303549">{{soldeServiceStock($service->id) }} XOF</span> </h4>
                         <hr style="display: block; border-bottom: 1px solid #93be52">
+{{--
                         <h4> <span style="font-size: 15px;color: #93be52">Gain</span> <span style="font-size: 16px;color: #303549">{{  gainIntechByService($service->id) }} XOF <br>  {!! period2() !!} </span></h4>
+--}}
 
                         <div>
                                                             <span class="f-left m-t-10 text-muted">
