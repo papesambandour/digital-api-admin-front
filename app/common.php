@@ -239,8 +239,8 @@ function percent($number): string{
 function period(): string
 {
     $start= request('date_start', gmdate('Y-m-d')  );
-    $end= request('date_end', gmdate('Y-m-d'));
-    if($start === $end && $end === gmdate('Y-m-d')){
+    $end= request('date_end', gmdate('Y-m-d  23:59:59'));
+    if($start === substr($end, 0, 10) && $end === gmdate('Y-m-d  23:59:59')){
         return  "Journée en cours" . partnerName();
     }
     return 'Du ' . dateFr($start). ' au ' . dateFr($end) . partnerName();
@@ -248,8 +248,8 @@ function period(): string
 function period2(): string
 {
     $start= request('date_start', gmdate('Y-m-d')  );
-    $end= request('date_end', gmdate('Y-m-d'));
-    if($start === $end && $end === gmdate('Y-m-d')){
+    $end= request('date_end', gmdate('Y-m-d  23:59:59'));
+    if($start === substr($end, 0, 10) && $end === gmdate('Y-m-d  23:59:59')){
         return  partnerName2() . "<br>Journée en cours" ;
     }
     return  partnerName2() .'<br> Du '.  dateFr($start). ' au ' . dateFr($end) ;
@@ -276,7 +276,9 @@ function balancePartners(){
 
 function gainIntech(){
     $start= request('date_start', gmdate('Y-m-d')  );
-    $end= request('date_end', gmdate('Y-m-d'));
+    $end= request('date_end', gmdate('Y-m-d 23:59:59'));
+
+
    return  fMoney(Transactions::query()->where(function ($query){
        if(getPartnerI()){
            $query->where('parteners_id',getPartnerI());
@@ -286,7 +288,7 @@ function gainIntech(){
 
 function gainIntechSousByService($codeService){
     $start= request('date_start', gmdate('Y-m-d')  );
-    $end= request('date_end', gmdate('Y-m-d'));
+    $end= request('date_end', gmdate('Y-m-d 23:59:59'));
    return  fMoney(Transactions::query()->where(function ($query){
        if(getPartnerI()){
            $query->where('parteners_id',getPartnerI());
@@ -296,7 +298,7 @@ function gainIntechSousByService($codeService){
 
 function gainIntechByService($idService){
     $start= request('date_start', gmdate('Y-m-d')  );
-    $end= request('date_end', gmdate('Y-m-d'));
+    $end= request('date_end', gmdate('Y-m-d 23:59:59'));
 
    return  fMoney(Transactions::query()->where(function ($query){
        if(getPartnerI()){
@@ -308,7 +310,7 @@ function gainIntechByService($idService){
 
 function gainIntechAllService($idService){
     $start= request('date_start', gmdate('Y-m-d')  );
-    $end= request('date_end', gmdate('Y-m-d'));
+    $end= request('date_end', gmdate('Y-m-d 23:59:59'));
 
    return  fMoney(Transactions::query()->where(function ($query){
        if(getPartnerI()){
