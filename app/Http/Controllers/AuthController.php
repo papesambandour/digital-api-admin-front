@@ -31,7 +31,7 @@ class AuthController extends Controller
 
        $login = $this->loginPartnerServices->login($credentials['email'],$credentials['password']);
        if($login){
-           return redirect('/');
+           return redirect('/transaction');
        }else{
            //Redirect::back()->withErrors(['msg' => 'The Message']);
            return redirect()->back()->with('error','Login ou mot de passe incorrect');
