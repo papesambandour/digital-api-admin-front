@@ -84,6 +84,12 @@ function  size(): int
     return (int)request('size',30);
 }
 
+
+function  exportMaxSize(): int
+{
+    return (int)20000;
+}
+
 function  timeouts(): int
 {
     return 60;

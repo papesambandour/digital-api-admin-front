@@ -60,6 +60,7 @@ class TransactionServices
         }
         $transactions->orderBy('id','DESC');
         if(isExportExcel()){
+            $transactions->limit(exportMaxSize());
             die (exportExcel(mappingExportTransaction($transactions->get())));
         }
         return $transactions->paginate(size());
