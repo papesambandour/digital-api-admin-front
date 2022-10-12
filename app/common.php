@@ -586,9 +586,10 @@ function mappingExportTransaction(Collection $transactions): array
 {
     return $transactions->map(function(Transactions $transaction){
         return [
-            'ID'=> $transaction->id,
+            //'ID'=> $transaction->id,
             'Transaction Id'=> $transaction->transaction_id,
-            'Numéro'=> $transaction->phone,
+            'Partnaire Id'=> $transaction->external_transaction_id,
+            'Numéro'=> $transaction->phone.''.$transaction->rib,
             'Montant'=> $transaction->amount  ,
             'Type Operation'=> $transaction->type_operation  ,
             'Partenaire'=> $transaction->partener_name  ,
