@@ -87,7 +87,7 @@ function  size(): int
 
 function  exportMaxSize(): int
 {
-    return (int)10000;
+    return (int)50000;
 }
 
 function  timeouts(): int
