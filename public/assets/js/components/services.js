@@ -282,6 +282,18 @@ class SousServicesPartners{
 
 
     function exportExcel(idButton="",fileName="",url=""){
+        if(!$('#date_start').val()){
+            return alert('Veuillez choisir une date de debut')
+        }
+
+        if(!$('#date_end').val()){
+            return alert('Veuillez choisir une date de fin')
+        }
+
+        if(!confirm('Attention: Nombre maximum de sortie 50.000 lignes')){
+            return ;
+        }
+
         if(!url){
             url = window.location.href;
         }
@@ -290,6 +302,12 @@ class SousServicesPartners{
         }else {
             url += "?_exported_excel_=1"
         }
+
+        url = url.replace('date_start', '_date_start').replace('date_end', '_date_end');
+
+        url += "&date_start=" + $('#date_start').val()
+        url += "&date_end=" + $('#date_end').val();
+
         document.getElementById(`${idButton}-sniper`).removeAttribute('hidden');
         document.getElementById(`${idButton}`).setAttribute('disabled', 'disabled')
         HttpClient.get(url)
