@@ -16,8 +16,9 @@ class PhonesServices
 {
     public function paginate(): LengthAwarePaginator{
         $query= Phones::query()
-            ->orderBy('number','DESC')
-        ->orderBy('id','DESC');
+            ->where('state', '!=', 'DELETED')
+        ->orderBy('id','ASC');
+
         if(request('date_start')){
             $query->where('created_at','>=',dateFilterStart(request('date_start')));
         }
