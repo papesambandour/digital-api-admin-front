@@ -391,7 +391,7 @@ function getTypeOperation(){
     return request(getTypeOperationRequestName(),null);
 }
 
-function number($number,$decimal = 2,$decimal_separator = '. ',$separator_thousand=' ') : string
+function number($number,$decimal = 1,$decimal_separator = '.',$separator_thousand=' ') : string
 {
     return number_format((float)$number,$decimal,$decimal_separator,$separator_thousand);
 }
