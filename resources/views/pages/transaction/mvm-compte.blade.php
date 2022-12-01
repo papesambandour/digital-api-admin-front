@@ -136,9 +136,9 @@
                                             {{$mouvement->id}}
                                         </span>
                                     </th>
-                                    <td> <span class="currency"> {{ $mouvement->amount }} XOF</span> </td>
-                                    <td> <span class="currency"> {{ $mouvement->solde_befor }} XOF</span> </td>
-                                    <td> <span class="currency"> {{ $mouvement->solde_after }} XOF</span> </td>
+                                    <td> <span class="currency"> {{ ($mouvement->amount) }} XOF</span> </td>
+                                    <td> <span class="currency"> {{ number($mouvement->solde_befor) }} XOF</span> </td>
+                                    <td> <span class="currency"> {{ number($mouvement->solde_after) }} XOF</span> </td>
                                     <td> <span class="currency"> {{ $mouvement->partener->name }} </span> </td>
 
                                     <td> <span class="statut-success">{{$mouvement->type_operation}} </span> </td>
