@@ -600,6 +600,7 @@ function mappingExportTransaction(Collection $transactions): array
             'Montant'=> $transaction->amount  ,
             'Type Operation'=> $transaction->type_operation  ,
             'Partenaire' => $transaction->partener_name  ,
+            'Info. Part' => $transaction->motif  ,
             'Commission Partenaire' => $transaction->commission_amount ,
             'Frais Partenaire' => $transaction->fee_amount  ,
             'Commission Psp. Intech' => $transaction->commission_amount_psp ,
