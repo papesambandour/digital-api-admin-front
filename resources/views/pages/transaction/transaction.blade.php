@@ -389,7 +389,7 @@
                         <div v-if="typeAction === 'retro'" class="form-group row">
                             <label class="col-sm-12 col-form-label">Montant</label>
                             <div class="col-sm-12">
-                                <input  value="{{ $transaction->amount }}" required  name="amount" id="amount" class="form-control"
+                                <input  value="{{ @$transaction->amount }}" required  name="amount" id="amount" class="form-control"
                                          placeholder="Montant">
                             </div>
 
