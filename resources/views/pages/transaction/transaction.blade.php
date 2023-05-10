@@ -190,7 +190,7 @@
                                     <td class="currency">{{ fMoney($transaction->fee_amount )}} <span>XOF</span></td>
                                     <td class="currency">{{ fMoney($transaction->commission_amount )}} <span>XOF</span></td>
                                     <td> <span class="statut-success">{{$transaction->type_operation}} </span> </td>
-                                    <td> {{$transaction->cardMask ?: ''}}</td>
+                                    <td> {{$transaction->card_mask ?: '-'}}</td>
                                     <td class="currency" title="{{ $transaction->partener->name}} : {{ $transaction->partener->email}}">{{ $transaction->partener_name }} <span></span></td>
                                     <td>{{ $transaction->sous_service_name }}</td>
                                     <td>
