@@ -165,6 +165,7 @@
                                 <th style="width: 100px;">Frais Part.</th>
                                 <th style="width: 100px;">Commission. Part.</th>
                                 <th>Type Operation</th>
+                                <th>Carte</th>
                                 <th>Partenaire</th>
                                 <th>Services</th>
                                 <th>Statut</th>
@@ -189,6 +190,7 @@
                                     <td class="currency">{{ fMoney($transaction->fee_amount )}} <span>XOF</span></td>
                                     <td class="currency">{{ fMoney($transaction->commission_amount )}} <span>XOF</span></td>
                                     <td> <span class="statut-success">{{$transaction->type_operation}} </span> </td>
+                                    <td> {{$transaction->cardMask ?: ''}}</td>
                                     <td class="currency" title="{{ $transaction->partener->name}} : {{ $transaction->partener->email}}">{{ $transaction->partener_name }} <span></span></td>
                                     <td>{{ $transaction->sous_service_name }}</td>
                                     <td>
