@@ -6,4 +6,4 @@ services:
        build:
            context: .
        ports:
-           - "8764:80"
+           - "127.0.0.1:8764:80"
