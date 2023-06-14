@@ -71,6 +71,7 @@ class PartnersController
             'attachment_path' => 'required|mimes:pdf,docx,doc,png,jpeg,jpg|max:20048',
         ]);
         $amount =(float) $request->get('amount');
+        $soldeBefore = $partners->solde;
         updateSolde($partners,$amount,'solde');
         $partners = Parteners::find($id);
         $data = [
@@ -81,8 +82,8 @@ class PartnersController
             'date_success'=>nowIso(),
             'date_processing'=>nowIso(),
             'operation'=>OPERATIONS_PARTNERS['APROVISIONNEMENT'],
-            'solde_befor'=>$partners->solde,
-            'solde_after'=>$partners->solde + $amount,
+            'solde_befor'=> $soldeBefore,
+            'solde_after'=>$partners->solde ,
             'fee'=>0,
             'commission'=>0,
             'fee_owner'=>0,
@@ -125,6 +126,7 @@ class PartnersController
         if($amount > floatval($partners->solde)){
             return redirect()->back(302)->with('error','Le solde du partenaire est insuffisant');
         }
+        $soldeBefore = $partners->solde;
         updateSolde($partners,-$amount,'solde');
         $partners = Parteners::find($id);
         $data = [
@@ -135,8 +137,8 @@ class PartnersController
             'date_success'=>nowIso(),
             'date_processing'=>nowIso(),
             'operation'=>OPERATIONS_PARTNERS['APPEL_DE_FOND'],
-            'solde_befor'=>$partners->solde,
-            'solde_after'=>$partners->solde - $amount,
+            'solde_befor'=>$soldeBefore,
+            'solde_after'=>$partners->solde ,
             'fee'=>0,
             'commission'=>0,
             'fee_owner'=>0,

@@ -97,6 +97,7 @@ class PhonesController extends Controller
             'attachment_path' => 'required|mimes:pdf,docx,doc,png,jpeg,jpg|max:20048',
         ]);
         $amount =(float) $request->get('amount');
+        $soldeBefore = $phones->solde;
         updateSolde($phones,$amount,'solde');
         //updateSolde($phones,$amount,'solde_api');
         $phones = Phones::find($id);
@@ -108,8 +109,8 @@ class PhonesController extends Controller
             'date_success'=>nowIso(),
             'date_processing'=>nowIso(),
             'operation'=>OPERATIONS_PHONES['APPROVISIONNEMENT'],
-            'solde_before'=>$phones->solde,
-            'solde_after'=>$phones->solde + $amount,
+            'solde_before'=>$soldeBefore,
+            'solde_after'=>$phones->solde,
             'fee'=>0,
             'commission'=>0,
             'fee_owner'=>0,
@@ -145,6 +146,7 @@ class PhonesController extends Controller
         if($amount > floatval($phones->solde)){
             return redirect()->back(302)->with('error','Le solde du telephone est insuffisant');
         }
+        $soldeBefore = $phones->solde;
         updateSolde($phones,-$amount,'solde');
         //updateSolde($phones,$amount,'solde_api');
         $phones = Phones::find($id);
@@ -156,8 +158,8 @@ class PhonesController extends Controller
             'date_success'=>nowIso(),
             'date_processing'=>nowIso(),
             'operation'=>OPERATIONS_PHONES['APPEL_DE_FONS'],
-            'solde_before'=>$phones->solde,
-            'solde_after'=>$phones->solde - $amount,
+            'solde_before'=>$soldeBefore,
+            'solde_after'=>$phones->solde ,
             'fee'=>0,
             'commission'=>0,
             'fee_owner'=>0,
