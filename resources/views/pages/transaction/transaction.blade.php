@@ -366,7 +366,7 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form @submit.prevent="handleSubmit"> id="modalTransactionForm" :action="url_transaction" method="POST"  class="modal-body">
+                <form @submit.prevent="handleSubmit" id="modalTransactionForm" :action="url_transaction" method="POST"  class="modal-body">
                     @csrf
                     <div >
                         <div v-if="typeAction == 'failed' || typeAction == 'success' " class="form-group row">
