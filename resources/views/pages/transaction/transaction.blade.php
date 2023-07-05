@@ -375,7 +375,6 @@
                                 <textarea required v-model="comment" rows="10" name="comment" id="comment"
                                           class="form-control form-control-normal" placeholder="Commentaire"></textarea>
                             </div>
-
                         </div>
                         <div v-if="typeAction === 'retro'" class="form-group row">
                             <label class="col-sm-12 col-form-label">Sous Services</label>
