@@ -42,6 +42,53 @@
 </script>
 
 <script>
+    function showLoader(text = 'Chargement...') {
+        // Create a new div element for the loader
+        const loader = document.createElement('div');
+
+        // Set the id attribute of the loader element
+        loader.id = 'loaderHtml';
+
+        // Set the HTML content and inline CSS styles of the loader element
+        loader.innerHTML = `
+    <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5);">
+      <div style="width: 40px; height: 40px; border-radius: 50%; border: 4px solid #fff; border-top-color: #ccc; animation: spin 1s linear infinite;"></div>
+      <span style="color: #fff; margin-top: 10px;">${text}</span>
+    </div>
+    <style>
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
+  `;
+
+        // Apply CSS styles using the style property
+        loader.style.zIndex = '99999999999';
+        loader.style.position = 'absolute';
+
+        // Append the loader element to the body of the document
+        document.body.appendChild(loader);
+    }
+
+
+
+
+    function removeLoader() {
+        // Find the loader element by its ID
+        const loader = document.getElementById('loaderHtml');
+
+        // Remove the loader element if it exists
+        if (loader) {
+            loader.parentNode.removeChild(loader);
+        }
+    }
+
+
     $(document).ready(function () {
         if( $('#_partener_').text()){
             $('#_partener_').select2();

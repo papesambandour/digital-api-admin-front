@@ -366,7 +366,7 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form :action="url_transaction" method="POST"  class="modal-body">
+                <form id="modalTransactionForm" :action="url_transaction" method="POST"  class="modal-body">
                     @csrf
                     <div >
                         <div v-if="typeAction == 'failed' || typeAction == 'success' " class="form-group row">
@@ -404,7 +404,7 @@
                             </div>
                         </div>
                         <div class="text-center">
-                            <button  class="primary-api-digital btn btn-primary btn-outline-primary "
+                            <button :disabled="isSubmitting"  class="primary-api-digital btn btn-primary btn-outline-primary "
                                      type="submit" >
                                 <i class="ti-plus"></i> @{{ btnMessage }}
                             </button>
@@ -438,8 +438,24 @@
                 amount:'',
                 motif:'',
                 sousServices:'',
+                isSubmitting: false,
             },
             methods:{
+                handleSubmit() {
+                    if (this.isSubmitting) {
+                        // Prevent multiple form submissions
+                        alert("Traitement Déja en cours, veuillez patienter...")
+                        return;
+                    }
+
+                    window.showLoader("Traitement en cours, veuillez patienter...")
+
+                    // Set isSubmitting to true to disable the submit button
+                    this.isSubmitting = true;
+
+                    // Submit the form
+                    document.getElementById('modalTransactionForm').submit();
+                },
                async openModal(id,type){
                     this.idTransaction = id;
                     this.typeAction = type;
