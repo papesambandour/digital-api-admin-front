@@ -305,7 +305,14 @@ class TransactionServices
         } catch (Exception $e) {
         }
 
-        return @$response['message'].' '. $message;
+        $message =  trim(@$response['message'].' '. $message);
+
+        if(empty($message)){
+            $message = json_encode($responseData);
+        }
+
+        return $message;
+
     }
 
 
