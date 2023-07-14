@@ -209,7 +209,7 @@
                                     </td>
                                     <td>
                                         @if($transaction->error_types_id)
-                                       {{--     Error ID: {{ $transaction->error_types_id }}--}}
+
                                             <details>
                                                 <summary>voir message</summary>
                                                 <p>
