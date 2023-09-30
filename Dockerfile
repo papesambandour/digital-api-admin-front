@@ -14,4 +14,4 @@ ENV CREATE_LARAVEL_STORAGE "1"
 
 WORKDIR /var/www/html
 RUN composer install --ignore-platform-reqs
-RUN chown -Rf nginx.nginx /var/www/html
+RUN chown -Rf nginx:nginx /var/www/html
